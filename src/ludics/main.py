@@ -358,12 +358,10 @@ def generate_transition_matrix(
                         )
                     )
                 if len(different_indices) == 1:
-
                     index_of_difference = different_indices[0]
                     new_type = target[index_of_difference]
 
                     try:
-
                         transition_matrix[row_index, col_index] = transition_matrix[
                             row_index, col_index
                         ] * (

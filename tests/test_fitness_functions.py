@@ -1,7 +1,6 @@
 import ludics.main
 import sympy as sym
 import numpy as np
-import pytest
 import ludics.fitness_functions as ff
 
 

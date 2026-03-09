@@ -1,6 +1,5 @@
 import pytest
 import numpy as np
-import pathlib
 
 import ludics.main as main
 

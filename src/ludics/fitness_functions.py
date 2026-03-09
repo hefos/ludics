@@ -102,5 +102,5 @@ def general_four_state_fitness_function(state, **kwargs):
         state_symbol = sym.Symbol("d")
 
     return np.array(
-        [sym.Function(f"f_{i+1}")(state_symbol) for i, j in enumerate(state)]
+        [sym.Function(f"f_{i + 1}")(state_symbol) for i, j in enumerate(state)]
     )

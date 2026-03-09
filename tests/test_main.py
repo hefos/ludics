@@ -1916,7 +1916,7 @@ def test_compute_fermi_transition_probability_for_symbolic_fitness_function():
     y = sym.Symbol("y")
 
     expected_probability = (1 / 6) * (
-        1 / (1 + sym.E ** (((x - y) * beta))) + 1 / (1 + sym.E ** (((x - y) * beta)))
+        1 / (1 + sym.E ** ((x - y) * beta)) + 1 / (1 + sym.E ** ((x - y) * beta))
     )
 
     assert actual_probability == expected_probability
