@@ -24,14 +24,14 @@ data_paths = [
         "fermi",
     ],
     [
-        comparison_path / "binomial/introspection_against_moran/main.csv",
-        "introspection",
-        "moran",
-    ],
-    [
         comparison_path / "binomial/introspection_against_imispection/main.csv",
         "introspection",
         "introspective imitation",
+    ],
+    [
+        comparison_path / "binomial/introspection_against_moran/main.csv",
+        "introspection",
+        "moran",
     ],
     [comparison_path / "linear/moran_against_fermi/main.csv", "moran", "fermi"],
     [
