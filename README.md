@@ -19,7 +19,7 @@ $ uv run pytest benchmarks
 To run ruff:
 
 ```
-$ uv run ruff clean
+$ uv run ruff format
 ```
 
 To check ruff:
