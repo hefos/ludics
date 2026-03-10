@@ -244,7 +244,7 @@ def compute_introspection_transition_probability(
 
     the transition probability when moving from the source state to the target
 
-    state in introspective imitation dynamics. Must move between states with a]
+    state under introspective imitation dynamics. Must move between states with
 
     Hamming distance of 1. Returns 0 if Hamming distance > 1.
 
@@ -289,6 +289,71 @@ def compute_introspection_transition_probability(
     selection_probability = 1 / (len(source) * ((number_of_strategies) - 1))
 
     delta = fitness_before - fitness_after
+
+    return selection_probability * fermi_imitation_function(
+        delta=delta, choice_intensity=choice_intensity
+    )
+
+
+def compute_aspiration_transition_probability(
+    source, target, fitness_function, choice_intensity, aspiration_vector, **kwargs
+):
+    """
+    Given two states, a fitness function, and a choice intensity, returns
+
+    the transition probability when moving from the source state to the target
+
+    state under aspiration dynamics. This dynamic takes the aspiration of a
+
+    given player and they will change action type with a probability
+
+    proportional to the difference between their current payoff, and their
+
+    aspired payoff.
+    Returns 0 if Hamming distance > 1.
+
+    Returns None if Hamming distance = 0.
+
+    This is adressed in the get_transition_matrix function.
+
+    Parameters
+    ----------
+
+    source: numpy.array, the starting state
+
+    target: numpy.array, what the source transitions to
+
+    fitness_function: func, The fitness function which maps a state to a
+    numpy.array
+
+    choice_intensity: float or sympy.Symbol: the choice intensity of the
+    function. The lower the value, the higher the probability that a player
+    will choose the higher fitness strategy in $\phi$
+
+    aspiration_vector: numpy.array: the aspiration of each player in a state.
+
+    returns
+    ---------
+    float: the transition pobability from source to target
+    """
+
+    if len(np.unique(source)) > 2:
+        raise ValueError("Aspiration Dynamics only supports 2 action types")
+    if len(np.unique(target)) > 2:
+        raise ValueError("Aspiration Dynamics only supports 2 action types")
+
+    different_indices = np.where(source != target)
+    if len(different_indices[0]) > 1:
+        return 0
+    if len(different_indices[0]) == 0:
+        return None
+
+    fitness = fitness_function(source, **kwargs)
+    fitness_before = fitness[different_indices][0]
+
+    selection_probability = 1 / (len(source))
+
+    delta = fitness_before - aspiration_vector[different_indices]
 
     return selection_probability * fermi_imitation_function(
         delta=delta, choice_intensity=choice_intensity
