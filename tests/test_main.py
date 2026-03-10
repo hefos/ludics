@@ -35,7 +35,7 @@ def test_compute_moran_transition_probability_for_trivial_fitness_function():
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
-            selection_intensity=0.5,
+            selection_intensity=selection_intensity,
         )
         == 1 / 9
     )
@@ -1464,11 +1464,11 @@ def test_calculate_absorption_matrix_for_5_by_5_symbolic_transition_matrix():
 
     Q = sym.Matrix(np.array([[1 / 3, B, 0], [A, 0, C], [0, C, D]]))
 
-    I = sym.Matrix(np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]]))
+    identity = sym.Matrix(np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]]))
 
     R = sym.Matrix(np.array([[A, 0], [0, 0], [0, 1 / 3]]))
 
-    expected_absorption_matrix = ((I - Q) ** -1) * R
+    expected_absorption_matrix = ((identity - Q) ** -1) * R
 
     obtained_absorption_matrix = ludics.main.calculate_absorption_matrix(
         transition_matrix=transition_matrix

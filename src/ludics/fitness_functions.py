@@ -91,7 +91,6 @@ def general_four_state_fitness_function(state, **kwargs):
     -------
     numpy.array: an ordered array of each player's fitness"""
 
-    f = sym.Function("f")
     if (state == np.array([0, 0])).all():
         state_symbol = sym.Symbol("a")
     if (state == np.array([0, 1])).all():

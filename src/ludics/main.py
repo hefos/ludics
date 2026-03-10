@@ -375,7 +375,7 @@ def generate_transition_matrix(
                             ].item()
                             / number_of_players
                         )
-                    except:
+                    except Exception:
                         transition_matrix = transition_matrix.astype(object)
 
                         transition_matrix[row_index, col_index] = (
@@ -597,8 +597,8 @@ def calculate_absorption_matrix(transition_matrix):
     Q_symbolic = sym.Matrix(Q)
     R_symbolic = sym.Matrix(R)
 
-    I = sym.eye(Q_symbolic.shape[0])
-    B = (I - Q_symbolic) ** -1 * R_symbolic
+    identity = sym.eye(Q_symbolic.shape[0])
+    B = (identity - Q_symbolic) ** -1 * R_symbolic
 
     return sym.Matrix(B)
 
@@ -731,7 +731,7 @@ def calculate_steady_state(transition_matrix):
 
     try:
         one_eigenvector = nullspace[0]
-    except:
+    except Exception:
         raise ValueError("No eigenvector found")
 
     return np.array(sym.simplify(one_eigenvector / sum(one_eigenvector)).T)[0]

@@ -10,9 +10,9 @@ step_size_prob = 2
 
 
 def generate_stochastic_2_valency_cycle_matrix(n, prob_prior):
-    I = np.eye(n)
-    return prob_prior * (np.roll(I, -1, axis=1)) + (1 - prob_prior) * (
-        np.roll(I, 1, axis=1)
+    identity = np.eye(n)
+    return prob_prior * (np.roll(identity, -1, axis=1)) + (1 - prob_prior) * (
+        np.roll(identity, 1, axis=1)
     )
 
 

@@ -147,8 +147,6 @@ def test_general_four_state_player_fitness_function_for_whole_state_space():
     states of the four-state system where N=2, k=2"""
     four_state_space = ludics.main.get_state_space(N=2, k=2)
 
-    f = sym.Function("f")
-
     expected_return_a = np.array(
         [
             sym.Function(f"f_{1}")(sym.Symbol("a")),
