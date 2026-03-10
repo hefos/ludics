@@ -102,11 +102,11 @@ def test_binomial_contribution_rule_for_N_eq_5_n_eq_3():
     expected_contribution_2 = 3
 
     obtained_contribution_1 = ludics.contribution_rules.binomial_contribution_rule(
-        index=index_1, M=M, N=N, alpha_h=alpha_h, n=3
+        index=index_1, M=M, N=N, alpha_h=alpha_h, n=n
     )
 
     obtained_contribution_2 = ludics.contribution_rules.binomial_contribution_rule(
-        index=index_2, M=M, N=N, alpha_h=alpha_h, n=3
+        index=index_2, M=M, N=N, alpha_h=alpha_h, n=n
     )
 
     assert expected_contribution_1 == obtained_contribution_1
