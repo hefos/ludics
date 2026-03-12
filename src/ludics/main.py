@@ -431,7 +431,7 @@ def generate_transition_matrix(
                             ),
                         )
                     )
-                except Exception:
+                except TypeError:
                     transition_matrix = transition_matrix.astype(object)
 
                     transition_matrix[row_index, col_index] = (
@@ -836,7 +836,7 @@ def simulate_markov_chain(
     seed,
     individual_to_action_mutation_probability=None,
     warmup=0,
-    time_steps=10000,
+    iterations=10000,
     **kwargs,
 ):
     """
@@ -864,10 +864,10 @@ def simulate_markov_chain(
     mutating to type $k$. By default, set to None, which gives an array of all
     zeros.
 
-    warmup: int - the number of time steps before we begin tracking the
+    warmup: int - the number of iterations before we begin tracking the
     distribution of steps
 
-    time_steps: int - the number of time steps in the simulation. By default,
+    iterations: int - the number of iterations in the simulation. By default,
     this is set to 10000
 
     returns
@@ -890,8 +890,8 @@ def simulate_markov_chain(
 
     state_to_neighourhood_and_transition_probabilities = {}
 
-    for time_step in range(time_steps - 1):
-        current_state_key = tuple(current_state)
+    for time_step in range(iterations - 1):
+        current_state_key = tuple(current_state.tolist())
         try:
             neighbourhood, transition_probabilities = (
                 state_to_neighourhood_and_transition_probabilities[current_state_key]
@@ -944,7 +944,7 @@ def simulate_markov_chain(
         current_state = neighbourhood[next_state_index]
 
         if time_step >= warmup - 1:
-            states_over_time.append(tuple(current_state))
+            states_over_time.append(tuple(current_state.tolist()))
 
     state_distribution = collections.Counter(states_over_time)
 
