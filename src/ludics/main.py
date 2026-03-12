@@ -43,8 +43,8 @@ def compute_moran_transition_probability(
     """
     Given two states and a fitness function, returns the transition probability
     when moving from the source state to the target state. Must move between
-    states with a Hamming distance of 1. 
-    
+    states with a Hamming distance of 1.
+
     Returns 0 if Hamming distance > 1.
     Returns None if Hamming distance = 0.
 
@@ -111,10 +111,10 @@ def compute_fermi_transition_probability(
     """
     Given two states, a fitness function, and a choice intensity, returns
     the transition probability when moving from the source state to the target
-    state. Must move between states with a Hamming distance of 1. 
+    state. Must move between states with a Hamming distance of 1.
 
     Returns 0 if Hamming distance > 1.
-    Returns None if Hamming distance = 0. 
+    Returns None if Hamming distance = 0.
 
     The following equation is the subject of this function:
 
@@ -167,7 +167,7 @@ def compute_imitation_introspection_transition_probability(
     Given two states, a fitness function, and a choice intensity, returns
     the transition probability when moving from the source state to the target
     state in introspective imitation dynamics. Must move between states with a
-    Hamming distance of 1. 
+    Hamming distance of 1.
 
     Returns 0 if Hamming distance > 1.
     Returns None if Hamming distance = 0.
@@ -225,8 +225,8 @@ def compute_introspection_transition_probability(
     Given two states, a fitness function, and a choice intensity, returns
     the transition probability when moving from the source state to the target
     state under introspective imitation dynamics. Must move between states with
-    Hamming distance of 1. 
-    
+    Hamming distance of 1.
+
     Returns 0 if Hamming distance > 1.
     Returns None if Hamming distance = 0.
 
@@ -327,6 +327,7 @@ def compute_aspiration_transition_probability(
     return selection_probability * fermi_imitation_function(
         delta=delta, choice_intensity=choice_intensity
     )
+
 
 def apply_mutation_probability(
     source, target, individual_to_action_mutation_probability, transition_probability
