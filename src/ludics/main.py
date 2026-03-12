@@ -41,16 +41,12 @@ def compute_moran_transition_probability(
 ):
     """
     Given two states and a fitness function, returns the transition probability
-
     when moving from the source state to the target state. Must move between
+    states with a Hamming distance of 1. 
+    
+    Returns 0 if Hamming distance > 1.
+    Returns None if Hamming distance = 0.
 
-    states with a Hamming distance of 1. Returns 0 if Hamming distance > 1.
-
-    Returns None if Hamming distance = 0. For an absorbing state, this will
-
-    naturally return 0 for all off-diagonal entries, and None on the diagonal.
-
-    This is adressed in the get_transition_matrix function.
 
     $\frac{\sum_{v_i = u_{i*}}{f(v_i)}}{\sum_{v_i}f(v_i)}$
 
@@ -84,9 +80,7 @@ def compute_moran_transition_probability(
 def fermi_imitation_function(delta, choice_intensity=0.5, **kwargs):
     """
     Given the fitness of the focal individual who changes action type, and the
-
     target individual who is being copied, as well as the choice intensity,
-
     returns $\phi(a_i, a_j) = \frac{1}{1 + \exp({\frac{f(a_{i}) - f(a_{j})
     }{\beta}})}$
 
@@ -115,18 +109,11 @@ def compute_fermi_transition_probability(
 ):
     """
     Given two states, a fitness function, and a choice intensity, returns
-
     the transition probability when moving from the source state to the target
+    state. Must move between states with a Hamming distance of 1. 
 
-    state. Must move between states with a Hamming distance of 1. Returns 0 if
-
-    Hamming distance > 1.
-
-    Returns None if Hamming distance = 0. For an absorbing state, this will
-
-    naturally return 0 for all off-diagonal entries, and None on the diagonal.
-
-    This is adressed in the get_transition_matrix function.
+    Returns 0 if Hamming distance > 1.
+    Returns None if Hamming distance = 0. 
 
     The following equation is the subject of this function:
 
@@ -177,18 +164,12 @@ def compute_imitation_introspection_transition_probability(
 ):
     """
     Given two states, a fitness function, and a choice intensity, returns
-
     the transition probability when moving from the source state to the target
+    state in introspective imitation dynamics. Must move between states with a
+    Hamming distance of 1. 
 
-    state in introspective imitation dynamics. Must move between states with a]
-
-    Hamming distance of 1. Returns 0 if Hamming distance > 1.
-
-    Returns None if Hamming distance = 0. For an absorbing state, this will
-
-    naturally return 0 for all off-diagonal entries, and None on the diagonal.
-
-    This is adressed in the get_transition_matrix function.
+    Returns 0 if Hamming distance > 1.
+    Returns None if Hamming distance = 0.
 
     The following equation is the subject of this function:
 
@@ -241,19 +222,14 @@ def compute_introspection_transition_probability(
 ):
     """
     Given two states, a fitness function, and a choice intensity, returns
-
     the transition probability when moving from the source state to the target
-
-    state in introspective imitation dynamics. Must move between states with a]
-
-    Hamming distance of 1. Returns 0 if Hamming distance > 1.
-
+    state under introspective imitation dynamics. Must move between states with
+    Hamming distance of 1. 
+    
+    Returns 0 if Hamming distance > 1.
     Returns None if Hamming distance = 0.
 
-    This is adressed in the get_transition_matrix function.
-
     The following equation is the subject of this function:
-
     $\frac{1}{N(m_j - 1)}\phi(f_i(a) - f_i(b))$
 
     Parameters
@@ -289,6 +265,64 @@ def compute_introspection_transition_probability(
     selection_probability = 1 / (len(source) * ((number_of_strategies) - 1))
 
     delta = fitness_before - fitness_after
+
+    return selection_probability * fermi_imitation_function(
+        delta=delta, choice_intensity=choice_intensity
+    )
+
+
+def compute_aspiration_transition_probability(
+    source, target, fitness_function, choice_intensity, aspiration_vector, **kwargs
+):
+    """
+    Given two states, a fitness function, and a choice intensity, returns
+    the transition probability when moving from the source state to the target
+    state under aspiration dynamics. This dynamic takes the aspiration of a
+    given player and they will change action type with a probability
+    proportional to the difference between their current payoff, and their
+    aspired payoff.
+
+    Returns 0 if Hamming distance > 1.
+    Returns None if Hamming distance = 0.
+
+    Parameters
+    ----------
+
+    source: numpy.array, the starting state
+
+    target: numpy.array, what the source transitions to
+
+    fitness_function: func, The fitness function which maps a state to a
+    numpy.array
+
+    choice_intensity: float or sympy.Symbol: the choice intensity of the
+    function. The lower the value, the higher the probability that a player
+    will choose the higher fitness strategy in $\phi$
+
+    aspiration_vector: numpy.array: the aspiration of each player in a state.
+
+    returns
+    ---------
+    float: the transition pobability from source to target
+    """
+
+    if len(np.unique(source)) > 2:
+        raise ValueError("Aspiration Dynamics only supports 2 action types")
+    if len(np.unique(target)) > 2:
+        raise ValueError("Aspiration Dynamics only supports 2 action types")
+
+    different_indices = np.where(source != target)
+    if len(different_indices[0]) > 1:
+        return 0
+    if len(different_indices[0]) == 0:
+        return None
+
+    fitness = fitness_function(source, **kwargs)
+    fitness_before = fitness[different_indices][0]
+
+    selection_probability = 1 / (len(source))
+
+    delta = fitness_before - aspiration_vector[different_indices]
 
     return selection_probability * fermi_imitation_function(
         delta=delta, choice_intensity=choice_intensity

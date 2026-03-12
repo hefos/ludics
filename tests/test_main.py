@@ -2286,3 +2286,166 @@ def test_approximate_steady_state_for_different_initial_dist():
         ),
         steady_state_2,
     )
+
+
+def test_compute_aspiration_transition_probability_for_trivial_fitness_function():
+    """
+    Tests the compute_aspiration_transition_probability function for a trivial
+    fitness function"""
+
+    def trivial_fitness_function(state):
+        return np.array([1 for _ in state])
+
+    source = np.array([1, 1, 0])
+    target = np.array([1, 1, 1])
+    aspiration_vector = np.array([2, 2, 2])
+    choice_intensity = 0.5
+
+    expected_transition_probability = 0.2074864437
+    actual_transition_probability = (
+        ludics.main.compute_aspiration_transition_probability(
+            source=source,
+            target=target,
+            fitness_function=trivial_fitness_function,
+            choice_intensity=choice_intensity,
+            aspiration_vector=aspiration_vector,
+        )
+    )
+
+    np.testing.assert_almost_equal(
+        actual_transition_probability, expected_transition_probability
+    )
+
+
+def test_compute_aspiration_transition_probability_for_heterogeneous_aspiration_vector():
+    """
+    Tests the compute_aspiration_transition_probability function for a
+    heterogeneous aspiration vector"""
+
+    def trivial_fitness_function(state):
+        return np.array([1 for _ in state])
+
+    source = np.array([1, 1, 1])
+    target = np.array([1, 0, 1])
+    aspiration_vector = np.array([2, 3, 4])
+    choice_intensity = 0.5
+
+    expected_transition_probability = 0.2436861929
+    actual_transition_probability = (
+        ludics.main.compute_aspiration_transition_probability(
+            source=source,
+            target=target,
+            fitness_function=trivial_fitness_function,
+            choice_intensity=choice_intensity,
+            aspiration_vector=aspiration_vector,
+        )
+    )
+
+    np.testing.assert_almost_equal(
+        actual_transition_probability, expected_transition_probability
+    )
+
+
+def test_compute_aspiration_transition_probability_for_non_trivial_fitness_function():
+    """
+    Tests the compute_aspiration_transition_probability function for a
+    non-trivial fitness function"""
+
+    def trivial_fitness_function(state):
+        return np.array([i + 3 for i in state])
+
+    source = np.array([0, 1, 1])
+    target = np.array([1, 1, 1])
+    aspiration_vector = np.array([2, 3, 4])
+    choice_intensity = 0.2
+
+    expected_transition_probability = 0.1500553342
+    actual_transition_probability = (
+        ludics.main.compute_aspiration_transition_probability(
+            source=source,
+            target=target,
+            fitness_function=trivial_fitness_function,
+            choice_intensity=choice_intensity,
+            aspiration_vector=aspiration_vector,
+        )
+    )
+
+    np.testing.assert_almost_equal(
+        actual_transition_probability, expected_transition_probability
+    )
+
+
+def test_compute_aspiration_transition_probability_for_infeasible_transition():
+    """
+    Tests the compute_aspiration_transition_probability function returns 0 for
+    the case where source and target are a distance >=2 away from each other"""
+
+    def trivial_fitness_function(state):
+        return np.array([i + 3 for i in state])
+
+    aspiration_vector = np.array([2, 3, 4])
+    choice_intensity = 0.5
+
+    source = np.array([0, 1, 1])
+    target = np.array([1, 0, 1])
+
+    assert (
+        ludics.main.compute_aspiration_transition_probability(
+            source=source,
+            target=target,
+            fitness_function=trivial_fitness_function,
+            choice_intensity=choice_intensity,
+            aspiration_vector=aspiration_vector,
+        )
+        == 0
+    )
+
+
+def test_compute_aspiration_transition_probability_fails_for_too_many_types():
+    """
+    Tests the compute_aspiration_transition_probability function fails for the
+    case where vectors contain 3 different types"""
+
+    def trivial_fitness_function(state):
+        return np.array([i + 3 for i in state])
+
+    aspiration_vector = np.array([2, 3, 4])
+    choice_intensity = 0.5
+
+    source = np.array([0, 1, 2])
+    target = np.array([0, 1, 2])
+
+    with pytest.raises(ValueError):
+        ludics.main.compute_aspiration_transition_probability(
+            source=source,
+            target=target,
+            fitness_function=trivial_fitness_function,
+            choice_intensity=choice_intensity,
+            aspiration_vector=aspiration_vector,
+        )
+
+
+def test_compute_aspiration_transition_probability_for_self_transition():
+    """
+    Tests the compute_aspiration_transition_probability function returns None
+    when a state transitions to itself"""
+
+    def trivial_fitness_function(state):
+        return np.array([i + 3 for i in state])
+
+    aspiration_vector = np.array([2, 3, 4])
+    choice_intensity = 0.5
+
+    source = np.array([0, 1, 1])
+    target = np.array([0, 1, 1])
+
+    assert (
+        ludics.main.compute_aspiration_transition_probability(
+            source=source,
+            target=target,
+            fitness_function=trivial_fitness_function,
+            choice_intensity=choice_intensity,
+            aspiration_vector=aspiration_vector,
+        )
+        is None
+    )
