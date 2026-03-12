@@ -322,7 +322,7 @@ def compute_aspiration_transition_probability(
 
     selection_probability = 1 / (len(source))
 
-    delta = fitness_before - aspiration_vector[different_indices]
+    delta = fitness_before - aspiration_vector[different_indices][0]
 
     return selection_probability * fermi_imitation_function(
         delta=delta, choice_intensity=choice_intensity
