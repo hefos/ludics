@@ -41,16 +41,12 @@ def compute_moran_transition_probability(
 ):
     """
     Given two states and a fitness function, returns the transition probability
-
     when moving from the source state to the target state. Must move between
+    states with a Hamming distance of 1. 
+    
+    Returns 0 if Hamming distance > 1.
+    Returns None if Hamming distance = 0.
 
-    states with a Hamming distance of 1. Returns 0 if Hamming distance > 1.
-
-    Returns None if Hamming distance = 0. For an absorbing state, this will
-
-    naturally return 0 for all off-diagonal entries, and None on the diagonal.
-
-    This is adressed in the get_transition_matrix function.
 
     $\frac{\sum_{v_i = u_{i*}}{f(v_i)}}{\sum_{v_i}f(v_i)}$
 
@@ -84,9 +80,7 @@ def compute_moran_transition_probability(
 def fermi_imitation_function(delta, choice_intensity=0.5, **kwargs):
     """
     Given the fitness of the focal individual who changes action type, and the
-
     target individual who is being copied, as well as the choice intensity,
-
     returns $\phi(a_i, a_j) = \frac{1}{1 + \exp({\frac{f(a_{i}) - f(a_{j})
     }{\beta}})}$
 
@@ -115,18 +109,11 @@ def compute_fermi_transition_probability(
 ):
     """
     Given two states, a fitness function, and a choice intensity, returns
-
     the transition probability when moving from the source state to the target
+    state. Must move between states with a Hamming distance of 1. 
 
-    state. Must move between states with a Hamming distance of 1. Returns 0 if
-
-    Hamming distance > 1.
-
-    Returns None if Hamming distance = 0. For an absorbing state, this will
-
-    naturally return 0 for all off-diagonal entries, and None on the diagonal.
-
-    This is adressed in the get_transition_matrix function.
+    Returns 0 if Hamming distance > 1.
+    Returns None if Hamming distance = 0. 
 
     The following equation is the subject of this function:
 
@@ -177,18 +164,12 @@ def compute_imitation_introspection_transition_probability(
 ):
     """
     Given two states, a fitness function, and a choice intensity, returns
-
     the transition probability when moving from the source state to the target
+    state in introspective imitation dynamics. Must move between states with a
+    Hamming distance of 1. 
 
-    state in introspective imitation dynamics. Must move between states with a]
-
-    Hamming distance of 1. Returns 0 if Hamming distance > 1.
-
-    Returns None if Hamming distance = 0. For an absorbing state, this will
-
-    naturally return 0 for all off-diagonal entries, and None on the diagonal.
-
-    This is adressed in the get_transition_matrix function.
+    Returns 0 if Hamming distance > 1.
+    Returns None if Hamming distance = 0.
 
     The following equation is the subject of this function:
 
@@ -241,19 +222,14 @@ def compute_introspection_transition_probability(
 ):
     """
     Given two states, a fitness function, and a choice intensity, returns
-
     the transition probability when moving from the source state to the target
-
     state under introspective imitation dynamics. Must move between states with
-
-    Hamming distance of 1. Returns 0 if Hamming distance > 1.
-
+    Hamming distance of 1. 
+    
+    Returns 0 if Hamming distance > 1.
     Returns None if Hamming distance = 0.
 
-    This is adressed in the get_transition_matrix function.
-
     The following equation is the subject of this function:
-
     $\frac{1}{N(m_j - 1)}\phi(f_i(a) - f_i(b))$
 
     Parameters
@@ -300,21 +276,14 @@ def compute_aspiration_transition_probability(
 ):
     """
     Given two states, a fitness function, and a choice intensity, returns
-
     the transition probability when moving from the source state to the target
-
     state under aspiration dynamics. This dynamic takes the aspiration of a
-
     given player and they will change action type with a probability
-
     proportional to the difference between their current payoff, and their
-
     aspired payoff.
+
     Returns 0 if Hamming distance > 1.
-
     Returns None if Hamming distance = 0.
-
-    This is adressed in the get_transition_matrix function.
 
     Parameters
     ----------
