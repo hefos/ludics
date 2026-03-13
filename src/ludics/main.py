@@ -14,6 +14,7 @@ import itertools
 import numpy as np
 import sympy as sym
 import scipy
+import collections
 
 
 def get_state_space(N, k):
@@ -42,8 +43,8 @@ def compute_moran_transition_probability(
     """
     Given two states and a fitness function, returns the transition probability
     when moving from the source state to the target state. Must move between
-    states with a Hamming distance of 1. 
-    
+    states with a Hamming distance of 1.
+
     Returns 0 if Hamming distance > 1.
     Returns None if Hamming distance = 0.
 
@@ -110,10 +111,10 @@ def compute_fermi_transition_probability(
     """
     Given two states, a fitness function, and a choice intensity, returns
     the transition probability when moving from the source state to the target
-    state. Must move between states with a Hamming distance of 1. 
+    state. Must move between states with a Hamming distance of 1.
 
     Returns 0 if Hamming distance > 1.
-    Returns None if Hamming distance = 0. 
+    Returns None if Hamming distance = 0.
 
     The following equation is the subject of this function:
 
@@ -166,7 +167,7 @@ def compute_imitation_introspection_transition_probability(
     Given two states, a fitness function, and a choice intensity, returns
     the transition probability when moving from the source state to the target
     state in introspective imitation dynamics. Must move between states with a
-    Hamming distance of 1. 
+    Hamming distance of 1.
 
     Returns 0 if Hamming distance > 1.
     Returns None if Hamming distance = 0.
@@ -224,8 +225,8 @@ def compute_introspection_transition_probability(
     Given two states, a fitness function, and a choice intensity, returns
     the transition probability when moving from the source state to the target
     state under introspective imitation dynamics. Must move between states with
-    Hamming distance of 1. 
-    
+    Hamming distance of 1.
+
     Returns 0 if Hamming distance > 1.
     Returns None if Hamming distance = 0.
 
@@ -287,7 +288,6 @@ def compute_aspiration_transition_probability(
 
     Parameters
     ----------
-
     source: numpy.array, the starting state
 
     target: numpy.array, what the source transitions to
@@ -322,11 +322,59 @@ def compute_aspiration_transition_probability(
 
     selection_probability = 1 / (len(source))
 
-    delta = fitness_before - aspiration_vector[different_indices]
+    delta = fitness_before - aspiration_vector[different_indices][0]
 
     return selection_probability * fermi_imitation_function(
         delta=delta, choice_intensity=choice_intensity
     )
+
+
+def apply_mutation_probability(
+    source, target, individual_to_action_mutation_probability, transition_probability
+):
+    """
+    Given two states and the probability of transitioning between them without
+    mutation, returns the probability of transitioning between them under
+    mutation.
+
+    Parameters
+    -----------
+    source: numpy.array, the starting state
+
+    target: numpy.array, the state which the source transitions to
+
+    individual_to_action_mutation_probability: numpy.array or None: the probability of each player
+    mutating to each action type. Row 0 corresponds to player 0, column 0
+    corresponds to action type 0. Action types must be written in the form of
+    0,1,2,etc.
+
+    transition_probability: float - the probability of transitioning between
+    source and target without mutation.
+
+    returns
+    --------
+    float: the transition probability between source and target under mutation
+
+    """
+
+    different_indices = np.where(source != target)[0]
+
+    if len(different_indices) == 1:
+        index_of_difference = different_indices[0]
+        new_type = target[index_of_difference]
+
+        return transition_probability * (
+            1
+            - np.sum(individual_to_action_mutation_probability, axis=1)[
+                different_indices
+            ].item()
+        ) + (
+            individual_to_action_mutation_probability[
+                different_indices, new_type
+            ].item()
+            / len(source)
+        )
+    return transition_probability
 
 
 def generate_transition_matrix(
@@ -363,68 +411,45 @@ def generate_transition_matrix(
     """
     N = len(state_space)
     transition_matrix = np.zeros(shape=(N, N))
-    number_of_players = len(state_space[0])
     if individual_to_action_mutation_probability is None:
         individual_to_action_mutation_probability = np.zeros(shape=(N, N))
     for row_index, source in enumerate(state_space):
         for col_index, target in enumerate(state_space):
             if row_index != col_index:
-                different_indices = np.where(source != target)[0]
-
                 try:
                     transition_matrix[row_index, col_index] = (
-                        compute_transition_probability(
+                        apply_mutation_probability(
                             source=source,
                             target=target,
-                            fitness_function=fitness_function,
-                            **kwargs,
+                            individual_to_action_mutation_probability=individual_to_action_mutation_probability,
+                            transition_probability=(
+                                compute_transition_probability(
+                                    source=source,
+                                    target=target,
+                                    fitness_function=fitness_function,
+                                    **kwargs,
+                                )
+                            ),
                         )
                     )
-
                 except TypeError:
                     transition_matrix = transition_matrix.astype(object)
+
                     transition_matrix[row_index, col_index] = (
-                        compute_transition_probability(
+                        apply_mutation_probability(
                             source=source,
                             target=target,
-                            fitness_function=fitness_function,
-                            **kwargs,
+                            individual_to_action_mutation_probability=individual_to_action_mutation_probability,
+                            transition_probability=(
+                                compute_transition_probability(
+                                    source=source,
+                                    target=target,
+                                    fitness_function=fitness_function,
+                                    **kwargs,
+                                )
+                            ),
                         )
                     )
-                if len(different_indices) == 1:
-                    index_of_difference = different_indices[0]
-                    new_type = target[index_of_difference]
-
-                    try:
-                        transition_matrix[row_index, col_index] = transition_matrix[
-                            row_index, col_index
-                        ] * (
-                            1
-                            - np.sum(individual_to_action_mutation_probability, axis=1)[
-                                different_indices
-                            ].item()
-                        ) + (
-                            individual_to_action_mutation_probability[
-                                different_indices, new_type
-                            ].item()
-                            / number_of_players
-                        )
-                    except Exception:
-                        transition_matrix = transition_matrix.astype(object)
-
-                        transition_matrix[row_index, col_index] = (
-                            transition_matrix[row_index, col_index]
-                            * (
-                                1
-                                - np.sum(
-                                    individual_to_action_mutation_probability, axis=1
-                                )[index_of_difference]
-                            )
-                            + individual_to_action_mutation_probability[
-                                index_of_difference, new_type
-                            ]
-                            / number_of_players
-                        )
 
     np.fill_diagonal(transition_matrix, 1 - transition_matrix.sum(axis=1))
     return transition_matrix
@@ -769,3 +794,159 @@ def calculate_steady_state(transition_matrix):
         raise ValueError("No eigenvector found")
 
     return np.array(sym.simplify(one_eigenvector / sum(one_eigenvector)).T)[0]
+
+
+def get_neighbourhood_states(state, number_of_strategies):
+    """
+    Given a state, returns a numpy.array of neighbouring states. That is, the
+    set of states which differ at 1 position from the current state.
+
+    Parameters:
+    ------------
+
+    state: numpy.array - the state to be considered
+
+    number_of_strategies: int - the number of actions available to each player
+
+    extrinsic: bool - whether or not the players can only change to a type
+    within the state.
+
+    returns:
+    ---------
+    numpy.array: the set of states in the neighbourhood of the passed state"""
+
+    action_set = np.arange(number_of_strategies)
+
+    neighbours = []
+
+    for player, player_type in enumerate(state):
+        for action in action_set:
+            if player_type != action:
+                adjacent_state = state.copy()
+                adjacent_state[player] = action
+                neighbours.append(adjacent_state)
+
+    return np.array(neighbours)
+
+
+def simulate_markov_chain(
+    initial_state,
+    number_of_strategies,
+    fitness_function,
+    compute_transition_probability,
+    seed,
+    individual_to_action_mutation_probability=None,
+    warmup=0,
+    iterations=10000,
+    **kwargs,
+):
+    """
+    Given an initial state, simulates a markov chain under a fitness function
+    and a population dynamic. Moves between neighbouring states and returns the
+    sets in the order they were visited in, and the number of times each state
+    was visited.
+
+    Parameters
+    -----------
+    initial_state: numpy.array - the state that our markov chain is in at $t=0$
+
+    number_of_strategies: int - the number of actions available to each player
+
+    fitness_function: func - takes a state and returns the fitness of each
+    individual
+
+    compute_transition_probability: func - takes two states and returns the
+    probability of transitioning from one state to another.
+
+    seed: int - the seed for the random process.
+
+    individual_to_action_mutation_probability: numpy.array - an N x (number of
+    strategies) array where $\mu_{ik}$ gives the probability of player $i$
+    mutating to type $k$. By default, set to None, which gives an array of all
+    zeros.
+
+    warmup: int - the number of iterations before we begin tracking the
+    distribution of steps
+
+    iterations: int - the number of iterations in the simulation. By default,
+    this is set to 10000
+
+    returns
+    --------
+    tuple - (the states in the order visited, the count of how often each state
+    was visited)"""
+
+    np.random.seed(seed)
+
+    if individual_to_action_mutation_probability is None:
+        individual_to_action_mutation_probability = np.zeros(
+            shape=(len(initial_state), number_of_strategies)
+        )
+
+    states_over_time = []
+    if warmup == 0:
+        states_over_time.append(tuple(initial_state))
+
+    current_state = initial_state
+
+    state_to_neighourhood_and_transition_probabilities = {}
+
+    for time_step in range(iterations - 1):
+        current_state_key = tuple(current_state.tolist())
+        try:
+            neighbourhood, transition_probabilities = (
+                state_to_neighourhood_and_transition_probabilities[current_state_key]
+            )
+
+        except KeyError:
+            neighbourhood = list(
+                get_neighbourhood_states(
+                    state=current_state, number_of_strategies=number_of_strategies
+                )
+            )
+
+            kwargs_with_strategies = {
+                **kwargs,
+                "number_of_strategies": number_of_strategies,
+            }
+
+            transition_probabilities = np.array(
+                [
+                    apply_mutation_probability(
+                        source=current_state,
+                        target=next_state,
+                        transition_probability=compute_transition_probability(
+                            source=current_state,
+                            target=next_state,
+                            fitness_function=fitness_function,
+                            **kwargs_with_strategies,
+                        ),
+                        individual_to_action_mutation_probability=individual_to_action_mutation_probability,
+                    )
+                    for next_state in neighbourhood
+                ],
+                dtype=float,
+            )
+
+            neighbourhood.append(current_state)
+            transition_probabilities = np.append(
+                transition_probabilities, 1 - transition_probabilities.sum()
+            )
+
+            state_to_neighourhood_and_transition_probabilities[current_state_key] = (
+                neighbourhood,
+                transition_probabilities,
+            )
+
+        next_state_index = np.random.choice(
+            len(neighbourhood), p=transition_probabilities
+        )
+
+        current_state = neighbourhood[next_state_index]
+
+        if time_step >= warmup - 1:
+            states_over_time.append(tuple(current_state.tolist()))
+
+    state_distribution = collections.Counter(states_over_time)
+
+    return (states_over_time, state_distribution)
