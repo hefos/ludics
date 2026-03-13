@@ -2589,6 +2589,8 @@ def test_simulate_markov_chain_for_trivial_fitness_function():
 
     initial_state = np.array([1, 1, 1])
     number_of_strategies = 2
+    seed = 2
+    iterations = 5
     fitness_function = trivial_fitness_function
     choice_intensity = 0.3
 
@@ -2600,15 +2602,15 @@ def test_simulate_markov_chain_for_trivial_fitness_function():
         tuple(np.array([0, 1, 1])),
     ]
 
-    actual_states_over_time = ludics.main.simulate_markov_chain(
+    actual_states_over_time, _ = ludics.main.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
         compute_transition_probability=ludics.main.compute_introspection_transition_probability,
-        seed=2,
-        iterations=5,
+        seed=seed,
+        iterations=iterations,
         choice_intensity=choice_intensity,
-    )[0]
+    )
     assert actual_states_over_time == expected_states_over_time
 
 
@@ -2622,6 +2624,9 @@ def test_simulate_markov_chain_for_warmup():
 
     initial_state = np.array([1, 1, 1])
     number_of_strategies = 2
+    seed = 2
+    iterations = 5
+    warmup = 1
     fitness_function = trivial_fitness_function
     choice_intensity = 0.3
 
@@ -2632,16 +2637,16 @@ def test_simulate_markov_chain_for_warmup():
         tuple(np.array([0, 1, 1])),
     ]
 
-    actual_states_over_time = ludics.main.simulate_markov_chain(
+    actual_states_over_time, _ = ludics.main.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
         compute_transition_probability=ludics.main.compute_introspection_transition_probability,
-        seed=2,
-        iterations=5,
-        warmup=1,
+        seed=seed,
+        iterations=iterations,
+        warmup=warmup,
         choice_intensity=choice_intensity,
-    )[0]
+    )
     assert actual_states_over_time == expected_states_over_time
 
 
@@ -2655,6 +2660,8 @@ def test_simulate_markov_chain_for_moran_process():
 
     initial_state = np.array([1, 1, 0])
     number_of_strategies = 2
+    seed = 2
+    iterations = 5
     fitness_function = trivial_fitness_function
     selection_intensity = 0.3
 
@@ -2666,16 +2673,15 @@ def test_simulate_markov_chain_for_moran_process():
         tuple(np.array([1, 1, 1])),
     ]
 
-    actual_states_over_time = ludics.main.simulate_markov_chain(
+    actual_states_over_time, _ = ludics.main.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
         compute_transition_probability=ludics.main.compute_moran_transition_probability,
-        seed=2,
-        iterations=5,
-        warmup=0,
+        seed=seed,
+        iterations=iterations,
         selection_intensity=selection_intensity,
-    )[0]
+    )
 
     assert actual_states_over_time == expected_states_over_time
 
@@ -2690,6 +2696,8 @@ def test_simulate_markov_chain_for_moran_process_counter():
 
     initial_state = np.array([1, 1, 0])
     number_of_strategies = 2
+    seed = 2
+    iterations = 5
     fitness_function = trivial_fitness_function
     selection_intensity = 0.3
 
@@ -2698,16 +2706,15 @@ def test_simulate_markov_chain_for_moran_process_counter():
         tuple(np.array([1, 1, 1])): 4,
     }
 
-    actual_state_distribution = ludics.main.simulate_markov_chain(
+    _, actual_state_distribution = ludics.main.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
         compute_transition_probability=ludics.main.compute_moran_transition_probability,
-        seed=2,
-        iterations=5,
-        warmup=0,
+        seed=seed,
+        iterations=iterations,
         selection_intensity=selection_intensity,
-    )[1]
+    )
 
     assert actual_state_distribution == expected_state_distribution
 
@@ -2724,6 +2731,8 @@ def test_simulate_markov_chain_gives_correct_numeric_results_introspection():
     initial_state = np.array([0, 1, 0])
     choice_intensity = 1
     number_of_strategies=2
+    seed = 1
+    iterations = 10000
     state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
     transition_matrix = ludics.main.generate_transition_matrix(
@@ -2743,15 +2752,15 @@ def test_simulate_markov_chain_gives_correct_numeric_results_introspection():
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        seed=1,
-        iterations=100000,
+        seed=seed,
+        iterations=iterations,
         compute_transition_probability=ludics.main.compute_introspection_transition_probability,
         choice_intensity=choice_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
 
     actual_state_distribution = np.array(
-        [states_and_counts[tuple(state.tolist())] / 100000 for state in state_space]
+        [states_and_counts[tuple(state.tolist())] / iterations for state in state_space]
     )
 
     np.testing.assert_array_almost_equal(
@@ -2771,6 +2780,8 @@ def test_simulate_markov_chain_gives_correct_numeric_results_moran():
     initial_state = np.array([0, 1, 0])
     selection_intensity = 0.5
     number_of_strategies=2
+    seed = 1
+    iterations = 10000
     state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
     
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
@@ -2790,15 +2801,15 @@ def test_simulate_markov_chain_gives_correct_numeric_results_moran():
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        seed=1,
-        iterations=100000,
+        seed=seed,
+        iterations=iterations,
         compute_transition_probability=ludics.main.compute_moran_transition_probability,
         selection_intensity=selection_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
 
     actual_state_distribution = np.array(
-        [states_and_counts[tuple(state.tolist())] / 100000 for state in state_space]
+        [states_and_counts[tuple(state.tolist())] / iterations for state in state_space]
     )
 
     np.testing.assert_array_almost_equal(
@@ -2818,6 +2829,8 @@ def test_simulate_markov_chain_gives_correct_numeric_results_fermi():
     initial_state = np.array([0, 1, 0])
     choice_intensity = 0.12
     number_of_strategies=2
+    seed = 1
+    iterations = 10000
     state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
 
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
@@ -2837,15 +2850,15 @@ def test_simulate_markov_chain_gives_correct_numeric_results_fermi():
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        seed=1,
-        iterations=100000,
+        seed=seed,
+        iterations=iterations,
         compute_transition_probability=ludics.main.compute_fermi_transition_probability,
         choice_intensity=choice_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
 
     actual_state_distribution = np.array(
-        [states_and_counts[tuple(state.tolist())] / 100000 for state in state_space]
+        [states_and_counts[tuple(state.tolist())] / iterations for state in state_space]
     )
 
     np.testing.assert_array_almost_equal(
@@ -2866,6 +2879,8 @@ def test_simulate_markov_chain_gives_correct_numeric_results_imispection():
     choice_intensity = 0.3
     selection_intensity = 0.8
     number_of_strategies=2
+    seed = 2
+    iterations = 100000
     state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
     
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
@@ -2886,8 +2901,8 @@ def test_simulate_markov_chain_gives_correct_numeric_results_imispection():
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        seed=1,
-        iterations=100000,
+        seed=seed,
+        iterations=iterations,
         compute_transition_probability=ludics.main.compute_imitation_introspection_transition_probability,
         choice_intensity=choice_intensity,
         selection_intensity=selection_intensity,
@@ -2895,7 +2910,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_imispection():
     )
 
     actual_state_distribution = np.array(
-        [states_and_counts[tuple(state.tolist())] / 100000 for state in state_space]
+        [states_and_counts[tuple(state.tolist())] / iterations for state in state_space]
     )
 
     np.testing.assert_array_almost_equal(
@@ -2915,6 +2930,8 @@ def test_simulate_markov_chain_gives_correct_numeric_results_aspiration():
     initial_state = np.array([0, 1, 0])
     choice_intensity = 0.12
     number_of_strategies=2
+    seed = 1
+    iterations = 10000
     state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
     aspiration_vector = np.array([2, 2, 2])
     
@@ -2937,8 +2954,8 @@ def test_simulate_markov_chain_gives_correct_numeric_results_aspiration():
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        seed=1,
-        iterations=100000,
+        seed=seed,
+        iterations=iterations,
         compute_transition_probability=ludics.main.compute_aspiration_transition_probability,
         choice_intensity=choice_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
@@ -2946,7 +2963,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_aspiration():
     )
 
     actual_state_distribution = np.array(
-        [states_and_counts[tuple(state.tolist())] / 100000 for state in state_space]
+        [states_and_counts[tuple(state.tolist())] / iterations for state in state_space]
     )
 
     np.testing.assert_array_almost_equal(
