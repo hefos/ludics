@@ -2,7 +2,7 @@
 
 ## Numeric transition matrices
 
-We use the `approximate_steady_state` function
+Use the `approximate_steady_state` function
 
 ```
 import ludics
@@ -26,16 +26,17 @@ array([0.11585355, 0.07317128, 0.16463682, 0.64633834])
 
 ## Symbolic transition matrices
 
-We use the `calculate_steady_state` function
+Use the `calculate_steady_state` function
 
 ```
 import ludics
 import sympy as sym
+import numpy as np
 
 x = sym.Symbol('x')
 y = sym.Symbol('y')
 z = sym.Symbol('z')
-transition_matrix = sym.Matrix([
+transition_matrix = np.array([
     [1-y, 0, y, 0],
     [y, 1-y, 0, 0],
     [0, 0, 1-x, x],

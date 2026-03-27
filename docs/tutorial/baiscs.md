@@ -2,28 +2,19 @@
 
 In this tutorial, you'll learn how to install `ludics`, create a state space,
 choose a fitness function and population dynamic,
-and define a simple transition matrix. For more information about modelling evolutionary
-games as Markov chains, we suggest Evolutionary dynamics, Exploring The
-Equations of Life - Martin A. Nowak and Evolutionary Games and Population
-Dynamics - Josef Hofbauer and Karl Sigmund.
+and define a simple transition matrix.
 
 ## Installing Ludics
 
-To install ludics with uv:
+To install ludics:
 
 ```
 uv add ludics
 ```
 
-or using pip:
-
-```
-python -m pip install ludics
-```
-
 ## Create a state space
 
-We first define a state space. This is the set of possible populations that our
+First define a state space. This is the set of possible populations that our
 model can take.
 
 ```
@@ -44,15 +35,10 @@ array([[0, 0],
        [1, 1]])
 ```
 
-We denote different action types by the values 0,1,2,...
-
 ## Choose a fitness function
 
-We then choose a fitness function. This shows how well a player performs in a
-given state. The ludics.fitness_functions module provides a selection of common
-fitness functions for evolutionary game theory. We see an example for the
-homogeneous public goods game. To learn more about the public goods game, see
-the previously mentioned textbook by Martin A. Nowak:
+Now choose a fitness function. The ludics.fitness_functions module provides a
+selection of common fitness functions for evolutionary game theory.
 
 ```
 import ludics.fitness_functions
@@ -72,7 +58,7 @@ array([ 1.5, -0.5])
 
 ## Choose a population dynamic
 
-We use population dynamics to calculate the probability of transitioning
+Population dynamics calculate the probability of transitioning
 between two states. There are 5 population dynamics built into ludics. We use
 them as follows:
 
@@ -87,7 +73,7 @@ ludics.compute_moran_transition_probability(
 )
 ```
 
-Then this returns:
+This returns:
 
 ```
 np.float64(0.35)
@@ -95,8 +81,7 @@ np.float64(0.35)
 
 ## Create a Transition Matrix
 
-We now have the three ingredients to create a transition matrix. We do this
-using the `generate_transition_matrix` function.
+Use the `generate_transition_matrix` function.
 
 ```
 ludics.generate_transition_matrix(
