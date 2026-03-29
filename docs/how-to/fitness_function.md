@@ -16,25 +16,21 @@ fitness of players in the state playing according to a public goods game.
 
 Use the following to calculate the fitness of each individual in the state:
 
-```
-import ludics.fitness_functions
-import numpy as np
+```py
+>>> import ludics.fitness_functions
+>>> import numpy as np
 
-state = np.array([1,0,0,1])
-r = 2
-alpha = 3
+>>> state = np.array([1,0,0,1])
+>>> r = 2
+>>> alpha = 3
 
-ludics.fitness_functions.homogeneous_pgg_fitness_function(
-    state=state,
-    alpha=alpha,
-    r=r
-)
-```
+>>> ludics.fitness_functions.homogeneous_pgg_fitness_function(
+... state=state,
+... alpha=alpha,
+... r=r
+... )
+array([0., 3., 3., 0.])
 
-which will return
-
-```
-array([0,3,3,0])
 ```
 
 ### Heterogeneous public goods game
@@ -44,25 +40,21 @@ The heterogeneous public goods game requires parameters `r` and
 according to a heterogeneous public goods game where player $i$ contributes
 `contribution_vector[i]`. It works as follows:
 
-```
-import ludics.fitness_functions
-import numpy as np
+```py
+>>> import ludics.fitness_functions
+>>> import numpy as np
 
-state = np.array([1,1,0,1])
-r = 2
-contribution_vector = np.array([1,2,3,4])
+>>> state = np.array([1,1,0,1])
+>>> r = 2
+>>> contribution_vector = np.array([1,2,3,4])
 
-ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function(
-    state=state,
-    r=r,
-    contribution_vector=contribution_vector
-)
-```
+>>> ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function(
+... state=state,
+... r=r,
+... contribution_vector=contribution_vector
+... )
+array([ 2.5,  1.5,  3.5, -0.5])
 
-which returns
-
-```
-array([1.5, 1.5, 4.5, 1.5])
 ```
 
 ## Symbolic fitness functions
@@ -81,18 +73,14 @@ np.array([
 
 It takes no additional arguments
 
-```
-import ludics.fitness_functions
-import numpy as np
+```py
+>>> import ludics.fitness_functions
+>>> import numpy as np
 
-state = np.array([0,1])
-ludics.fitness_functions.general_four_state_fitness_function(state)
-```
+>>> state = np.array([0,1])
+>>> ludics.fitness_functions.general_four_state_fitness_function(state)
+array([f_1(b), f_2(b)], dtype=object)
 
-which returns:
-
-```
-array([f_1(b), f_2(b)])
 ```
 
 ## Defining your own fitness function
@@ -102,20 +90,16 @@ of the fitness of each player.
 
 For example:
 
-```
-def sample_fitness_function(state, test_parameter, **kwargs):
-    return np.array([test_parameter * player_type for player_type in state])
+```py
+>>> def sample_fitness_function(state, test_parameter, **kwargs):
+...    return np.array([test_parameter * player_type for player_type in state])
 
-state = np.array([1,2,3])
-test_parameter = 3
+>>> state = np.array([1,2,3])
+>>> test_parameter = 3
 
-sample_fitness_function(state, test_parameter)
-```
+>>> sample_fitness_function(state, test_parameter)
+array([3, 6, 9])
 
-which will return
-
-```
-array([3,6,9])
 ```
 
 **NOTE**: A fitness function _must_ take \*\*kwargs arguments in order to be

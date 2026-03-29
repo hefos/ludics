@@ -17,22 +17,18 @@ uv add ludics
 First define a state space. This is the set of possible populations that our
 model can take.
 
-```
-import ludics
+```py
+>>> import ludics.main
 
-N = 2
-number_of_strategies = 2
+>>> N = 2
+>>> number_of_strategies = 2
 
-ludics.main.get_state_space(N=N, k=number_of_strategies)
-```
-
-This will return:
-
-```
+>>> ludics.main.get_state_space(N=N, k=number_of_strategies)
 array([[0, 0],
        [0, 1],
        [1, 0],
        [1, 1]])
+
 ```
 
 ## Choose a fitness function
@@ -40,20 +36,17 @@ array([[0, 0],
 Now choose a fitness function. The ludics.fitness_functions module provides a
 selection of common fitness functions for evolutionary game theory.
 
-```
-import ludics.fitness_functions
+```py
+>>> import ludics.fitness_functions
+>>> import numpy as np
 
-ludics.fitness_functions.homogeneous_pgg_fitness_function(
-    state=state_space[1],
-    alpha=2,
-    r=1.5
-)
-```
-
-Which will return:
-
-```
+>>> ludics.fitness_functions.homogeneous_pgg_fitness_function(
+... state=np.array([0,1]),
+... alpha=2,
+... r=1.5
+... )
 array([ 1.5, -0.5])
+
 ```
 
 ## Choose a population dynamic
@@ -62,43 +55,54 @@ Population dynamics calculate the probability of transitioning
 between two states. There are 5 population dynamics built into ludics.main. We use
 them as follows:
 
-```
-ludics.main.compute_moran_transition_probability(
-    source=state_space[1],
-    target=state_space[0],
-    selection_intensity=0.5,
-    fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
-    alpha=2,
-    r=1.5
-)
-```
+```py
+>>> import ludics.main
+>>> import ludics.fitness_functions
+>>> import numpy as np
 
-This returns:
+>>> source = np.array([0,1])
+>>> target = np.array([0,0])
+>>> r = 1.5
+>>> alpha = 2
+>>> selection_intensity = 0.5
 
-```
+>>> ludics.main.compute_moran_transition_probability(
+... source=source,
+... target=target,
+... selection_intensity=0.5,
+... fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+... alpha=2,
+... r=1.5
+... )
 np.float64(0.35)
+
 ```
 
 ## Create a Transition Matrix
 
 Use the `generate_transition_matrix` function.
 
-```
-ludics.main.generate_transition_matrix(
-    state_space=state_space,
-    compute_transition_probability=ludics.main.compute_moran_transition_probability,
-    fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
-    selection_intensity=0.5,
-    alpha=2,
-    r=1.5
-)
-```
+```py
+>>> import ludics.main
+>>> import ludics.fitness_functions
+>>> import numpy as np
 
-This returns a transition matrix:
+>>> state_space = ludics.main.get_state_space(N=2,k=2)
+>>> selection_intensity=0.5
+>>> r=1.5
+>>> alpha=2
 
-```
+>>> ludics.main.generate_transition_matrix(
+... state_space=state_space,
+... compute_transition_probability=ludics.main.compute_moran_transition_probability,
+... fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+... selection_intensity=0.5,
+... alpha=2,
+... r=1.5
+... )
 array([[1.  , 0.  , 0.  , 0.  ],
        [0.35, 0.5 , 0.  , 0.15],
        [0.35, 0.  , 0.5 , 0.15],
        [0.  , 0.  , 0.  , 1.  ]])
+
 ```

@@ -1,33 +1,28 @@
 # Generate a transition matrix
 
-Given a state space, a fitness function, and a population dynamic, our
-transition matrix is given by:
+Use the `generate_transition_matrix` function:
 
-```
-import ludics
-import ludics.fitness_functions
+```py
+>>> import ludics.main
+>>> import ludics.fitness_functions
 
-r=1.5
-alpha=5
-selection_intensity=0.2
-state_space = ludics.main.get_state_space(N=2, k=2)
-ludics.main.generate_transition_matrix(
-    state_space=state_space,
-    fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
-    compute_transition_probability=ludics.main.compute_moran_transition_probability
-    selection_intensity=selection_intensity,
-    alpha=alpha,
-    r=r
-)
-```
-
-which gives the following:
-
-```
+>>> r=1.5
+>>> alpha=5
+>>> selection_intensity=0.2
+>>> state_space = ludics.main.get_state_space(N=2, k=2)
+>>> ludics.main.generate_transition_matrix(
+... state_space=state_space,
+... fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+... compute_transition_probability=ludics.main.compute_moran_transition_probability,
+... selection_intensity=selection_intensity,
+... alpha=alpha,
+... r=r
+... )
 array([[1.  , 0.  , 0.  , 0.  ],
        [0.35, 0.5 , 0.  , 0.15],
        [0.35, 0.  , 0.5 , 0.15],
        [0.  , 0.  , 0.  , 1.  ]])
+
 ```
 
 Most fitness functions and population dynamics in `ludics` will require
@@ -37,34 +32,30 @@ Most fitness functions and population dynamics in `ludics` will require
 
 Pass the `individual_to_action_mutation_probability` argument
 
-```
-import ludics
-import ludics.fitness_functions
+```py
+>>> import ludics.main
+>>> import ludics.fitness_functions
+>>> import numpy as np
 
-r=1.5
-alpha=5
-selection_intensity=0.2
-state_space = ludics.main.get_state_space(N=3, k=2)
-individual_to_action_mutation_probability = np.array([
-    [0.1,0.2],
-    [0.2,0.15],
-    [0.15,0.1]
-])
+>>> r=1.5
+>>> alpha=5
+>>> selection_intensity=0.2
+>>> state_space = ludics.main.get_state_space(N=3, k=2)
+>>> mutation_probabilities = np.array([
+... [0.1,0.2],
+... [0.2,0.15],
+... [0.15,0.1]
+... ])
 
-ludics.main.generate_transition_matrix(
-    state_space=state_space,
-    fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
-    compute_transition_probability=ludics.main.compute_moran_transition_probability,
-    selection_intensity=selection_intensity,
-    alpha=alpha,
-    r=r,
-    individual_to_action_mutation_probability=individual_to_action_mutation_probability
-)
-```
-
-which will return:
-
-````
+>>> ludics.main.generate_transition_matrix(
+... state_space=state_space,
+... fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+... compute_transition_probability=ludics.main.compute_moran_transition_probability,
+... selection_intensity=selection_intensity,
+... alpha=alpha,
+... r=r,
+... individual_to_action_mutation_probability=mutation_probabilities
+... )
 array([[0.85      , 0.03333333, 0.05      , 0.        , 0.06666667,
         0.        , 0.        , 0.        ],
        [0.26428571, 0.5547619 , 0.        , 0.08095238, 0.        ,
@@ -81,5 +72,5 @@ array([[0.85      , 0.03333333, 0.05      , 0.        , 0.06666667,
         0.        , 0.51666667, 0.15833333],
        [0.        , 0.        , 0.        , 0.03333333, 0.        ,
         0.06666667, 0.05      , 0.85      ]])
-        ```
-````
+
+```
