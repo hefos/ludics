@@ -23,7 +23,7 @@ import ludics
 N = 2
 number_of_strategies = 2
 
-ludics.get_state_space(N=N, k=number_of_strategies)
+ludics.main.get_state_space(N=N, k=number_of_strategies)
 ```
 
 This will return:
@@ -59,11 +59,11 @@ array([ 1.5, -0.5])
 ## Choose a population dynamic
 
 Population dynamics calculate the probability of transitioning
-between two states. There are 5 population dynamics built into ludics. We use
+between two states. There are 5 population dynamics built into ludics.main. We use
 them as follows:
 
 ```
-ludics.compute_moran_transition_probability(
+ludics.main.compute_moran_transition_probability(
     source=state_space[1],
     target=state_space[0],
     selection_intensity=0.5,
@@ -84,9 +84,9 @@ np.float64(0.35)
 Use the `generate_transition_matrix` function.
 
 ```
-ludics.generate_transition_matrix(
+ludics.main.generate_transition_matrix(
     state_space=state_space,
-    compute_transition_probability=ludics.compute_moran_transition_probability,
+    compute_transition_probability=ludics.main.compute_moran_transition_probability,
     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
     selection_intensity=0.5,
     alpha=2,

@@ -15,7 +15,7 @@ transition_matrix = np.array([
     [0.1,0,0,0.9]
 ])
 
-ludics.approximate_steady_state(transition_matrix)
+ludics.main.approximate_steady_state(transition_matrix)
 ```
 
 which will return:
@@ -43,7 +43,7 @@ transition_matrix = np.array([
     [0, x, 0, 1-x]
 ])
 
-ludics.calculate_steady_state(transition_matrix)
+ludics.main.calculate_steady_state(transition_matrix)
 ```
 
 which will give:

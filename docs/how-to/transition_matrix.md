@@ -10,11 +10,11 @@ import ludics.fitness_functions
 r=1.5
 alpha=5
 selection_intensity=0.2
-state_space = ludics.get_state_space(N=2, k=2)
-ludics.generate_transition_matrix(
+state_space = ludics.main.get_state_space(N=2, k=2)
+ludics.main.generate_transition_matrix(
     state_space=state_space,
     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
-    compute_transition_probability=ludics.compute_moran_transition_probability
+    compute_transition_probability=ludics.main.compute_moran_transition_probability
     selection_intensity=selection_intensity,
     alpha=alpha,
     r=r
@@ -44,17 +44,17 @@ import ludics.fitness_functions
 r=1.5
 alpha=5
 selection_intensity=0.2
-state_space = ludics.get_state_space(N=3, k=2)
+state_space = ludics.main.get_state_space(N=3, k=2)
 individual_to_action_mutation_probability = np.array([
     [0.1,0.2],
     [0.2,0.15],
     [0.15,0.1]
 ])
 
-ludics.generate_transition_matrix(
+ludics.main.generate_transition_matrix(
     state_space=state_space,
     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
-    compute_transition_probability=ludics.compute_moran_transition_probability,
+    compute_transition_probability=ludics.main.compute_moran_transition_probability,
     selection_intensity=selection_intensity,
     alpha=alpha,
     r=r,

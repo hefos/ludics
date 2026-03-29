@@ -19,7 +19,7 @@ source = np.array([0,1,2])
 target = np.array([1,1,2])
 selection_intensity = 0.5
 
-ludics.compute_moran_transition_probability(
+ludics.main.compute_moran_transition_probability(
     source=source,
     target=target,
     selection_intensity=selection_intensity,
@@ -53,7 +53,7 @@ source = np.array([0,1,2])
 target = np.array([1,1,2])
 choice_intensity = 0.5
 
-ludics.compute_fermi_transition_probability(
+ludics.main.compute_fermi_transition_probability(
     source=source,
     target=target,
     choice_intensity=choice_intensity,
@@ -82,7 +82,7 @@ source = np.array([0,1,2])
 target = np.array([1,1,2])
 choice_intensity = 0.5
 
-ludics.compute_introspection_transition_probability(
+ludics.main.compute_introspection_transition_probability(
     source=source,
     target=target,
     choice_intensity=choice_intensity,
@@ -114,7 +114,7 @@ target = np.array([1,1,1])
 choice_intensity = 0.5
 aspiration_vector = np.array([3,2,1])
 
-ludics.compute_aspiration_transition_probability(
+ludics.main.compute_aspiration_transition_probability(
     source=source,
     target=target,
     choice_intensity=choice_intensity,
@@ -146,7 +146,7 @@ target = np.array([1,1,1])
 choice_intensity = 0.5
 selection_intensity = 0.5
 
-ludics.compute_imitation_introspection_transition_probability(
+ludics.main.compute_imitation_introspection_transition_probability(
     source=source,
     target=target,
     choice_intensity=choice_intensity,

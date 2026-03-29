@@ -19,23 +19,23 @@ $ python -m pip install ludics
 To install the latest version directly from github:
 
 ```
-uv add git+https://github.com/HarryFosterCU/ludics.git
+uv add git+https://github.com/HarryFosterCU/ludics.main.git
 ```
 
 or with pip
 
 ```
-$ python -m pip install git+https://github.com/HarryFosterCU/ludics.git
+$ python -m pip install git+https://github.com/HarryFosterCU/ludics.main.git
 ```
 
 To install a specifc branch or tag
 
 ```
-uv add git+https://github.com/HarryFosterCU/ludics.git@main
+uv add git+https://github.com/HarryFosterCU/ludics.main.git@main
 ```
 
 or with pip
 
 ```
-$ python -m pip install git+https://github.com/HarryFosterCU/ludics.git@main
+$ python -m pip install git+https://github.com/HarryFosterCU/ludics.main.git@main
 ```

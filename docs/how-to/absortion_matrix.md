@@ -15,7 +15,7 @@ transition_matrix = np.array([
     [0,0,0,1]
 ])
 
-ludics.approximate_absorption_matrix(transition_matrix)
+ludics.main.approximate_absorption_matrix(transition_matrix)
 ```
 
 which will return:

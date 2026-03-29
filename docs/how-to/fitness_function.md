@@ -52,10 +52,10 @@ state = np.array([1,1,0,1])
 r = 2
 contribution_vector = np.array([1,2,3,4])
 
-ludics.fitness_functions.homogeneous_pgg_fitness_function(
+ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function(
     state=state,
-    alpha=alpha,
-    r=r
+    r=r,
+    contribution_vector=contribution_vector
 )
 ```
 

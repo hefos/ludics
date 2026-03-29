@@ -16,11 +16,11 @@ warmup = 2
 iterations = 8
 choice_intensity = 2
 
-ludics.simulate_markov_chain(
+ludics.main.simulate_markov_chain(
     initial_state=initial_state,
     number_of_strategies=number_of_strategies,
     fitness_function=example_fitness_function,
-    compute_transition_probability=ludics.
+    compute_transition_probability=ludics.main.
     compute_introspection_transition_probability,
     iterations=iterations,
     warmup=warmup,
