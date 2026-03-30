@@ -22,7 +22,7 @@ Below is a list of functionality included in `ludics`
 - [compute_moran_transition_probability](compute_moran.md)
 - [compute_fermi_transition_probability](compute_fermi.md)
 - [compute_imitation_introspection_transition_probability](compute_imispection.md)
-- [compute_introspection_transition_probability](compute_intrspection.md)
+- [compute_introspection_transition_probability](compute_introspection.md)
 - [compute_aspiration_transition_probability](compute_aspiration.md)
 
 ### Additional Functionality
