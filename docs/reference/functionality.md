@@ -2,14 +2,18 @@
 
 Below is a list of functionality included in `ludics`
 
-## ludics.main
+---
 
-### Build Markov chain
+## `ludics.main`
+
+---
+
+### Build a Markov chain
 
 - [get_state_space](get_state_space.md)
 - [generate_transition_matrix](generate_transition_matrix.md)
 
-### Analyse Markov chain
+### Analyse a Markov chain
 
 - [approximate_absorption_matrix](approximate_absorption_matrix.md)
 - [calculate_absorption_matrix](calculate_absorption_matrix.md)
@@ -36,7 +40,11 @@ Below is a list of functionality included in `ludics`
 - [extract_R_symbolic](extract_R_symbolic.md)
 - [get_neighbourhood_states](get_neighbourhood_states.md)
 
-## ludics.fitness_functions
+---
+
+## `ludics.fitness_functions`
+
+---
 
 ### Public goods games
 
