@@ -40,8 +40,8 @@ The transition matrix for a Moran process is defined as follows:
 $$
         T_\textbf{ab} =
         \begin{cases}
-            \frac{1}{N} \cdot\frac{\sum_{a_i = b_{I(\textbf{a,b})}}{f_i(a)}}{\sum_{a_j}f_j(a)} & \text{if }\textbf{b} \in \text{Neb(\textbf{a})}\text{, differing at position }I(\textbf{a,b})\\
-            0 & \text{if }\textbf{b} \notin \text{Neb(\textbf{a}) and \textbf{a}}\neq \textbf{b}\\
+            \frac{1}{N} \cdot\frac{\sum_{a_i = b_{I(\textbf{a,b})}}{f_i(a)}}{\sum_{a_j}f_j(a)} & \text{if }\textbf{b} \in \text{Neb($\textbf{a}$)}\text{, differing at position }I(\textbf{a,b})\\
+            0 & \text{if }\textbf{b} \notin \text{Neb($\textbf{a}$) and $\textbf{a}$}\neq \textbf{b}\\
             1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ac} & \text{if }\textbf{a}=\textbf{b}
         \end{cases}
 $$
@@ -73,8 +73,10 @@ follows:
 $$
 T_\textbf{ab}  =
         \begin{cases}
-            \frac{1}{N(N-1)}\sum_{a_j=b_{I(\textbf{a,b})}}\phi(f_{\text{I(\textbf{a,b})}}(a) - f_{j}(\textbf{a})))& \text{if }\textbf{b} \in \text{Neb(\textbf{a})}\\
-            0 & \text{if }\textbf{b} \notin \text{Neb(\textbf{a}) and \textbf{a}}\neq \textbf{b}\\
+            \frac{1}{N(N-1)}\sum_{a_j=b_{I(\textbf{a,b})}}\phi(f_{\text{I(\textbf{a,b})}}(a)
+            - f_{j}(\textbf{a})) & \text{if }\textbf{b} \in
+            \text{Neb($\textbf{a}$)}\\
+            0 & \text{if }\textbf{b} \notin \text{Neb($\textbf{a}$) and $\textbf{a}$}\neq \textbf{b}\\
             1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ab} & \text{if }\textbf{a}=\textbf{b}
         \end{cases}
 $$
@@ -91,9 +93,9 @@ The transition matrix of a process operating under aspiration dynamics is define
 
 $$
 T_{ab} = \begin{cases}
-\frac{1}{N} \cdot \phi(f_{I(a,b)}(a) - A_{I(a,b)}) & \text{if \textbf{b}} \in
+\frac{1}{N} \cdot \phi(f_{I(a,b)}(a) - A_{I(a,b)}) & \text{if $\textbf{b}$} \in
 \text{Neb}(\textbf{a})\\
-0 & \text{if }\textbf{b} \notin \text{Neb(\textbf{a}) and \textbf{a}}\neq \textbf{b}\\
+0 & \text{if }\textbf{b} \notin \text{Neb($\textbf{a}$) and $\textbf{a}$}\neq \textbf{b}\\
             1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ab} & \text{if }\textbf{a}=\textbf{b}
 \end{cases}
 $$
@@ -117,7 +119,7 @@ T_{\textbf{ab}} =
 \dfrac{1}{N(m_j - 1)} \, \phi (f_i(a) - f_i(b))
     & \text{if } \textbf{b} \in \mathrm{Neb}(\textbf{a}) \text{ and } j = I(\textbf{a,b}),\\[1.2em]
 0
-    & \text{if } \textbf{b} \notin \mathrm{Neb}(\textbf{a}) \text{and \textbf{a}} \neq \textbf{b},\\[0.8em]
+    & \text{if } \textbf{b} \notin \mathrm{Neb}(\textbf{a}) \text{and $\textbf{a}$} \neq \textbf{b},\\[0.8em]
 1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ab} & \text{if }\textbf{a}=\textbf{b}
 \end{cases}
 $$
@@ -138,8 +140,8 @@ dynamics is defined as follows:
 
 $$
 T_{\textbf{ab}} =  \begin{cases}
-    \frac{1}{N}\frac{\sum_{a_{j} = b_{I(\textbf{a}, \textbf{b})}}f_j(\textbf{a})}{\sum_{k}f_k(\textbf{a})}\phi(f_i(a) - f_i(b)) & \text{if \textbf{b}}\in \text{Neb(\textbf{a})}\\
-    0 & \text{if \textbf{b}}\notin \text{Neb(\textbf{a}) and \textbf{a}} \neq \textbf{b}\\
+    \frac{1}{N}\frac{\sum_{a_{j} = b_{I(\textbf{a}, \textbf{b})}}f_j(\textbf{a})}{\sum_{k}f_k(\textbf{a})}\phi(f_i(a) - f_i(b)) & \text{if $\textbf{b}$}\in \text{Neb($\textbf{a}$)}\\
+    0 & \text{if $\textbf{b}$}\notin \text{Neb($\textbf{a}$) and $\textbf{a}$} \neq \textbf{b}\\
     1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ab} & \text{if }\textbf{a}=\textbf{b}
     \end{cases}
 $$
