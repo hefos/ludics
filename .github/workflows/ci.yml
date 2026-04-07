@@ -18,6 +18,7 @@ jobs:
       - name: Run tests
         run: |
           uv run pytest tests
+          uv run pytest --doctest-glob="*.md" docs
       - name: Run ruff
         run: |
           uv run ruff check

@@ -1,0 +1,30 @@
+site_name: ludics
+
+theme:
+  name: readthedocs
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Tutorials:
+      - Getting Started: tutorial/basics.md
+  - How-To Guides:
+      - Install: how-to/install.md
+      - Choose a fitness function: how-to/fitness_function.md
+      - Choose a population dynamic: how-to/population_dynamic.md
+      - Create a transition matrix: how-to/transition_matrix.md
+      - Find an absorption matrix: how-to/absorption_matrix.md
+      - Find a steady state: how-to/steady_state.md
+      - Simulate a Markov Chain: how-to/simulate_markov_chain.md
+  - Reference:
+      - List of functionality: reference/functionality.md
+  - Explanation:
+      - Evolutionary games and Markov chains: explanation/markov_chain.md
+      - Population dynamics: explanation/population_dynamics.md
+      - Public Goods Games: explanation/public_goods_game.md
