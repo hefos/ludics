@@ -20,6 +20,7 @@ states: all-defect $[0,0,0]$ and all-contribute $[1,1,1]$.
 >>> import ludics.fitness_functions
 >>> import numpy as np
 
+>>> N = 3
 >>> state_space = ludics.get_state_space(N=N, k=2)
 >>> state_space
 array([[0, 0, 0],
@@ -36,7 +37,6 @@ array([[0, 0, 0],
 ## Build the transition matrix
 
 ```py
->>> N = 3
 >>> r = 1.5
 >>> alpha = 1.0
 >>> choice_intensity = 1.0
