@@ -8,3 +8,4 @@ chains. Get started below.
 - Learn how to use `ludics` with our [how-to guides](how-to/how-to.md)
 - Explore the functionality with our API [reference](reference/functionality.md) section
 - Dive deeper into evolutionary games with our [explanation](explanation/explanation_reference.md) section
+- View the source code on [github](https://github.com/hefos/ludics)
