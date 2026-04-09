@@ -16,15 +16,22 @@ nav:
       - Getting Started: tutorial/basics.md
   - How-To Guides:
       - Install: how-to/install.md
-      - Choose a fitness function: how-to/fitness_function.md
-      - Choose a population dynamic: how-to/population_dynamic.md
-      - Create a transition matrix: how-to/transition_matrix.md
-      - Find an absorption matrix: how-to/absorption_matrix.md
-      - Find a steady state: how-to/steady_state.md
-      - Simulate a Markov Chain: how-to/simulate_markov_chain.md
+      - Choose a fitness function: how-to/choose_fitness_function.md
+      - Define a fitness function: how-to/define_fitness_function.md
+      - Choose an evolutionary dynamic: how-to/population_dynamic.md
+      - Assemble the underlying Markov chain: how-to/transition_matrix.md
+      - Compute absorption probabilities for absorbing processes: how-to/absorption_matrix.md
+      - Compute the stationary distribution of ergodic processes: how-to/steady_state.md
+      - Simulate dynamics for large populations: how-to/simulate_markov_chain.md
+      - Analyse a Public Goods Game: how-to/pgg_analysis.md
+      - Compare evolutionary dynamics on a Public Goods Game: how-to/compare_dynamics.md
+      - Model heterogeneous contributions: how-to/heterogeneous_pgg.md
+      - Use symbolic payoffs for a 2-player game: how-to/symbolic_fitness.md
   - Reference:
       - List of functionality: reference/functionality.md
+      - Bibliography: reference/bibliography.md
   - Explanation:
+      - How states are represented: explanation/state_representation.md
       - Evolutionary games and Markov chains: explanation/markov_chain.md
       - Population dynamics: explanation/population_dynamics.md
       - Public Goods Games: explanation/public_goods_game.md

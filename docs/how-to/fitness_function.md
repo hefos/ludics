@@ -20,14 +20,14 @@ Use the following to calculate the fitness of each individual in the state:
 >>> import ludics.fitness_functions
 >>> import numpy as np
 
->>> state = np.array([1,0,0,1])
+>>> state = np.array([1, 0, 0, 1])
 >>> r = 2
 >>> alpha = 3
 
 >>> ludics.fitness_functions.homogeneous_pgg_fitness_function(
-... state=state,
-... alpha=alpha,
-... r=r
+...     state=state,
+...     alpha=alpha,
+...     r=r,
 ... )
 array([0., 3., 3., 0.])
 
@@ -44,14 +44,14 @@ according to a heterogeneous public goods game where player $i$ contributes
 >>> import ludics.fitness_functions
 >>> import numpy as np
 
->>> state = np.array([1,1,0,1])
+>>> state = np.array([1, 1, 0, 1])
 >>> r = 2
->>> contribution_vector = np.array([1,2,3,4])
+>>> contribution_vector = np.array([1, 2, 3, 4])
 
 >>> ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function(
-... state=state,
-... r=r,
-... contribution_vector=contribution_vector
+...     state=state,
+...     r=r,
+...     contribution_vector=contribution_vector,
 ... )
 array([ 2.5,  1.5,  3.5, -0.5])
 
@@ -77,7 +77,7 @@ It takes no additional arguments
 >>> import ludics.fitness_functions
 >>> import numpy as np
 
->>> state = np.array([0,1])
+>>> state = np.array([0, 1])
 >>> ludics.fitness_functions.general_four_state_fitness_function(state)
 array([f_1(b), f_2(b)], dtype=object)
 
@@ -92,9 +92,9 @@ For example:
 
 ```py
 >>> def sample_fitness_function(state, test_parameter, **kwargs):
-...    return np.array([test_parameter * player_type for player_type in state])
+...     return np.array([test_parameter * player_type for player_type in state])
 
->>> state = np.array([1,2,3])
+>>> state = np.array([1, 2, 3])
 >>> test_parameter = 3
 
 >>> sample_fitness_function(state, test_parameter)

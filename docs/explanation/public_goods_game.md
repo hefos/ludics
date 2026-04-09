@@ -21,3 +21,5 @@ Where $\alpha_i$ is the amount contributed by player $i$. It takes the value 0
 if player $i$ defects, and the value of their contribution if they cooperate.
 The contribution of different players may be a heterogeneous attribute of the
 population.
+
+See Hauert et al. (2002) in the [bibliography](../reference/bibliography.md).

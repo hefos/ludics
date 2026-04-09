@@ -14,26 +14,29 @@ birth-death processes. They fall into two catagories:
 
    These are dynamics in which players decide on new strategies by copying
    other players who perform well in a given population. The purely extrinsic
-   dynamics included in `ludics` are the [Moran process](https://www.cambridge.org/core/journals/mathematical-proceedings-of-the-cambridge-philosophical-society/article/random-processes-in-genetics/9EEED52D6AE22A026036F32D9B1CA07C) and [Fermi imitation
-   dynamics](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.58.69).
+   dynamics included in `ludics` are the Moran process (Moran, 1958) and Fermi
+   imitation dynamics (Szabó and Tőke, 1998).
 
 2. Intrinsic Dynamics
 
    These are dynamics in which players decide on new strategies entirely based
    on their own fitness. The purely intrinsic dynamics included in `ludics`
-   are [introspection dynamics](https://iopscience.iop.org/article/10.1088/1367-2630/ac6f76) and [aspiration dynamics](https://royalsocietypublishing.org/rsif/article/11/94/20140077/64468/Aspiration-dynamics-of-multi-player-games-in).
+   are introspection dynamics (Couto, Giaimo and Hilbe, 2022) and aspiration
+   dynamics (Du et al., 2014).
 
-Introspective imitation dynamics is also included in `ludics`, which has both
-intrinsic and extrinsic steps.
+Introspective imitation dynamics (Foster, Knight and Krapohl, in preparation)
+is also included in `ludics`, which has both intrinsic and extrinsic steps.
+
+Full citations are in the [bibliography](../reference/bibliography.md).
 
 ## The Moran Process
 
 This follows the algorithm:
 
-1. A player $i$ is picked to have their action type copied with a probability
-   proportion to their fitness in relation to the population
-2. A player $j$ is picked at random to change their action type.
-3. Player $i$ changes their action type to that of player $j$.
+1. A player $i$ is selected to reproduce with probability proportional to their
+   fitness in the population.
+2. A player $j$ is selected uniformly at random to be replaced.
+3. Player $j$ adopts the strategy of player $i$.
 
 The transition matrix for a Moran process is defined as follows:
 
