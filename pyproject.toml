@@ -3,6 +3,7 @@ name = "ludics"
 version = "0.1.0"
 description = "A python library for the study of heterogenous population dynamics"
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.13"
 dependencies = [
     "black>=25.9.0",
