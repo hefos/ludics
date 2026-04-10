@@ -22,6 +22,7 @@ nav:
       - Assemble the underlying Markov chain: how-to/transition_matrix.md
       - Compute absorption probabilities for absorbing processes: how-to/absorption_matrix.md
       - Compute the stationary distribution of ergodic processes: how-to/steady_state.md
+      - Increase the precision of the approximate stationary distribution: how-to/steady_state_precision.md
       - Simulate dynamics for large populations: how-to/simulate_markov_chain.md
       - Analyse a Public Goods Game: how-to/pgg_analysis.md
       - Compare evolutionary dynamics on a Public Goods Game: how-to/compare_dynamics.md
