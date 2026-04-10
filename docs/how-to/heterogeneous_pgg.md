@@ -1,4 +1,4 @@
-# Model heterogeneous contributions
+# Model heterogeneous contributions for the Public Goods Game
 
 Players often differ in how much they can contribute to a public good.
 `heterogeneous_contribution_pgg_fitness_function` models a PGG where each
@@ -42,28 +42,3 @@ array([[0.99330284, 0.00669716],
 High contributors bear a greater individual cost relative to their share of
 the pool (since $r < N$). States where the high contributor is the lone
 contributor fix on defection with the highest probability (~99%).
-
-Compare this to the homogeneous case with `alpha=2` (the mean contribution):
-
-```py
->>> tm_hom = ludics.generate_transition_matrix(
-...     state_space=state_space,
-...     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
-...     compute_transition_probability=ludics.compute_fermi_transition_probability,
-...     choice_intensity=choice_intensity,
-...     r=r,
-...     alpha=2.0,
-... )
->>> ludics.approximate_absorption_matrix(tm_hom)
-array([[0.98412376, 0.01587624],
-       [0.98412376, 0.01587624],
-       [0.86681333, 0.13318667],
-       [0.98412376, 0.01587624],
-       [0.86681333, 0.13318667],
-       [0.86681333, 0.13318667]])
-
-```
-
-Heterogeneity breaks the symmetry between transient states: states that
-previously had identical fixation probabilities now diverge depending on which
-players are contributing.

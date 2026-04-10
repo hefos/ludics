@@ -1,4 +1,4 @@
-# The Basics
+# Analyse a Public Goods Game
 
 In this tutorial you will build a complete evolutionary game theory analysis
 using `ludics`: from defining a population, through constructing the Markov
