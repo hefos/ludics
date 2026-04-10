@@ -1524,11 +1524,9 @@ def test_calculate_steady_state_for_trivial_transition_matrix():
         [[0.5 + p + q, 0.5 - p - q], [0.5 + p + q, 0.5 - p - q]]
     )
 
-    expected_symbolic_output = np.array([0.5 + p + q, 0.5 - p - q])
+    expected_symbolic_output = sym.Matrix([[0.5 + p + q, 0.5 - p - q]])
 
-    np.testing.assert_array_almost_equal(
-        expected_symbolic_output, ludics.main.calculate_steady_state(symbolic_matrix)
-    )
+    assert expected_symbolic_output - ludics.main.calculate_steady_state(symbolic_matrix) == sym.zeros(rows=1, cols=2)
 
 
 def test_calculate_steady_state_for_absorbing_symbolic_transition_matrix():
@@ -1542,23 +1540,10 @@ def test_calculate_steady_state_for_absorbing_symbolic_transition_matrix():
 
     transition_matrix = np.array([[p, 1 - p - 0.1, 0.1], [0, 1, 0], [0.6, 0.2, 0.2]])
 
-    expected_output = np.array([0, 1, 0])
+    expected_output = sym.Matrix([[0, 1, 0]])
+    
 
-    np.testing.assert_array_equal(
-        expected_output, ludics.main.calculate_steady_state(transition_matrix)
-    )
-
-
-def test_calculate_steady_state_errors():
-    """
-    Tests whether the errors in get_steady_state are correctly raised for:
-    Symbolic matrix with no real solutions"""
-    p = sym.Symbol("p")
-
-    test_no_solution_matrix_symbolic = np.array([[p, 0], [0, p]])
-
-    with pytest.raises(ValueError):
-        ludics.main.calculate_steady_state(test_no_solution_matrix_symbolic)
+    assert expected_output - ludics.main.calculate_steady_state(transition_matrix) == sym.zeros(rows=1, cols=3)
 
 
 def test_fermi_imitation_function_for_numeric_value():

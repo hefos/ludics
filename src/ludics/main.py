@@ -702,19 +702,17 @@ def calculate_steady_state(transition_matrix):
 
     Returns
     ----------
-    numpy.array - steady state of transition_matrix. For the symbolic case,
+    sym.Matrix - steady state of transition_matrix. For the symbolic case,
     this will always be simplified.
     """
     transition_matrix = sym.Matrix(transition_matrix)
-
-    nullspace = (transition_matrix.T - sym.eye(transition_matrix.rows)).nullspace()
-
-    try:
-        one_eigenvector = nullspace[0]
-    except Exception:
-        raise ValueError("No eigenvector found")
-
-    return np.array(sym.simplify(one_eigenvector / sum(one_eigenvector)).T)[0]
+    n, _ = transition_matrix.shape
+    M_dash = transition_matrix.T - sym.eye(n)
+    M_dash[-1,:] = sym.ones(rows=1, cols=n)
+    b = sym.zeros(rows=n, cols=1)
+    b[-1] = 1
+    pi = M_dash.inv() @ b
+    return pi.T
 
 
 def get_neighbourhood_states(state, number_of_strategies):
