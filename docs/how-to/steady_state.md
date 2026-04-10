@@ -43,8 +43,7 @@ Use `calculate_steady_state` when entries contain symbolic parameters:
 ... ])
 
 >>> ludics.calculate_steady_state(transition_matrix)
-array([x/(2*(x + y)), x/(2*(x + y)), y/(2*(x + y)), y/(2*(x + y))],
-      dtype=object)
+Matrix([[x/(2*x + 2*y), x/(2*x + 2*y), y/(2*x + 2*y), y/(2*x + 2*y)]])
 
 ```
 
