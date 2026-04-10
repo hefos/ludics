@@ -6,8 +6,16 @@ A library for the study of heterogeneous population dynamics.
 
 To run tests:
 
+For source code:
+
 ```
 $ uv run pytest tests
+```
+
+For docs:
+
+```
+$ uv run pytest --doctest-glob="*.md" docs
 ```
 
 To run benchmarks:

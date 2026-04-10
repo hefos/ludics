@@ -15,9 +15,9 @@ Below is a list of functionality included in `ludics`
 
 ### Analyse a Markov chain
 
-- [approximate_absorption_matrix](approximate_absorption_matrix.md)
+- [compute_absorption_matrix](compute_absorption_matrix.md)
 - [calculate_absorption_matrix](calculate_absorption_matrix.md)
-- [approximate_steady_state](approximate_steady_state.md)
+- [compute_steady_state](compute_steady_state.md)
 - [calculate_steady_state](calculate_steady_state.md)
 - [simulate_markov_chain](simulate_markov_chain.md)
 
@@ -25,7 +25,6 @@ Below is a list of functionality included in `ludics`
 
 - [compute_moran_transition_probability](compute_moran.md)
 - [compute_fermi_transition_probability](compute_fermi.md)
-- [compute_imitation_introspection_transition_probability](compute_imispection.md)
 - [compute_introspection_transition_probability](compute_introspection.md)
 - [compute_aspiration_transition_probability](compute_aspiration.md)
 

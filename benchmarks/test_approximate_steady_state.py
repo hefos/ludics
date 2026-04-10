@@ -54,12 +54,12 @@ def test_generate_full_uniform_matrix():
 
 
 @pytest.mark.parametrize("n", range(2, n_range, step_size_n))
-def test_approximate_steady_state_for_deterministic_cycle_matrix(n, benchmark):
-    """Benchmarks approximate_steady_state for the deterministic cycle
+def test_compute_steady_state_for_deterministic_cycle_matrix(n, benchmark):
+    """Benchmarks compute_steady_state for the deterministic cycle
     matrix"""
 
     transition_matrix = generate_stochastic_2_valency_cycle_matrix(n, 0)
-    benchmark(main.approximate_steady_state, transition_matrix)
+    benchmark(main.compute_steady_state, transition_matrix)
 
 
 @pytest.mark.parametrize(
@@ -70,26 +70,26 @@ def test_approximate_steady_state_for_deterministic_cycle_matrix(n, benchmark):
         for p in [1 / (i) for i in range(1, prob_range + 1, step_size_prob)]
     ],
 )
-def test_approximate_steady_state_for_stochastic_2_valency_cycle_matrix(
+def test_compute_steady_state_for_stochastic_2_valency_cycle_matrix(
     n, prob_prior, benchmark
 ):
-    """Benchmarks approximate_steady_state for the stochastic 2-valency cycle
+    """Benchmarks compute_steady_state for the stochastic 2-valency cycle
     matrix"""
 
     transition_matrix = generate_stochastic_2_valency_cycle_matrix(n, prob_prior)
-    benchmark(main.approximate_steady_state, transition_matrix)
+    benchmark(main.compute_steady_state, transition_matrix)
 
 
 @pytest.mark.parametrize("n", range(2, n_range, step_size_n))
-def test_approximate_steady_state_for_full_uniform_matrix(n, benchmark):
-    """Benchmarks approximate_steady_state for the full uniform
+def test_compute_steady_state_for_full_uniform_matrix(n, benchmark):
+    """Benchmarks compute_steady_state for the full uniform
     matrix"""
 
     transition_matrix = generate_full_uniform_matrix(n)
-    benchmark(main.approximate_steady_state, transition_matrix)
+    benchmark(main.compute_steady_state, transition_matrix)
 
 
-def test_approximate_steady_state_for_specific_four_by_four(benchmark):
+def test_compute_steady_state_for_specific_four_by_four(benchmark):
     """A benchmark with a specific 4 by 4 matrix"""
 
     transition_matrix = np.array(
@@ -101,4 +101,4 @@ def test_approximate_steady_state_for_specific_four_by_four(benchmark):
         ]
     )
 
-    benchmark(main.approximate_steady_state, transition_matrix)
+    benchmark(main.compute_steady_state, transition_matrix)
