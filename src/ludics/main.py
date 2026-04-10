@@ -594,7 +594,7 @@ def extract_R_symbolic(transition_matrix):
     return R
 
 
-def approximate_absorption_matrix(transition_matrix):
+def compute_absorption_matrix(transition_matrix):
     """
     Given a transition matrix, NOT allowing for symbolic values,
 
@@ -661,7 +661,7 @@ def calculate_absorption_matrix(transition_matrix):
 
     return sym.Matrix(B)
 
-def approximate_steady_state(transition_matrix, tolerance=10**-6, initial_dist=None):
+def compute_steady_state(transition_matrix, tolerance=10**-6, initial_dist=None):
     """
     Returns the steady state vector of a given transition matrix that is
     entirely numeric.

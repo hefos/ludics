@@ -1289,9 +1289,9 @@ def test_extract_R_symbolic_for_purely_symbolic_transition_matrix():
     )
 
 
-def test_approximate_absorption_matrix_for_numeric_transition_matrix():
+def test_compute_absorption_matrix_for_numeric_transition_matrix():
     """
-    Tests the approximate_absorption_matrix function for an entirely
+    Tests the compute_absorption_matrix function for an entirely
 
     numeric transition matrix"""
 
@@ -1308,7 +1308,7 @@ def test_approximate_absorption_matrix_for_numeric_transition_matrix():
 
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
-        ludics.main.approximate_absorption_matrix(transition_matrix=transition_matrix),
+        ludics.main.compute_absorption_matrix(transition_matrix=transition_matrix),
     )
 
 
@@ -1339,9 +1339,9 @@ def test_calculate_absorption_matrix_for_symbolic_transition_matrix():
     )
 
 
-def test_approximate_absorption_matrix_for_standard_transition_matrix():
+def test_compute_absorption_matrix_for_standard_transition_matrix():
     """
-    Tests the approximate_absorption_matrix function for an entirely
+    Tests the compute_absorption_matrix function for an entirely
 
     numeric transition matrix"""
 
@@ -1358,7 +1358,7 @@ def test_approximate_absorption_matrix_for_standard_transition_matrix():
 
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
-        ludics.main.approximate_absorption_matrix(transition_matrix=transition_matrix),
+        ludics.main.compute_absorption_matrix(transition_matrix=transition_matrix),
     )
 
 
@@ -1480,9 +1480,9 @@ def test_calculate_absorption_matrix_for_5_by_5_symbolic_transition_matrix():
         expected_absorption_matrix - obtained_absorption_matrix, zero_matrix
     )
 
-def test_approximate_steady_state_for_trivial_transition_matrix():
+def test_compute_steady_state_for_trivial_transition_matrix():
     """
-    Tests approximate_steady_state for a trivial transition matrix
+    Tests compute_steady_state for a trivial transition matrix
     """
 
     numeric_matrix = np.array([[0.4, 0.6], [0.4, 0.6]])
@@ -1490,13 +1490,13 @@ def test_approximate_steady_state_for_trivial_transition_matrix():
     expected_numeric_output = np.array([0.4, 0.6])
 
     np.testing.assert_allclose(
-        expected_numeric_output, ludics.main.approximate_steady_state(numeric_matrix)
+        expected_numeric_output, ludics.main.compute_steady_state(numeric_matrix)
     )
 
 
-def test_approximate_steady_state_for_absorbing_transition_matrix():
+def test_compute_steady_state_for_absorbing_transition_matrix():
     """
-    Tests approximate_steady_state for an absorbing transition matrix
+    Tests compute_steady_state for an absorbing transition matrix
     """
 
     numeric_matrix = np.array(
@@ -1507,7 +1507,7 @@ def test_approximate_steady_state_for_absorbing_transition_matrix():
 
     np.testing.assert_allclose(
         expected_numeric_output,
-        ludics.main.approximate_steady_state(numeric_matrix),
+        ludics.main.compute_steady_state(numeric_matrix),
         rtol=1**-5,
     )
 
@@ -1985,8 +1985,8 @@ def test_compute_introspection_transition_probability_for_infeasible_states_and_
     _ = trivial_fitness_function(source1)  # prevents unused function warning
 
 
-def test_approximate_steady_state_for_different_initial_dist():
-    """tests that the approximate_steady_state function correctly
+def test_compute_steady_state_for_different_initial_dist():
+    """tests that the compute_steady_state function correctly
     approximates a system's steady state for a different initial distribution"""
 
     initial_dist_1 = np.array([1, 0, 0, 0])
@@ -2000,14 +2000,14 @@ def test_approximate_steady_state_for_different_initial_dist():
     steady_state_2 = np.array([0, 0, 0, 1])
 
     np.testing.assert_array_equal(
-        ludics.main.approximate_steady_state(
+        ludics.main.compute_steady_state(
             transition_matrix=transition_matrix, initial_dist=initial_dist_1
         ),
         steady_state_1,
     )
 
     np.testing.assert_array_equal(
-        ludics.main.approximate_steady_state(
+        ludics.main.compute_steady_state(
             transition_matrix=transition_matrix, initial_dist=initial_dist_2
         ),
         steady_state_2,
@@ -2449,7 +2449,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_introspection():
     """
     Tests that the results we see from simulate_markov_chain give us the
     correct approximate values that we see from our numeric function
-    approximate_steady_state when using introspection dynamics"""
+    compute_steady_state when using introspection dynamics"""
 
     def fitness_function(state, **kwargs):
         return np.array([i + j for i, j in enumerate(state)])
@@ -2470,7 +2470,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_introspection():
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
 
-    expected_state_distribution = ludics.main.approximate_steady_state(
+    expected_state_distribution = ludics.main.compute_steady_state(
         transition_matrix=transition_matrix
     )
 
@@ -2498,7 +2498,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_moran():
     """
     Tests that the results we see from simulate_markov_chain give us the
     correct approximate values that we should see from our numeric function
-    approximate_steady_state using the moran process"""
+    compute_steady_state using the moran process"""
 
     def fitness_function(state, **kwargs):
         return np.array([i + j for i, j in enumerate(state)])
@@ -2519,7 +2519,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_moran():
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
 
-    expected_state_distribution = ludics.main.approximate_steady_state(
+    expected_state_distribution = ludics.main.compute_steady_state(
         transition_matrix=transition_matrix
     )
 
@@ -2547,7 +2547,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_fermi():
     """
     Tests that the results we see from simulate_markov_chain give us the
     correct approximate values that we should see from our numeric function
-    approximate_steady_state using fermi imitation dynamics"""
+    compute_steady_state using fermi imitation dynamics"""
 
     def fitness_function(state, **kwargs):
         return np.array([i + j for i, j in enumerate(state)])
@@ -2568,7 +2568,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_fermi():
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
 
-    expected_state_distribution = ludics.main.approximate_steady_state(
+    expected_state_distribution = ludics.main.compute_steady_state(
         transition_matrix=transition_matrix
     )
 
@@ -2596,7 +2596,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_imispection():
     """
     Tests that the results we see from simulate_markov_chain give us the
     correct approximate values that we should see from our numeric function
-    approximate_steady_state using introspective imitation dynamics"""
+    compute_steady_state using introspective imitation dynamics"""
 
     def fitness_function(state, **kwargs):
         return np.array([i + j for i, j in enumerate(state)])
@@ -2619,7 +2619,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_imispection():
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
 
-    expected_state_distribution = ludics.main.approximate_steady_state(
+    expected_state_distribution = ludics.main.compute_steady_state(
         transition_matrix=transition_matrix
     )
 
@@ -2648,7 +2648,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_aspiration():
     """
     Tests that the results we see from simulate_markov_chain give us the
     correct approximate values that we should see from our numeric function
-    approximate_steady_state using aspiration dynamics"""
+    compute_steady_state using aspiration dynamics"""
 
     def fitness_function(state, **kwargs):
         return np.array([i + j for i, j in enumerate(state)])
@@ -2672,7 +2672,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_aspiration():
         aspiration_vector=aspiration_vector,
     )
 
-    expected_state_distribution = ludics.main.approximate_steady_state(
+    expected_state_distribution = ludics.main.compute_steady_state(
         transition_matrix=transition_matrix
     )
 
