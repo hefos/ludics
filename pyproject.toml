@@ -1,6 +1,6 @@
 [project]
 name = "ludics"
-version = "0.1.0"
+version = "0.1.1"
 description = "A python library for the study of heterogenous population dynamics"
 readme = "README.md"
 license = { file = "LICENSE" }
