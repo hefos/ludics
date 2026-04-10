@@ -28,12 +28,6 @@ The following papers define the population dynamics supported by `ludics`:
 > multi-player games in finite populations. Journal of the Royal Society
 > Interface, 11(94), 20140077, 2014.
 
-The following paper introduces introspective imitation dynamics:
-
-> Harry Foster, Vince Knight and Sebastian Krapohl: Introspective Imitation
-> Dynamics and the Limits of Extrinsic Update Rules in Heterogeneous Public
-> Goods Games. In preparation.
-
 The following paper defines the Public Goods Game fitness function used in
 `ludics`:
 

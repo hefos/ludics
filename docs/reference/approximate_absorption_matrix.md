@@ -1,7 +1,7 @@
-# approximate_absorption_matrix
+# compute_absorption_matrix
 
 ```
-ludics.main.approximate_absorption_matrix(transition_matrix)
+ludics.main.compute_absorption_matrix(transition_matrix)
 ```
 
 Approximates the absorption matrix for a numeric transition matrix

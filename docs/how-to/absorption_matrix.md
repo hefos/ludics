@@ -6,7 +6,7 @@ population eventually fixes in absorbing state $j$.
 
 ## Numeric transition matrix
 
-Use the `approximate_absorption_matrix` function:
+Use the `compute_absorption_matrix` function:
 
 ```py
 >>> import numpy as np
@@ -18,7 +18,7 @@ Use the `approximate_absorption_matrix` function:
 ...     [0.1, 0.4, 0.3, 0.2],
 ...     [0, 0, 0, 1],
 ... ])
->>> ludics.approximate_absorption_matrix(transition_matrix)
+>>> ludics.compute_absorption_matrix(transition_matrix)
 array([[0.3902439 , 0.6097561 ],
        [0.36585366, 0.63414634]])
 

@@ -49,7 +49,7 @@ Moran and Fermi produce **absorbing** chains. Introspection produces an
 ...     r=r,
 ...     alpha=alpha,
 ... )
->>> ludics.approximate_absorption_matrix(tm_moran)
+>>> ludics.compute_absorption_matrix(tm_moran)
 array([[0.80645161, 0.19354839],
        [0.80645161, 0.19354839],
        [0.48387097, 0.51612903],
@@ -70,7 +70,7 @@ array([[0.80645161, 0.19354839],
 ...     r=r,
 ...     alpha=alpha,
 ... )
->>> ludics.approximate_absorption_matrix(tm_fermi)
+>>> ludics.compute_absorption_matrix(tm_fermi)
 array([[0.90996943, 0.09003057],
        [0.90996943, 0.09003057],
        [0.66524096, 0.33475904],
@@ -95,7 +95,7 @@ the same strategy, so the chain has no absorbing states.
 ...     r=r,
 ...     alpha=alpha,
 ... )
->>> ludics.approximate_steady_state(tm_intro)
+>>> ludics.compute_steady_state(tm_intro)
 array([0.24117286, 0.14628008, 0.14628008, 0.08872416, 0.14628008,
        0.08872416, 0.08872416, 0.05381442])
 
@@ -106,11 +106,11 @@ all-contribute $[1,1,1]$ (~5%), as expected when $r < N$.
 
 ## Summary
 
-| Dynamic | Chain type | Key quantity |
-|---|---|---|
-| Moran | Absorbing | Fixation probabilities |
-| Fermi imitation | Absorbing | Fixation probabilities |
-| Introspection | Ergodic | Stationary distribution |
+| Dynamic         | Chain type | Key quantity            |
+| --------------- | ---------- | ----------------------- |
+| Moran           | Absorbing  | Fixation probabilities  |
+| Fermi imitation | Absorbing  | Fixation probabilities  |
+| Introspection   | Ergodic    | Stationary distribution |
 
 Fermi dynamics places stronger pressure on payoff differences than the Moran
 process at comparable parameters, driving fixation toward defection more

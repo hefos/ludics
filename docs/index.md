@@ -7,13 +7,12 @@ both absorbing and ergodic chains.
 
 ## Implemented evolutionary dynamics
 
-| Dynamic                 | Type                       | Chain structure |
-| ----------------------- | -------------------------- | --------------- |
-| Moran process           | Extrinsic (imitation)      | Absorbing       |
-| Fermi imitation         | Extrinsic (imitation)      | Absorbing       |
-| Introspection           | Intrinsic                  | Ergodic         |
-| Aspiration              | Intrinsic (binary actions) | Ergodic         |
-| Introspective imitation | Hybrid                     | Absorbing       |
+| Dynamic         | Type                       | Chain structure |
+| --------------- | -------------------------- | --------------- |
+| Moran process   | Extrinsic (imitation)      | Absorbing       |
+| Fermi imitation | Extrinsic (imitation)      | Absorbing       |
+| Introspection   | Intrinsic                  | Ergodic         |
+| Aspiration      | Intrinsic (binary actions) | Ergodic         |
 
 ## Built-in fitness functions
 

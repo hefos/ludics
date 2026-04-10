@@ -29,7 +29,7 @@ contributes 3 units.
 ...     r=r,
 ...     contribution_vector=contribution_vector,
 ... )
->>> ludics.approximate_absorption_matrix(transition_matrix)
+>>> ludics.compute_absorption_matrix(transition_matrix)
 array([[0.99330284, 0.00669716],
        [0.9808759 , 0.0191241 ],
        [0.90462762, 0.09537238],

@@ -1,12 +1,12 @@
 # Compute the stationary distribution of a Markov chain
 
-Both `approximate_steady_state` and `calculate_steady_state` work on any
+Both `compute_steady_state` and `calculate_steady_state` work on any
 ergodic (irreducible, aperiodic) Markov chain — not just ones built from
 evolutionary dynamics. You can pass any transition matrix directly.
 
 ## Numeric transition matrices
 
-Use `approximate_steady_state`:
+Use `compute_steady_state`:
 
 ```py
 >>> import ludics
@@ -19,7 +19,7 @@ Use `approximate_steady_state`:
 ...     [0.1, 0.0, 0.0, 0.9],
 ... ])
 
->>> ludics.approximate_steady_state(transition_matrix)
+>>> ludics.compute_steady_state(transition_matrix)
 array([0.11585355, 0.07317128, 0.16463682, 0.64633834])
 
 ```

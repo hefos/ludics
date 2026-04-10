@@ -146,7 +146,7 @@ absorbing state $j$ when starting from transient state $i$:
 ...     r=1.5,
 ... )
 
->>> ludics.approximate_absorption_matrix(transition_matrix)
+>>> ludics.compute_absorption_matrix(transition_matrix)
 array([[0.7, 0.3],
        [0.7, 0.3]])
 

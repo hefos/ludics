@@ -3,7 +3,7 @@
 A population dynamic defines how the population transitions between states.
 There are five dynamics in `ludics`, falling into two categories:
 
-**Extrinsic dynamics** (Moran, Fermi, introspective imitation): players update
+**Extrinsic dynamics** (Moran, Fermi): players update
 by comparing themselves to others. The resulting Markov chain is **absorbing**
 and the key quantity is the fixation probability.
 
@@ -153,35 +153,6 @@ parameters. State space must include exactly two actions.
 ...     aspiration_vector=aspiration_vector,
 ... )
 0.207486443733952
-
-```
-
-## Introspective imitation dynamics
-
-Use the `compute_imitation_introspection_transition_probability` function.
-Takes `choice_intensity` and `selection_intensity` parameters in addition to
-standard parameters.
-
-```py
->>> import ludics
->>> import numpy as np
-
->>> def example_fitness_function(state):
-...     return np.array([np.sum(state) - player_action for player_action in state])
-
->>> source = np.array([0, 1, 1])
->>> target = np.array([1, 1, 1])
->>> choice_intensity = 0.5
->>> selection_intensity = 0.5
-
->>> ludics.compute_imitation_introspection_transition_probability(
-...     source=source,
-...     target=target,
-...     choice_intensity=choice_intensity,
-...     selection_intensity=selection_intensity,
-...     fitness_function=example_fitness_function,
-... )
-0.100000000000000
 
 ```
 
