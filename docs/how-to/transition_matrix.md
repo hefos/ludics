@@ -77,7 +77,7 @@ array([[0.85      , 0.03333333, 0.05      , 0.        , 0.06666667,
 
 ## Consider heterogeneous population dynamics
 
-Pass `compute_transition_probability` as a _numpy.array_
+Pass `compute_transition_probability` as a _numpy.array_ of population dynamics
 
 ```py
 >>> import ludics.main
