@@ -2680,3 +2680,44 @@ def test_simulate_markov_chain_gives_correct_numeric_results_aspiration():
     np.testing.assert_array_almost_equal(
         actual_state_distribution, expected_state_distribution, decimal=2
     )
+
+def test_generate_transition_matrix_for_multiple_population_dynamics():
+    """Tests that generate_transition_matrix returns the correct values when
+    using different population dynamics for each player"""
+
+    population_dynamic_array = np.array([ludics.compute_moran_transition_probability, ludics.compute_fermi_transition_probability, ludics.compute_introspection_transition_probability])
+
+    N=3
+    number_of_strategies=2
+    state_space = ludics.get_state_space(N=N, k=number_of_strategies)
+    r=2
+    contribution_vector = np.array([1,2,3])
+    choice_intensity=1
+    selection_intensity=0.1
+    ludics.fitness_functions
+    actual_transition_matrix = ludics.generate_transition_matrix(
+        state_space=state_space,
+        fitness_function=ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function,
+        compute_transition_probability=population_dynamic_array,
+        r=r,
+        contribution_vector=contribution_vector,
+        choice_intensity=choice_intensity,
+        selection_intensity=selection_intensity,
+        number_of_strategies=number_of_strategies
+    )
+
+    expected_transition_matrix = np.array([
+        [1 - 0.08964714046,0.08964714046,0,0,0,0,0,0],
+        [0.2436861929, 0.657500404, 0, 0.007904312196, 0, 0.09090909091, 0, 0],
+        [0.293599026, 0, 0.5195316113177778, 0.08964714046, 0, 0, 0.0972222222222222, 0],
+        [0, 0.146799513, 0.2436861929, 0.4031650878 , 0, 0, 0, 0.2063492063],
+        [0.229390681, 0, 0, 0, 0.6361386083, 0.08964714046, 0.04482357023, 0],
+        [0, 0.12418300653594769, 0, 0, 0.2436861929, 1 - 0.12418300653594769 -  0.2436861929 - 0.0527278824245936, 0, 0.0527278824245936],
+        [0,0,0.1212121212,0, 0.146799513, 0, 0.6423412253, 0.08964714046],
+        [0,0,0,0,0,0,0.2436861929,1 - 0.2436861929]
+    ])
+
+    np.testing.assert_array_almost_equal(
+        expected_transition_matrix,
+        actual_transition_matrix
+    )
