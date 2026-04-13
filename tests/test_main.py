@@ -2694,7 +2694,6 @@ def test_generate_transition_matrix_for_multiple_population_dynamics():
     contribution_vector = np.array([1,2,3])
     choice_intensity=1
     selection_intensity=0.1
-    ludics.fitness_functions
     actual_transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function,
