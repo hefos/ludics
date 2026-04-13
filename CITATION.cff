@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Foster
+    given-names: Harry
+  - family-names: Knight
+    given-names: Vince
+title: "hefos/ludics"
+version: 0.1.1
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.19495530
+date-released: 2026-04-10
