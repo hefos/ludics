@@ -396,7 +396,7 @@ def generate_transition_matrix(
     fitness_function: function, should return a size N numpy.array when passed
     a state
 
-    compute_transition_probability: function or np.array of functions, takes a
+    compute_transition_probability: function, takes a
     source state, a target state, and a fitness function, and returns the
     probability of transitioning from the source state to the target state
 
@@ -871,6 +871,18 @@ def simulate_markov_chain(
     return (states_over_time, state_distribution)
 
 def build_hybrid_population_dynamic(dynamic_array):
+    """
+    Given an array of population dynamics, builds a new population dynamic
+    which assigns a dynamic to each player. When a player updates their action,
+    it is done according to the population dynamic which they are assigned.
+    
+    Parameters
+    ----------
+    dynamic_array: numpy.array - an array of population dynamics
+    
+    Returns
+    --------
+    function - a population dynamic"""
 
     def hybrid_dynamic(source, target, fitness_function, **kwargs):
         different_indices = np.where(source != target)
