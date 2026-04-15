@@ -3,16 +3,17 @@
 Use the `build_hybrid_population_dynamic` function:
 
 ```py
-import ludics
-import numpy as np
+>>> import ludics
+>>> import numpy as np
 
-population_dynamic_array = np.array([
-    ludics.compute_moran_transition_probability,
-    ludics.compute_fermi_transition_probability,
-    ludics.compute_introspection_transition_probability
-])
+>>> population_dynamic_array = np.array([
+...     ludics.compute_moran_transition_probability,
+...     ludics.compute_fermi_transition_probability,
+...     ludics.compute_introspection_transition_probability
+... ])
 
-ludics.main.build_hybrid_population_dynamic(population_dynamic_array)
+>>> ludics.main.build_hybrid_population_dynamic(population_dynamic_array)
+<function ...>
 
 ```
 

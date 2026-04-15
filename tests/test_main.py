@@ -1480,6 +1480,7 @@ def test_calculate_absorption_matrix_for_5_by_5_symbolic_transition_matrix():
         expected_absorption_matrix - obtained_absorption_matrix, zero_matrix
     )
 
+
 def test_compute_steady_state_for_trivial_transition_matrix():
     """
     Tests compute_steady_state for a trivial transition matrix
@@ -1526,7 +1527,9 @@ def test_calculate_steady_state_for_trivial_transition_matrix():
 
     expected_symbolic_output = sym.Matrix([[0.5 + p + q, 0.5 - p - q]])
 
-    assert expected_symbolic_output - ludics.main.calculate_steady_state(symbolic_matrix) == sym.zeros(rows=1, cols=2)
+    assert expected_symbolic_output - ludics.main.calculate_steady_state(
+        symbolic_matrix
+    ) == sym.zeros(rows=1, cols=2)
 
 
 def test_calculate_steady_state_for_absorbing_symbolic_transition_matrix():
@@ -1541,9 +1544,10 @@ def test_calculate_steady_state_for_absorbing_symbolic_transition_matrix():
     transition_matrix = np.array([[p, 1 - p - 0.1, 0.1], [0, 1, 0], [0.6, 0.2, 0.2]])
 
     expected_output = sym.Matrix([[0, 1, 0]])
-    
 
-    assert expected_output - ludics.main.calculate_steady_state(transition_matrix) == sym.zeros(rows=1, cols=3)
+    assert expected_output - ludics.main.calculate_steady_state(
+        transition_matrix
+    ) == sym.zeros(rows=1, cols=3)
 
 
 def test_fermi_imitation_function_for_numeric_value():
@@ -2441,7 +2445,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_introspection():
 
     initial_state = np.array([0, 1, 0])
     choice_intensity = 1
-    number_of_strategies=2
+    number_of_strategies = 2
     seed = 1
     iterations = 10000
     state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
@@ -2459,7 +2463,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_introspection():
         transition_matrix=transition_matrix
     )
 
-    _,states_and_counts = ludics.main.simulate_markov_chain(
+    _, states_and_counts = ludics.main.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
@@ -2490,11 +2494,11 @@ def test_simulate_markov_chain_gives_correct_numeric_results_moran():
 
     initial_state = np.array([0, 1, 0])
     selection_intensity = 0.5
-    number_of_strategies=2
+    number_of_strategies = 2
     seed = 1
     iterations = 10000
     state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
-    
+
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
     transition_matrix = ludics.main.generate_transition_matrix(
         state_space=state_space,
@@ -2539,7 +2543,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_fermi():
 
     initial_state = np.array([0, 1, 0])
     choice_intensity = 0.12
-    number_of_strategies=2
+    number_of_strategies = 2
     seed = 1
     iterations = 10000
     state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
@@ -2589,11 +2593,11 @@ def test_simulate_markov_chain_gives_correct_numeric_results_imispection():
     initial_state = np.array([0, 1, 0])
     choice_intensity = 0.3
     selection_intensity = 0.8
-    number_of_strategies=2
+    number_of_strategies = 2
     seed = 2
     iterations = 100000
     state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
-    
+
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
     transition_matrix = ludics.main.generate_transition_matrix(
         state_space=state_space,
@@ -2608,7 +2612,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_imispection():
         transition_matrix=transition_matrix
     )
 
-    _,states_and_counts = ludics.main.simulate_markov_chain(
+    _, states_and_counts = ludics.main.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
@@ -2640,14 +2644,14 @@ def test_simulate_markov_chain_gives_correct_numeric_results_aspiration():
 
     initial_state = np.array([0, 1, 0])
     choice_intensity = 0.12
-    number_of_strategies=2
+    number_of_strategies = 2
     seed = 1
     iterations = 10000
     state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
     aspiration_vector = np.array([2, 2, 2])
-    
+
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
-    
+
     transition_matrix = ludics.main.generate_transition_matrix(
         state_space=state_space,
         fitness_function=fitness_function,
@@ -2681,20 +2685,29 @@ def test_simulate_markov_chain_gives_correct_numeric_results_aspiration():
         actual_state_distribution, expected_state_distribution, decimal=2
     )
 
+
 def test_generate_transition_matrix_for_multiple_population_dynamics():
     """Tests that generate_transition_matrix returns the correct values when
     using different population dynamics for each player"""
 
-    population_dynamic_array = np.array([ludics.compute_moran_transition_probability, ludics.compute_fermi_transition_probability, ludics.compute_introspection_transition_probability])
+    population_dynamic_array = np.array(
+        [
+            ludics.compute_moran_transition_probability,
+            ludics.compute_fermi_transition_probability,
+            ludics.compute_introspection_transition_probability,
+        ]
+    )
 
-    N=3
-    number_of_strategies=2
+    N = 3
+    number_of_strategies = 2
     state_space = ludics.get_state_space(N=N, k=number_of_strategies)
-    r=2
-    contribution_vector = np.array([1,2,3])
-    choice_intensity=1
-    selection_intensity=0.1
-    hybrid_population_dynamic = ludics.main.build_hybrid_population_dynamic(population_dynamic_array)
+    r = 2
+    contribution_vector = np.array([1, 2, 3])
+    choice_intensity = 1
+    selection_intensity = 0.1
+    hybrid_population_dynamic = ludics.main.build_hybrid_population_dynamic(
+        population_dynamic_array
+    )
 
     actual_transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
@@ -2704,50 +2717,86 @@ def test_generate_transition_matrix_for_multiple_population_dynamics():
         contribution_vector=contribution_vector,
         choice_intensity=choice_intensity,
         selection_intensity=selection_intensity,
-        number_of_strategies=number_of_strategies
+        number_of_strategies=number_of_strategies,
     )
 
-    expected_transition_matrix = np.array([
-        [1 - 0.08964714046,0.08964714046,0,0,0,0,0,0],
-        [0.2436861929, 0.657500404, 0, 0.007904312196, 0, 0.09090909091, 0, 0],
-        [0.293599026, 0, 0.5195316113177778, 0.08964714046, 0, 0, 0.0972222222222222, 0],
-        [0, 0.146799513, 0.2436861929, 0.4031650878 , 0, 0, 0, 0.2063492063],
-        [0.229390681, 0, 0, 0, 0.6361386083, 0.08964714046, 0.04482357023, 0],
-        [0, 0.12418300653594769, 0, 0, 0.2436861929, 1 - 0.12418300653594769 -  0.2436861929 - 0.0527278824245936, 0, 0.0527278824245936],
-        [0,0,0.1212121212,0, 0.146799513, 0, 0.6423412253, 0.08964714046],
-        [0,0,0,0,0,0,0.2436861929,1 - 0.2436861929]
-    ])
+    expected_transition_matrix = np.array(
+        [
+            [1 - 0.08964714046, 0.08964714046, 0, 0, 0, 0, 0, 0],
+            [0.2436861929, 0.657500404, 0, 0.007904312196, 0, 0.09090909091, 0, 0],
+            [
+                0.293599026,
+                0,
+                0.5195316113177778,
+                0.08964714046,
+                0,
+                0,
+                0.0972222222222222,
+                0,
+            ],
+            [0, 0.146799513, 0.2436861929, 0.4031650878, 0, 0, 0, 0.2063492063],
+            [0.229390681, 0, 0, 0, 0.6361386083, 0.08964714046, 0.04482357023, 0],
+            [
+                0,
+                0.12418300653594769,
+                0,
+                0,
+                0.2436861929,
+                1 - 0.12418300653594769 - 0.2436861929 - 0.0527278824245936,
+                0,
+                0.0527278824245936,
+            ],
+            [0, 0, 0.1212121212, 0, 0.146799513, 0, 0.6423412253, 0.08964714046],
+            [0, 0, 0, 0, 0, 0, 0.2436861929, 1 - 0.2436861929],
+        ]
+    )
 
     np.testing.assert_array_almost_equal(
-        expected_transition_matrix,
-        actual_transition_matrix
+        expected_transition_matrix, actual_transition_matrix
     )
+
 
 def test_build_hybrid_dynamic_calls_correct_functions():
     """
     Tests that the function built by build_hybrid_dynamics calls the correct
-    function at any given time """
+    function at any given time"""
 
     def trivial_fitness_function(state, **kwargs):
         return np.array([i for i in state])
 
-    population_dynamic_array = np.array([
-        ludics.main.compute_fermi_transition_probability,
-        ludics.main.compute_introspection_transition_probability
-    ])
+    population_dynamic_array = np.array(
+        [
+            ludics.main.compute_fermi_transition_probability,
+            ludics.main.compute_introspection_transition_probability,
+        ]
+    )
     choice_intensity = 0.5
 
-    state_1 = np.array([0,0])
-    state_2 = np.array([1,0])
-    state_3 = np.array([0,1])
+    state_1 = np.array([0, 0])
+    state_2 = np.array([1, 0])
+    state_3 = np.array([0, 1])
 
-    hybrid_dynamic = ludics.main.build_hybrid_population_dynamic(population_dynamic_array)
+    hybrid_dynamic = ludics.main.build_hybrid_population_dynamic(
+        population_dynamic_array
+    )
 
-    expected_results = np.array([0, 1 / (2*(1 + np.exp(-0.5)))])
-    actual_results = np.array([hybrid_dynamic(source=state_1, target=state_2, fitness_function=trivial_fitness_function, choice_intensity=choice_intensity, number_of_strategies=2), hybrid_dynamic(source=state_1, target=state_3, fitness_function=trivial_fitness_function, choice_intensity=choice_intensity, number_of_strategies=2)])
-
+    expected_results = np.array([0, 1 / (2 * (1 + np.exp(-0.5)))])
+    actual_results = np.array(
+        [
+            hybrid_dynamic(
+                source=state_1,
+                target=state_2,
+                fitness_function=trivial_fitness_function,
+                choice_intensity=choice_intensity,
+                number_of_strategies=2,
+            ),
+            hybrid_dynamic(
+                source=state_1,
+                target=state_3,
+                fitness_function=trivial_fitness_function,
+                choice_intensity=choice_intensity,
+                number_of_strategies=2,
+            ),
+        ]
+    )
     np.testing.assert_array_almost_equal(actual_results, expected_results)
-    
-
-    
-

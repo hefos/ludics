@@ -29,7 +29,7 @@ birth-death processes. They fall into two catagories:
    These are games where we consider the update rule of players as a
    heterogeneous attribute, and that each player may follow a different
    population dynamic. For example (Xuesong Liu, Qiuhui Pan, Yibin Kang,
-   Mingfeng He, 2015)
+   Mingfeng He, 2015).
 
 Full citations are in the [bibliography](../reference/bibliography.md).
 
@@ -143,7 +143,7 @@ matrix of the system looks like:
 $$
 T_{\textbf{ab}} =
 \begin{cases}
-\T_\mathbf{ab}^{I(\mathbf{a},\mathbf{b})}
+\T_\mathbf{ab}^{(I(\mathbf{a},\mathbf{b}))}
     & \text{if } \textbf{b} \in \mathrm{Neb}(\textbf{a}) \text{ and } j = I(\textbf{a,b}),\\[1.2em]
 0
     & \text{if } \textbf{b} \notin \mathrm{Neb}(\textbf{a}) \text{and $\textbf{a}$} \neq \textbf{b},\\[0.8em]

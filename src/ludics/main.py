@@ -661,6 +661,7 @@ def calculate_absorption_matrix(transition_matrix):
 
     return sym.Matrix(B)
 
+
 def compute_steady_state(transition_matrix, tolerance=10**-6, initial_dist=None):
     """
     Returns the steady state vector of a given transition matrix that is
@@ -708,7 +709,7 @@ def calculate_steady_state(transition_matrix):
     transition_matrix = sym.Matrix(transition_matrix)
     n, _ = transition_matrix.shape
     M_dash = transition_matrix.T - sym.eye(n)
-    M_dash[-1,:] = sym.ones(rows=1, cols=n)
+    M_dash[-1, :] = sym.ones(rows=1, cols=n)
     b = sym.zeros(rows=n, cols=1)
     b[-1] = 1
     pi = M_dash.inv() @ b
@@ -870,16 +871,17 @@ def simulate_markov_chain(
 
     return (states_over_time, state_distribution)
 
+
 def build_hybrid_population_dynamic(dynamic_array):
     """
     Given an array of population dynamics, builds a new population dynamic
     which assigns a dynamic to each player. When a player updates their action,
     it is done according to the population dynamic which they are assigned.
-    
+
     Parameters
     ----------
     dynamic_array: numpy.array - an array of population dynamics
-    
+
     Returns
     --------
     function - a population dynamic"""
@@ -890,6 +892,8 @@ def build_hybrid_population_dynamic(dynamic_array):
             return 0
         if len(different_indices[0]) == 0:
             return None
-        return dynamic_array[different_indices[0][0]](source,target,fitness_function, **kwargs)
+        return dynamic_array[different_indices[0][0]](
+            source, target, fitness_function, **kwargs
+        )
 
     return hybrid_dynamic
