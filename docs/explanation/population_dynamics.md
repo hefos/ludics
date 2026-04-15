@@ -24,6 +24,13 @@ birth-death processes. They fall into two catagories:
    are introspection dynamics (Couto, Giaimo and Hilbe, 2022) and aspiration
    dynamics (Du et al., 2014).
 
+3. Hybrid Dynamics
+
+   These are games where we consider the update rule of players as a
+   heterogeneous attribute, and that each player may follow a different
+   population dynamic. For example (Xuesong Liu, Qiuhui Pan, Yibin Kang,
+   Mingfeng He, 2015)
+
 Full citations are in the [bibliography](../reference/bibliography.md).
 
 ## The Moran Process
@@ -123,6 +130,29 @@ T_{\textbf{ab}} =
 1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ab} & \text{if }\textbf{a}=\textbf{b}
 \end{cases}
 $$
+
+## Hybrid population dynamics
+
+Hybrid population dynamics are those in which a player $i$ updates it's
+strategy based on a different population dynamic than another player $j$. For
+example, a 3 player game may have player 1 updating according to the Moran
+process, player 2 updating according to Fermi imitation dynamics, and player 3
+updating according to introspection dynamics. In this case, the transition
+matrix of the system looks like:
+
+$$
+T_{\textbf{ab}} =
+\begin{cases}
+\T_\mathbf{ab}^{I(\mathbf{a},\mathbf{b})}
+    & \text{if } \textbf{b} \in \mathrm{Neb}(\textbf{a}) \text{ and } j = I(\textbf{a,b}),\\[1.2em]
+0
+    & \text{if } \textbf{b} \notin \mathrm{Neb}(\textbf{a}) \text{and $\textbf{a}$} \neq \textbf{b},\\[0.8em]
+1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ab} & \text{if }\textbf{a}=\textbf{b}
+\end{cases}
+$$
+
+where $T^i$ is the transition matrix where players contribute according to the
+population dynamic of player $i$.
 
 ## Mutation
 

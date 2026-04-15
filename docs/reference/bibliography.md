@@ -28,6 +28,10 @@ The following papers define the population dynamics supported by `ludics`:
 > multi-player games in finite populations. Journal of the Royal Society
 > Interface, 11(94), 20140077, 2014.
 
+> Xuesong Liu, Qiuhui Pan, Yibin Kang, Mingfeng He: Fixation probabilities in
+> evolutionary games with the Moran and Fermi processes. Journal of Theoretical
+> Biology, Volume 364, 7 January 2015, Pages 242-248, ISSN 0022-5193
+
 The following paper defines the Public Goods Game fitness function used in
 `ludics`:
 
