@@ -413,51 +413,43 @@ def generate_transition_matrix(
     transition_matrix = np.zeros(shape=(N, N))
     if individual_to_action_mutation_probability is None:
         individual_to_action_mutation_probability = np.zeros(shape=(N, N))
-    if callable(compute_transition_probability) is True:
-        population_dynamic = np.array([compute_transition_probability for _ in range(N)], dtype=object)
-    else:
-        population_dynamic = compute_transition_probability
     for row_index, source in enumerate(state_space):
         for col_index, target in enumerate(state_space):
             if row_index != col_index:
-                different_indices = np.where(source != target)[0]
-                if len(different_indices) == 1:
-                    try:
-                        transition_matrix[row_index, col_index] = (
-                            apply_mutation_probability(
-                                source=source,
-                                target=target,
-                                individual_to_action_mutation_probability=individual_to_action_mutation_probability,
-                                transition_probability=(
-                                    population_dynamic[different_indices[0]](
-                                        source=source,
-                                        target=target,
-                                        fitness_function=fitness_function,
-                                        **kwargs,
-                                    )
-                                ),
-                            )
+                try:
+                    transition_matrix[row_index, col_index] = (
+                        apply_mutation_probability(
+                            source=source,
+                            target=target,
+                            individual_to_action_mutation_probability=individual_to_action_mutation_probability,
+                            transition_probability=(
+                                compute_transition_probability(
+                                    source=source,
+                                    target=target,
+                                    fitness_function=fitness_function,
+                                    **kwargs,
+                                )
+                            ),
                         )
-                    except TypeError:
-                        transition_matrix = transition_matrix.astype(object)
+                    )
+                except TypeError:
+                    transition_matrix = transition_matrix.astype(object)
 
-                        transition_matrix[row_index, col_index] = (
-                            apply_mutation_probability(
-                                source=source,
-                                target=target,
-                                individual_to_action_mutation_probability=individual_to_action_mutation_probability,
-                                transition_probability=(
-                                    population_dynamic[different_indices[0]](
-                                        source=source,
-                                        target=target,
-                                        fitness_function=fitness_function,
-                                        **kwargs,
-                                    )
-                                ),
-                            )
+                    transition_matrix[row_index, col_index] = (
+                        apply_mutation_probability(
+                            source=source,
+                            target=target,
+                            individual_to_action_mutation_probability=individual_to_action_mutation_probability,
+                            transition_probability=(
+                                compute_transition_probability(
+                                    source=source,
+                                    target=target,
+                                    fitness_function=fitness_function,
+                                    **kwargs,
+                                )
+                            ),
                         )
-                else:
-                    transition_matrix[row_index, col_index] = 0
+                    )
 
     np.fill_diagonal(transition_matrix, 1 - transition_matrix.sum(axis=1))
     return transition_matrix
@@ -877,3 +869,15 @@ def simulate_markov_chain(
     state_distribution = collections.Counter(states_over_time)
 
     return (states_over_time, state_distribution)
+
+def build_hybrid_population_dynamic(dynamic_array):
+
+    def hybrid_dynamic(source, target, fitness_function, **kwargs):
+        different_indices = np.where(source != target)
+        if len(different_indices[0]) > 1:
+            return 0
+        if len(different_indices[0]) == 0:
+            return None
+        return dynamic_array[different_indices[0][0]](source,target,fitness_function, **kwargs)
+
+    return hybrid_dynamic

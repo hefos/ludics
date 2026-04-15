@@ -2694,10 +2694,12 @@ def test_generate_transition_matrix_for_multiple_population_dynamics():
     contribution_vector = np.array([1,2,3])
     choice_intensity=1
     selection_intensity=0.1
+    hybrid_population_dynamic = ludics.main.build_hybrid_population_dynamic(population_dynamic_array)
+
     actual_transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function,
-        compute_transition_probability=population_dynamic_array,
+        compute_transition_probability=hybrid_population_dynamic,
         r=r,
         contribution_vector=contribution_vector,
         choice_intensity=choice_intensity,
@@ -2720,3 +2722,32 @@ def test_generate_transition_matrix_for_multiple_population_dynamics():
         expected_transition_matrix,
         actual_transition_matrix
     )
+
+def test_build_hybrid_dynamic_calls_correct_functions():
+    """
+    Tests that the function built by build_hybrid_dynamics calls the correct
+    function at any given time """
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i for i in state])
+
+    population_dynamic_array = np.array([
+        ludics.main.compute_fermi_transition_probability,
+        ludics.main.compute_introspection_transition_probability
+    ])
+    choice_intensity = 0.5
+
+    state_1 = np.array([0,0])
+    state_2 = np.array([1,0])
+    state_3 = np.array([0,1])
+
+    hybrid_dynamic = ludics.main.build_hybrid_population_dynamic(population_dynamic_array)
+
+    expected_results = np.array([0, 1 / (2*(1 + np.exp(-0.5)))])
+    actual_results = np.array([hybrid_dynamic(source=state_1, target=state_2, fitness_function=trivial_fitness_function, choice_intensity=choice_intensity, number_of_strategies=2), hybrid_dynamic(source=state_1, target=state_3, fitness_function=trivial_fitness_function, choice_intensity=choice_intensity, number_of_strategies=2)])
+
+    np.testing.assert_array_almost_equal(actual_results, expected_results)
+    
+
+    
+
