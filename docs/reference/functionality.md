@@ -27,6 +27,7 @@ Below is a list of functionality included in `ludics`
 - [compute_fermi_transition_probability](compute_fermi.md)
 - [compute_introspection_transition_probability](compute_introspection.md)
 - [compute_aspiration_transition_probability](compute_aspiration.md)
+- [build_hybrid_population_dynamic](build_hybrid_dynamic.md)
 
 ### Additional Functionality
 
