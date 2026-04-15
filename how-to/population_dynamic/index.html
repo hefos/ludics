@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Choose an evolutionary dynamic - ludics</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Choose an evolutionary dynamic";
+        var mkdocs_page_input_path = "how-to/population_dynamic.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> ludics
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorial/basics/">Analyse a Public Goods Game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-To Guides</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../install/">Install</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../choose_fitness_function/">Choose a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../define_fitness_function/">Define a fitness function</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Choose an evolutionary dynamic</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#the-moran-process">The Moran process</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fermi-imitation-dynamics">Fermi imitation dynamics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fermi-imitation-dynamics_1">Fermi imitation dynamics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#introspection-dynamics">Introspection dynamics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#aspiration-dynamics">Aspiration dynamics</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../transition_matrix/">Assemble the underlying Markov chain</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../absorption_matrix/">Compute absorption probabilities for absorbing processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../steady_state/">Compute the stationary distribution of ergodic processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../steady_state_precision/">Increase the precision of the approximate stationary distribution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../simulate_markov_chain/">Simulate dynamics for large populations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../compare_dynamics/">Compare evolutionary dynamics on a Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../heterogeneous_pgg/">Model heterogeneous contributions for the Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../symbolic_fitness/">Use symbolic payoffs for a 2-player game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/functionality/">List of functionality</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/bibliography/">Bibliography</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/state_representation/">How states are represented</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/markov_chain/">Evolutionary games and Markov chains</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/population_dynamics/">Population dynamics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/public_goods_game/">Public Goods Games</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ludics</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">How-To Guides</li>
+      <li class="breadcrumb-item active">Choose an evolutionary dynamic</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="choose-an-evolutionary-dynamic">Choose an evolutionary dynamic</h1>
+<p>A population dynamic defines how the population transitions between states.
+There are five dynamics in <code>ludics</code>, falling into two categories:</p>
+<p><strong>Extrinsic dynamics</strong> (Moran, Fermi): players update
+by comparing themselves to others. The resulting Markov chain is <strong>absorbing</strong>
+and the key quantity is the fixation probability.</p>
+<p><strong>Intrinsic dynamics</strong> (introspection, aspiration): players update based on
+their own payoff alone. The resulting chain is <strong>ergodic</strong> and the key quantity
+is the stationary distribution.</p>
+<p>See <a href="../../explanation/population_dynamics/">What is a population dynamic?</a> for
+the mathematical definitions of each dynamic.</p>
+<h2 id="the-moran-process">The Moran process</h2>
+<p>Use the <code>compute_moran_transition_probability</code> function. Takes a
+<code>selection_intensity</code> argument in addition to standard parameters.</p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics.main
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; def example_fitness_function(state):
+...    return np.array([np.sum(state) - player_action for player_action in state])
+
+&gt;&gt;&gt; source = np.array([0,1,2])
+&gt;&gt;&gt; target = np.array([1,1,2])
+&gt;&gt;&gt; selection_intensity = 0.5
+
+&gt;&gt;&gt; ludics.main.compute_moran_transition_probability(
+... source=source,
+... target=target,
+... selection_intensity=selection_intensity,
+... fitness_function=example_fitness_function
+... )
+np.float64(0.1111111111111111)
+
+</code></pre>
+<p><strong>Note:</strong> <code>selection_intensity</code> must satisfy the following equation for all
+players <span class="arithmatex">\(i\)</span>:</p>
+<p><span class="arithmatex">\(1 +\)</span> <code>selection_intensity</code> <span class="arithmatex">\(\cdot\)</span> <code>fitness_function(state)[i]</code> <span class="arithmatex">\(\gt 0\)</span></p>
+<h2 id="fermi-imitation-dynamics">Fermi imitation dynamics</h2>
+<p>Use the <code>compute_fermi_transition_probability</code> function. Takes a <code>choice_intensity</code> argument in addition to standard parameters</p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; def example_fitness_function(state):
+...     return np.array([np.sum(state) - player_action for player_action in state])
+
+&gt;&gt;&gt; source = np.array([0, 1, 2])
+&gt;&gt;&gt; target = np.array([1, 1, 2])
+&gt;&gt;&gt; selection_intensity = 0.5
+
+&gt;&gt;&gt; ludics.compute_moran_transition_probability(
+...     source=source,
+...     target=target,
+...     selection_intensity=selection_intensity,
+...     fitness_function=example_fitness_function,
+... )
+np.float64(0.1111111111111111)
+
+</code></pre>
+<p><strong>Note:</strong> <code>selection_intensity</code> must satisfy <span class="arithmatex">\(1 +\)</span> <code>selection_intensity</code>
+<span class="arithmatex">\(\cdot\)</span> <code>fitness_function(state)[i]</code> <span class="arithmatex">\(&gt; 0\)</span> for all players <span class="arithmatex">\(i\)</span>.</p>
+<h2 id="fermi-imitation-dynamics_1">Fermi imitation dynamics</h2>
+<p>Use the <code>compute_fermi_transition_probability</code> function. Takes a
+<code>choice_intensity</code> argument in addition to standard parameters.</p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; def example_fitness_function(state):
+...     return np.array([np.sum(state) - player_action for player_action in state])
+
+&gt;&gt;&gt; source = np.array([0, 1, 2])
+&gt;&gt;&gt; target = np.array([1, 1, 2])
+&gt;&gt;&gt; choice_intensity = 0.5
+
+&gt;&gt;&gt; ludics.compute_fermi_transition_probability(
+...     source=source,
+...     target=target,
+...     choice_intensity=choice_intensity,
+...     fitness_function=example_fitness_function,
+... )
+0.0629234447996909
+
+</code></pre>
+<h2 id="introspection-dynamics">Introspection dynamics</h2>
+<p>Use the <code>compute_introspection_transition_probability</code> function. Takes
+<code>choice_intensity</code> and <code>number_of_strategies</code> arguments in addition to
+standard parameters.</p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; def example_fitness_function(state):
+...     return np.array([np.sum(state) - player_action for player_action in state])
+
+&gt;&gt;&gt; source = np.array([0, 1, 2])
+&gt;&gt;&gt; target = np.array([1, 1, 2])
+&gt;&gt;&gt; choice_intensity = 0.5
+
+&gt;&gt;&gt; ludics.compute_introspection_transition_probability(
+...     source=source,
+...     target=target,
+...     choice_intensity=choice_intensity,
+...     fitness_function=example_fitness_function,
+...     number_of_strategies=3,
+... )
+0.0833333333333333
+
+</code></pre>
+<h2 id="aspiration-dynamics">Aspiration dynamics</h2>
+<p>Use the <code>compute_aspiration_transition_probability</code> function. Takes
+<code>choice_intensity</code> and <code>aspiration_vector</code> arguments in addition to standard
+parameters. State space must include exactly two actions.</p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; def example_fitness_function(state):
+...     return np.array([np.sum(state) - player_action for player_action in state])
+
+&gt;&gt;&gt; source = np.array([0, 1, 1])
+&gt;&gt;&gt; target = np.array([1, 1, 1])
+&gt;&gt;&gt; choice_intensity = 0.5
+&gt;&gt;&gt; aspiration_vector = np.array([3, 2, 1])
+
+&gt;&gt;&gt; ludics.compute_aspiration_transition_probability(
+...     source=source,
+...     target=target,
+...     choice_intensity=choice_intensity,
+...     fitness_function=example_fitness_function,
+...     aspiration_vector=aspiration_vector,
+... )
+0.207486443733952
+
+</code></pre>
+<p><strong>Note:</strong> <code>selection_intensity</code> must satisfy <span class="arithmatex">\(1 +\)</span> <code>selection_intensity</code>
+<span class="arithmatex">\(\cdot\)</span> <code>fitness_function(state)[i]</code> <span class="arithmatex">\(&gt; 0\)</span> for all players <span class="arithmatex">\(i\)</span>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../define_fitness_function/" class="btn btn-neutral float-left" title="Define a fitness function"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../transition_matrix/" class="btn btn-neutral float-right" title="Assemble the underlying Markov chain">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../define_fitness_function/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../transition_matrix/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

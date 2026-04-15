@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>How states are represented - ludics</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "How states are represented";
+        var mkdocs_page_input_path = "explanation/state_representation.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> ludics
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorial/basics/">Analyse a Public Goods Game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-To Guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/install/">Install</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/choose_fitness_function/">Choose a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/define_fitness_function/">Define a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/population_dynamic/">Choose an evolutionary dynamic</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/transition_matrix/">Assemble the underlying Markov chain</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/absorption_matrix/">Compute absorption probabilities for absorbing processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/steady_state/">Compute the stationary distribution of ergodic processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/steady_state_precision/">Increase the precision of the approximate stationary distribution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/simulate_markov_chain/">Simulate dynamics for large populations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/compare_dynamics/">Compare evolutionary dynamics on a Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/heterogeneous_pgg/">Model heterogeneous contributions for the Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/symbolic_fitness/">Use symbolic payoffs for a 2-player game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/functionality/">List of functionality</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/bibliography/">Bibliography</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">How states are represented</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#why-individual-indexed-states">Why individual-indexed states?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#absorbing-states">Absorbing states</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../markov_chain/">Evolutionary games and Markov chains</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../population_dynamics/">Population dynamics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../public_goods_game/">Public Goods Games</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ludics</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Explanation</li>
+      <li class="breadcrumb-item active">How states are represented</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="how-states-are-represented">How states are represented</h1>
+<p><code>ludics</code> represents the population as an <strong>ordered vector of individual
+strategies</strong>, one entry per player:</p>
+<div class="arithmatex">\[\mathbf{a} = (a_1, a_2, \ldots, a_N)\]</div>
+<p>where <span class="arithmatex">\(a_i \in \{0, 1, \ldots, k-1\}\)</span> is the strategy currently played by
+player <span class="arithmatex">\(i\)</span>, <span class="arithmatex">\(N\)</span> is the population size, and <span class="arithmatex">\(k\)</span> is the number of strategies.</p>
+<p>For example, with <span class="arithmatex">\(N = 3\)</span> players and <span class="arithmatex">\(k = 2\)</span> strategies (0 = defect, 1 =
+cooperate):</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[0, 0, 0]</code></td>
+<td>all three players defect</td>
+</tr>
+<tr>
+<td><code>[0, 0, 1]</code></td>
+<td>players 0 and 1 defect; player 2 cooperates</td>
+</tr>
+<tr>
+<td><code>[1, 1, 0]</code></td>
+<td>players 0 and 1 cooperate; player 2 defects</td>
+</tr>
+<tr>
+<td><code>[1, 1, 1]</code></td>
+<td>all three players cooperate</td>
+</tr>
+</tbody>
+</table>
+<p>The full state space contains <span class="arithmatex">\(k^N\)</span> states: for <span class="arithmatex">\(N=3\)</span>, <span class="arithmatex">\(k=2\)</span> this is 8.</p>
+<h2 id="why-individual-indexed-states">Why individual-indexed states?</h2>
+<p>This representation tracks <em>who</em> is playing <em>what</em>, not just <em>how many</em> players
+use each strategy. It is more general than a frequency-based representation: it
+supports <strong>heterogeneous players</strong> (different contribution levels, different
+aspiration levels) and <strong>asymmetric payoff functions</strong> where the identity of
+the player matters, not just the aggregate counts.</p>
+<p>The cost is a larger state space. For symmetric games where only the count of
+each strategy matters, many states are payoff-equivalent: <code>[0, 1, 0]</code> and
+<code>[0, 0, 1]</code> produce the same fitness values under a homogeneous PGG. <code>ludics</code>
+does not collapse these equivalent states; it works with the full <span class="arithmatex">\(k^N\)</span> space.</p>
+<h2 id="absorbing-states">Absorbing states</h2>
+<p>In games with two strategies, the two fully-homogeneous states (all-0 and
+all-1) are typically absorbing under extrinsic dynamics (Moran, Fermi), since
+there is no fitness difference to drive a change. Their absorption
+probabilities are the <strong>fixation probabilities</strong> central to evolutionary game
+theory.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../reference/bibliography/" class="btn btn-neutral float-left" title="Bibliography"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../markov_chain/" class="btn btn-neutral float-right" title="Evolutionary games and Markov chains">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../reference/bibliography/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../markov_chain/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

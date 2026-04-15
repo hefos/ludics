@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Compute the stationary distribution of ergodic processes - ludics</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Compute the stationary distribution of ergodic processes";
+        var mkdocs_page_input_path = "how-to/steady_state.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> ludics
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorial/basics/">Analyse a Public Goods Game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-To Guides</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../install/">Install</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../choose_fitness_function/">Choose a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../define_fitness_function/">Define a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../population_dynamic/">Choose an evolutionary dynamic</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../transition_matrix/">Assemble the underlying Markov chain</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../absorption_matrix/">Compute absorption probabilities for absorbing processes</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Compute the stationary distribution of ergodic processes</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#numeric-transition-matrices">Numeric transition matrices</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#symbolic-transition-matrices">Symbolic transition matrices</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../steady_state_precision/">Increase the precision of the approximate stationary distribution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../simulate_markov_chain/">Simulate dynamics for large populations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../compare_dynamics/">Compare evolutionary dynamics on a Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../heterogeneous_pgg/">Model heterogeneous contributions for the Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../symbolic_fitness/">Use symbolic payoffs for a 2-player game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/functionality/">List of functionality</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/bibliography/">Bibliography</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/state_representation/">How states are represented</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/markov_chain/">Evolutionary games and Markov chains</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/population_dynamics/">Population dynamics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/public_goods_game/">Public Goods Games</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ludics</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">How-To Guides</li>
+      <li class="breadcrumb-item active">Compute the stationary distribution of ergodic processes</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="compute-the-stationary-distribution-of-a-markov-chain">Compute the stationary distribution of a Markov chain</h1>
+<p>Both <code>compute_steady_state</code> and <code>calculate_steady_state</code> work on any
+ergodic (irreducible, aperiodic) Markov chain — not just ones built from
+evolutionary dynamics. You can pass any transition matrix directly.</p>
+<h2 id="numeric-transition-matrices">Numeric transition matrices</h2>
+<p>Use <code>compute_steady_state</code>:</p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; transition_matrix = np.array([
+...     [0.3, 0.3, 0.3, 0.1],
+...     [0.0, 0.3, 0.2, 0.5],
+...     [0.1, 0.1, 0.7, 0.1],
+...     [0.1, 0.0, 0.0, 0.9],
+... ])
+
+&gt;&gt;&gt; ludics.compute_steady_state(transition_matrix)
+array([0.11585355, 0.07317128, 0.16463682, 0.64633834])
+
+</code></pre>
+<h2 id="symbolic-transition-matrices">Symbolic transition matrices</h2>
+<p>Use <code>calculate_steady_state</code> when entries contain symbolic parameters:</p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics
+&gt;&gt;&gt; import sympy as sym
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; x = sym.Symbol('x')
+&gt;&gt;&gt; y = sym.Symbol('y')
+&gt;&gt;&gt; transition_matrix = np.array([
+...     [1 - y, 0, y, 0],
+...     [y, 1 - y, 0, 0],
+...     [0, 0, 1 - x, x],
+...     [0, x, 0, 1 - x],
+... ])
+
+&gt;&gt;&gt; ludics.calculate_steady_state(transition_matrix)
+Matrix([[x/(2*x + 2*y), x/(2*x + 2*y), y/(2*x + 2*y), y/(2*x + 2*y)]])
+
+</code></pre>
+<p>The result is always a <code>numpy.array</code>. For symbolic matrices, at least one entry
+per row must be expressed as <span class="arithmatex">\((1 - \sum_{\text{other entries}})\)</span> to ensure the
+transition matrix has a valid eigenvector for all parameter values.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../absorption_matrix/" class="btn btn-neutral float-left" title="Compute absorption probabilities for absorbing processes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../steady_state_precision/" class="btn btn-neutral float-right" title="Increase the precision of the approximate stationary distribution">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../absorption_matrix/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../steady_state_precision/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

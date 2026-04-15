@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Population dynamics - ludics</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Population dynamics";
+        var mkdocs_page_input_path = "explanation/population_dynamics.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> ludics
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorial/basics/">Analyse a Public Goods Game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-To Guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/install/">Install</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/choose_fitness_function/">Choose a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/define_fitness_function/">Define a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/population_dynamic/">Choose an evolutionary dynamic</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/transition_matrix/">Assemble the underlying Markov chain</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/absorption_matrix/">Compute absorption probabilities for absorbing processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/steady_state/">Compute the stationary distribution of ergodic processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/steady_state_precision/">Increase the precision of the approximate stationary distribution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/simulate_markov_chain/">Simulate dynamics for large populations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/compare_dynamics/">Compare evolutionary dynamics on a Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/heterogeneous_pgg/">Model heterogeneous contributions for the Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/symbolic_fitness/">Use symbolic payoffs for a 2-player game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/functionality/">List of functionality</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/bibliography/">Bibliography</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../state_representation/">How states are represented</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../markov_chain/">Evolutionary games and Markov chains</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Population dynamics</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#the-moran-process">The Moran Process</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fermi-imitation-dynamics">Fermi imitation dynamics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#aspiration-dynamics">Aspiration dynamics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#introspection-dynamics">Introspection Dynamics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hybrid-population-dynamics">Hybrid population dynamics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mutation">Mutation</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../public_goods_game/">Public Goods Games</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ludics</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Explanation</li>
+      <li class="breadcrumb-item active">Population dynamics</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="population-dynamics">Population dynamics</h1>
+<p>A population dynamic is the function by which players in a population update
+their action types. The most common type of population dynamic is a
+"birth-death process". This is a process in which one player will change their
+action type at a time, traditionally representing a player "dying" and another
+player "reproducing" - that is, creating a copy of themself to replace the
+player who "died".</p>
+<p>There are 5 population dynamics considered in <code>ludics</code>, all of which are
+birth-death processes. They fall into two catagories:</p>
+<ol>
+<li>Extrinsic Dynamics</li>
+</ol>
+<p>These are dynamics in which players decide on new strategies by copying
+   other players who perform well in a given population. The purely extrinsic
+   dynamics included in <code>ludics</code> are the Moran process (Moran, 1958) and Fermi
+   imitation dynamics (Szabó and Tőke, 1998).</p>
+<ol>
+<li>Intrinsic Dynamics</li>
+</ol>
+<p>These are dynamics in which players decide on new strategies entirely based
+   on their own fitness. The purely intrinsic dynamics included in <code>ludics</code>
+   are introspection dynamics (Couto, Giaimo and Hilbe, 2022) and aspiration
+   dynamics (Du et al., 2014).</p>
+<ol>
+<li>Hybrid Dynamics</li>
+</ol>
+<p>These are games where we consider the update rule of players as a
+   heterogeneous attribute, and that each player may follow a different
+   population dynamic. For example (Xuesong Liu, Qiuhui Pan, Yibin Kang,
+   Mingfeng He, 2015).</p>
+<p>Full citations are in the <a href="../../reference/bibliography/">bibliography</a>.</p>
+<h2 id="the-moran-process">The Moran Process</h2>
+<p>This follows the algorithm:</p>
+<ol>
+<li>A player <span class="arithmatex">\(i\)</span> is selected to reproduce with probability proportional to their
+   fitness in the population.</li>
+<li>A player <span class="arithmatex">\(j\)</span> is selected uniformly at random to be replaced.</li>
+<li>Player <span class="arithmatex">\(j\)</span> adopts the strategy of player <span class="arithmatex">\(i\)</span>.</li>
+</ol>
+<p>The transition matrix for a Moran process is defined as follows:</p>
+<div class="arithmatex">\[
+        T_\textbf{ab} =
+        \begin{cases}
+            \frac{1}{N} \cdot\frac{\sum_{a_i = b_{I(\textbf{a,b})}}{f_i(a)}}{\sum_{a_j}f_j(a)} &amp; \text{if }\textbf{b} \in \text{Neb($\textbf{a}$)}\text{, differing at position }I(\textbf{a,b})\\
+            0 &amp; \text{if }\textbf{b} \notin \text{Neb($\textbf{a}$) and $\textbf{a}$}\neq \textbf{b}\\
+            1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ac} &amp; \text{if }\textbf{a}=\textbf{b}
+        \end{cases}
+\]</div>
+<p>Where we denote the fitness of player <span class="arithmatex">\(i\)</span> in state <span class="arithmatex">\(a\)</span> by <span class="arithmatex">\(f_i(a)\)</span>, and the set
+of states which differ from state <span class="arithmatex">\(a\)</span> in exactly one position by Neb(<span class="arithmatex">\(a\)</span>)</p>
+<h2 id="fermi-imitation-dynamics">Fermi imitation dynamics</h2>
+<p>This follows the algorithm:</p>
+<ol>
+<li>A player <span class="arithmatex">\(i\)</span> is chosen at random to consider changing strategy, and
+   another player <span class="arithmatex">\(j\)</span> is
+   chosen to have their strategy considered</li>
+<li>Player <span class="arithmatex">\(i\)</span> accepts player <span class="arithmatex">\(j\)</span>'s strategy with a probability according
+   to the Fermi logit function
+   <span class="arithmatex">\(\phi(\Delta(f)) = \frac{1}{1 + e^{\beta(\Delta(f))}}\)</span>
+   where <span class="arithmatex">\(\Delta(f) = f_i(a) - f_j(a)\)</span> is the difference between player <span class="arithmatex">\(i\)</span>'s
+   fitness and player <span class="arithmatex">\(j\)</span>'s fitness</li>
+</ol>
+<p>Where <span class="arithmatex">\(\beta\)</span> is the <em>choice intensity</em> of the system which defines how often a
+player makes the "more rational" decision, with <span class="arithmatex">\(\beta = 0\)</span> resulting in
+completely random updates.</p>
+<p>The transition matrix of a process operating under to Fermi imitation dynamics is
+defined as
+follows:</p>
+<div class="arithmatex">\[
+T_\textbf{ab}  =
+        \begin{cases}
+            \frac{1}{N(N-1)}\sum_{a_j=b_{I(\textbf{a,b})}}\phi(f_{\text{I(\textbf{a,b})}}(a)
+            - f_{j}(\textbf{a})) &amp; \text{if }\textbf{b} \in
+            \text{Neb($\textbf{a}$)}\\
+            0 &amp; \text{if }\textbf{b} \notin \text{Neb($\textbf{a}$) and $\textbf{a}$}\neq \textbf{b}\\
+            1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ab} &amp; \text{if }\textbf{a}=\textbf{b}
+        \end{cases}
+\]</div>
+<h2 id="aspiration-dynamics">Aspiration dynamics</h2>
+<p>Aspiration dynamics is only defined for games with exactly two strategies, and follows the algorithm:</p>
+<ol>
+<li>A player <span class="arithmatex">\(i\)</span> is picked to switch strategy at random</li>
+<li>They change strategy with probability <span class="arithmatex">\(\phi(f_i(a) - A_i)\)</span>, where <span class="arithmatex">\(A_i\)</span> is
+   the <em>aspiration</em> of player <span class="arithmatex">\(i\)</span>, the fitness that they wish to obtain.</li>
+</ol>
+<p>The transition matrix of a process operating under aspiration dynamics is defined as follows:</p>
+<div class="arithmatex">\[
+T_{ab} = \begin{cases}
+\frac{1}{N} \cdot \phi(f_{I(a,b)}(a) - A_{I(a,b)}) &amp; \text{if $\textbf{b}$} \in
+\text{Neb}(\textbf{a})\\
+0 &amp; \text{if }\textbf{b} \notin \text{Neb($\textbf{a}$) and $\textbf{a}$}\neq \textbf{b}\\
+            1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ab} &amp; \text{if }\textbf{a}=\textbf{b}
+\end{cases}
+\]</div>
+<h2 id="introspection-dynamics">Introspection Dynamics</h2>
+<p>This follows the algorithm:</p>
+<ol>
+<li>A player <span class="arithmatex">\(i\)</span> is picked at random to reconsider their strategy</li>
+<li>A strategy <span class="arithmatex">\(k\)</span> is picked at random for them to consider</li>
+<li>They accept the new strategy with a probability <span class="arithmatex">\(\phi(\Delta(f))\)</span>, where
+   <span class="arithmatex">\(\Delta(f) = f_i(a) - f_i(b)\)</span> is the difference between a player's current
+   payoff and the possible payoff they could obtain by switching strategy.</li>
+</ol>
+<p>The transition matrix of a process operating under introspection dynamics is
+defined as follows:</p>
+<div class="arithmatex">\[
+T_{\textbf{ab}} =
+\begin{cases}
+\dfrac{1}{N(m_j - 1)} \, \phi (f_i(a) - f_i(b))
+    &amp; \text{if } \textbf{b} \in \mathrm{Neb}(\textbf{a}) \text{ and } j = I(\textbf{a,b}),\\[1.2em]
+0
+    &amp; \text{if } \textbf{b} \notin \mathrm{Neb}(\textbf{a}) \text{and $\textbf{a}$} \neq \textbf{b},\\[0.8em]
+1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ab} &amp; \text{if }\textbf{a}=\textbf{b}
+\end{cases}
+\]</div>
+<h2 id="hybrid-population-dynamics">Hybrid population dynamics</h2>
+<p>Hybrid population dynamics are those in which a player <span class="arithmatex">\(i\)</span> updates it's
+strategy based on a different population dynamic than another player <span class="arithmatex">\(j\)</span>. For
+example, a 3 player game may have player 1 updating according to the Moran
+process, player 2 updating according to Fermi imitation dynamics, and player 3
+updating according to introspection dynamics. In this case, the transition
+matrix of the system looks like:</p>
+<div class="arithmatex">\[
+T_{\textbf{ab}} =
+\begin{cases}
+\T_\mathbf{ab}^{(I(\mathbf{a},\mathbf{b}))}
+    &amp; \text{if } \textbf{b} \in \mathrm{Neb}(\textbf{a}) \text{ and } j = I(\textbf{a,b}),\\[1.2em]
+0
+    &amp; \text{if } \textbf{b} \notin \mathrm{Neb}(\textbf{a}) \text{and $\textbf{a}$} \neq \textbf{b},\\[0.8em]
+1 - \sum_{\textbf{c} \in S \setminus \text{\{\textbf{a}\}}}T_{ab} &amp; \text{if }\textbf{a}=\textbf{b}
+\end{cases}
+\]</div>
+<p>where <span class="arithmatex">\(T^i\)</span> is the transition matrix where players contribute according to the
+population dynamic of player <span class="arithmatex">\(i\)</span>.</p>
+<h2 id="mutation">Mutation</h2>
+<p>Mutation is a step which can be added to any birth-death process. It follows
+the algorithm:</p>
+<ol>
+<li>The population dynamic occurs as usual</li>
+<li>Before the chosen player <span class="arithmatex">\(i\)</span> changes strategy, they may instead mutate to
+   another action type <span class="arithmatex">\(k\)</span> with probability <span class="arithmatex">\(\mu_{ik}\)</span></li>
+</ol>
+<p>We can apply mutation to functions by the following transformation:</p>
+<div class="arithmatex">\[
+T^m_{ab} = T_{ab}(1 - \sum_{k \in K}\mu_{I(ab), k}) +  \frac{\mu_{I(a,b),
+b_{I(a,b)}}}{N}
+\]</div>
+<p>where <span class="arithmatex">\(K\)</span> is the set of action types.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../markov_chain/" class="btn btn-neutral float-left" title="Evolutionary games and Markov chains"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../public_goods_game/" class="btn btn-neutral float-right" title="Public Goods Games">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../markov_chain/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../public_goods_game/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

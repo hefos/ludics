@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Evolutionary games and Markov chains - ludics</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Evolutionary games and Markov chains";
+        var mkdocs_page_input_path = "explanation/markov_chain.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> ludics
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorial/basics/">Analyse a Public Goods Game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-To Guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/install/">Install</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/choose_fitness_function/">Choose a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/define_fitness_function/">Define a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/population_dynamic/">Choose an evolutionary dynamic</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/transition_matrix/">Assemble the underlying Markov chain</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/absorption_matrix/">Compute absorption probabilities for absorbing processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/steady_state/">Compute the stationary distribution of ergodic processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/steady_state_precision/">Increase the precision of the approximate stationary distribution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/simulate_markov_chain/">Simulate dynamics for large populations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/compare_dynamics/">Compare evolutionary dynamics on a Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/heterogeneous_pgg/">Model heterogeneous contributions for the Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/symbolic_fitness/">Use symbolic payoffs for a 2-player game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/functionality/">List of functionality</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/bibliography/">Bibliography</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../state_representation/">How states are represented</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Evolutionary games and Markov chains</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#types-of-markov-chain">Types of Markov chain</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#absorbing-markov-chains">Absorbing Markov chains</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ergodic-markov-chains">Ergodic Markov chains</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../population_dynamics/">Population dynamics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../public_goods_game/">Public Goods Games</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ludics</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Explanation</li>
+      <li class="breadcrumb-item active">Evolutionary games and Markov chains</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="modelling-evolutionary-games-as-markov-chains">Modelling evolutionary games as Markov chains</h1>
+<p>We can model any evolutionary game as a <a href="https://en.wikipedia.org/wiki/Markov_chain">Markov
+chain</a> by taking our state space as
+the set of possible populations. In doing so, we can define
+a transition matrix for the system. For example, for a 2-player, 2-action game
+we have:</p>
+<div class="arithmatex">\[
+T =
+\begin{pmatrix}
+T_{11}, T_{12}, T_{13}, T_{14}\\
+T_{21}, T_{22}, T_{23}, T_{24}\\
+T_{31}, T_{32}, T_{33}, T_{34}\\
+T_{41}, T_{42}, T_{43}, T_{44}
+\end{pmatrix}
+\]</div>
+<p>where <span class="arithmatex">\(T_{ab} = p(a \to b)\)</span> is the probability of transitioning from state <span class="arithmatex">\(a\)</span> to state <span class="arithmatex">\(b\)</span>.</p>
+<h2 id="types-of-markov-chain">Types of Markov chain</h2>
+<h3 id="absorbing-markov-chains">Absorbing Markov chains</h3>
+<p>The
+first type of Markov chain is an <em>absorbing Markov chain</em>. This is a process where certain states can
+only transition to themselves, and thus the Markov chain gets stuck in said
+states. The transition matrix of such a process will have at least one row such
+that</p>
+<div class="arithmatex">\[
+T_{ij} = \begin{cases}
+1 &amp; \text{if i = j}\\
+0 &amp; \text{otherwise}
+\end{cases}
+\]</div>
+<p>In such a Markov chain, we can calculate an <em>absorption matrix</em> as follows:</p>
+<ol>
+<li>Write the transition matrix in canonical form</li>
+</ol>
+<p>This is the form</p>
+<div class="arithmatex">\[
+  T =
+  \left(\begin{array}{c|c}
+    Q &amp; R \\\hline
+    0 &amp; I
+  \end{array}\right)
+\]</div>
+<p>Where <span class="arithmatex">\(Q\)</span> is the set of transitions from transitive (non-absorbing) states to
+other transitive states, and <span class="arithmatex">\(R\)</span> is the set of transitions from transitive
+states to absorbing states.</p>
+<ol>
+<li>Compute the absorption matrix</li>
+</ol>
+<div class="arithmatex">\[
+B = (I - Q)^{-1} R = \begin{pmatrix}
+B_{11}&amp; B_{12}\\
+B_{21} &amp; B_{22}
+\end{pmatrix}
+\]</div>
+<p>where <span class="arithmatex">\(B_{ab}\)</span> is the probability of the Markov chain being absorbed into state
+<span class="arithmatex">\(b\)</span> given that it started in state <span class="arithmatex">\(a\)</span>.</p>
+<p>This can be used to analyse which
+strategies are favoured by the population. For example, in a Moran process,
+absorbing states are those in which all players have the same action type, and
+so the state with the highest probability of absorption would be that which has
+all players playing the strategy which produces the highest fitness in the
+model.</p>
+<h3 id="ergodic-markov-chains">Ergodic Markov chains</h3>
+<p>An ergodic Markov chain is one which has no absorbing states, and so you are
+able to traverse from any state to any other state in a finite number of steps.
+In this case, we consider state distributions in the form</p>
+<div class="arithmatex">\[ \pi^t = (\pi^t_1, \pi^t_2, ...)\]</div>
+<p>Where <span class="arithmatex">\(\pi^t_i\)</span> is the proportion of the time spent in a certain state at step
+<span class="arithmatex">\(T\)</span>. We have that <span class="arithmatex">\(\sum_{i=1}^N \pi^t_i = 1\)</span>. Now, if we multiply <span class="arithmatex">\(\pi^t\)</span> by
+the transition matrix <span class="arithmatex">\(T\)</span>, we get the distribution at the next step:</p>
+<div class="arithmatex">\[ \pi^t T = \pi^{t+1}\]</div>
+<p>Thus, by taking the left eigenvector of the transition matrix <span class="arithmatex">\(T\)</span>, we obtain a
+state distribution <span class="arithmatex">\(\pi\)</span> such that:</p>
+<div class="arithmatex">\[ \pi T = \pi\]</div>
+<p>We call this the <em>steady state</em> of the Markov chain, and it gives us the
+distribution of the system amongst it's states when the system has stabilised.
+A Markov chain will always reach it's unique steady state provided that it is
+irreducible (all states can reach all other states in a finite number of steps)
+and aperiodic (the states do not oscillate between certain subsets). Any
+birth-death process fulfills these conditions, and thus reaches the steady
+state in a finite number of steps.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../state_representation/" class="btn btn-neutral float-left" title="How states are represented"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../population_dynamics/" class="btn btn-neutral float-right" title="Population dynamics">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../state_representation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../population_dynamics/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
