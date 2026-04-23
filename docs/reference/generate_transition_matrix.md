@@ -1,7 +1,7 @@
 # generate_transition_matrix
 
 ```
-ludics.main.generate_transition_matrix(state_space, fitness_function, compute_transition_probability, individual_to_action_mutation_probability=None,
+ludics.generate_transition_matrix(state_space, fitness_function, compute_transition_probability, individual_to_action_mutation_probability=None,
 **kwargs)
 ```
 

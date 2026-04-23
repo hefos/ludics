@@ -1,7 +1,7 @@
 # calculate_steady_state
 
 ```
-ludics.main.calculate_steady_state(transition_matrix)
+ludics.calculate_steady_state(transition_matrix)
 ```
 
 Calculates the steady state of a Markov chain with a symbolic transition matrix

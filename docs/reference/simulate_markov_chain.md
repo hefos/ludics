@@ -1,7 +1,7 @@
 # simulate_markov_chain
 
 ```
-ludics.main.simulate_markov_chain(initial_state, number_of_strategies, fitness_function, compute_transition_probability, seed, individual_to_action_mutation_probability=None, warmup=0, iterations=10000,
+ludics.simulate_markov_chain(initial_state, number_of_strategies, fitness_function, compute_transition_probability, seed, individual_to_action_mutation_probability=None, warmup=0, iterations=10000,
 **kwargs)
 ```
 

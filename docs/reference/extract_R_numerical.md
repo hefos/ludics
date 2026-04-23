@@ -1,7 +1,7 @@
 # extract_R_numerical
 
 ```
-ludics.main.extract_R_numerical(transition_matrix)
+ludics.extract_R_numerical(transition_matrix)
 ```
 
 Extracts the submatrix of transitions from transitive states to absorbing

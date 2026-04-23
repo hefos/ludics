@@ -1,7 +1,7 @@
 # extract_Q
 
 ```
-ludics.main.extract_Q(transition_matrix)
+ludics.extract_Q(transition_matrix)
 ```
 
 Extracts the submatrix of transitions between transitive states

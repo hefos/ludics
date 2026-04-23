@@ -1,7 +1,7 @@
 # get_neighbourhood_states
 
 ```
-ludics.main.get_neighbourhood_states(state, number_of_strategies)
+ludics.get_neighbourhood_states(state, number_of_strategies)
 ```
 
 Finds all states that differ from a state in exactly one position

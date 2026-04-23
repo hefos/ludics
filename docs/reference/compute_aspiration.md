@@ -1,7 +1,7 @@
 # compute_aspiration_transition_probability
 
 ```
-ludics.main.compute_aspiration_transition_probability(source, target, fitness_function, choice_intensity, aspiration_vector, **kwargs)
+ludics.compute_aspiration_transition_probability(source, target, fitness_function, choice_intensity, aspiration_vector, **kwargs)
 ```
 
 Calculates the probability of transitioning from `source` to `target` with
