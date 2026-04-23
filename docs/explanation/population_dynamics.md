@@ -143,7 +143,7 @@ matrix of the system looks like:
 $$
 T_{\textbf{ab}} =
 \begin{cases}
-\T_\mathbf{ab}^{(I(\mathbf{a},\mathbf{b}))}
+T_\mathbf{ab}^{(I(\mathbf{a},\mathbf{b}))}
     & \text{if } \textbf{b} \in \mathrm{Neb}(\textbf{a}) \text{ and } j = I(\textbf{a,b}),\\[1.2em]
 0
     & \text{if } \textbf{b} \notin \mathrm{Neb}(\textbf{a}) \text{and $\textbf{a}$} \neq \textbf{b},\\[0.8em]
