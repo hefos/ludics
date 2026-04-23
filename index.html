@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>ludics</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> ludics
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#implemented-evolutionary-dynamics">Implemented evolutionary dynamics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#built-in-fitness-functions">Built-in fitness functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#key-features">Key features</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#get-started">Get started</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="tutorial/basics/">Analyse a Public Goods Game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-To Guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/install/">Install</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/choose_fitness_function/">Choose a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/define_fitness_function/">Define a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/population_dynamic/">Choose an evolutionary dynamic</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/transition_matrix/">Assemble the underlying Markov chain</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/absorption_matrix/">Compute absorption probabilities for absorbing processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/steady_state/">Compute the stationary distribution of ergodic processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/steady_state_precision/">Increase the precision of the approximate stationary distribution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/simulate_markov_chain/">Simulate dynamics for large populations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/compare_dynamics/">Compare evolutionary dynamics on a Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/heterogeneous_pgg/">Model heterogeneous contributions for the Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/symbolic_fitness/">Use symbolic payoffs for a 2-player game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/hybrid_population_dynamic/">Build a hybrid population dynamic</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="reference/functionality/">List of functionality</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="reference/bibliography/">Bibliography</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="explanation/state_representation/">How states are represented</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="explanation/markov_chain/">Evolutionary games and Markov chains</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="explanation/population_dynamics/">Population dynamics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="explanation/public_goods_game/">Public Goods Games</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">ludics</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Home</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="welcome-to-ludics">Welcome to <code>ludics</code>!</h1>
+<p><code>ludics</code> is a Python library for modelling and analysing evolutionary games as
+Markov chains. It supports exact symbolic computation via
+<a href="https://www.sympy.org/">SymPy</a> as well as numerical approximation, and handles
+both absorbing and ergodic chains.</p>
+<h2 id="implemented-evolutionary-dynamics">Implemented evolutionary dynamics</h2>
+<table>
+<thead>
+<tr>
+<th>Dynamic</th>
+<th>Type</th>
+<th>Chain structure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Moran process</td>
+<td>Extrinsic (imitation)</td>
+<td>Absorbing</td>
+</tr>
+<tr>
+<td>Fermi imitation</td>
+<td>Extrinsic (imitation)</td>
+<td>Absorbing</td>
+</tr>
+<tr>
+<td>Introspection</td>
+<td>Intrinsic</td>
+<td>Ergodic</td>
+</tr>
+<tr>
+<td>Aspiration</td>
+<td>Intrinsic (binary actions)</td>
+<td>Ergodic</td>
+</tr>
+</tbody>
+</table>
+<h2 id="built-in-fitness-functions">Built-in fitness functions</h2>
+<ul>
+<li><strong>Homogeneous Public Goods Game</strong>: all players contribute equally</li>
+<li><strong>Heterogeneous Public Goods Game</strong>: player-specific contribution amounts</li>
+<li><strong>General symbolic 4-state</strong>: fully symbolic payoffs for 2-player, 2-action games</li>
+</ul>
+<h2 id="key-features">Key features</h2>
+<ul>
+<li>Build transition matrices for any combination of dynamic and fitness function</li>
+<li>Compute <strong>fixation probabilities</strong> (absorbing chains) or <strong>stationary
+  distributions</strong> (ergodic chains), exactly or numerically; works on any
+  Markov chain</li>
+<li>Add <strong>mutation</strong> between strategies via a per-player mutation matrix</li>
+<li><strong>Simulate</strong> trajectories forward in time when the state space is too large
+  for exact computation</li>
+<li>Full <strong>symbolic support</strong>: work with SymPy expressions and simplify results
+  algebraically</li>
+</ul>
+<h2 id="get-started">Get started</h2>
+<ul>
+<li>Get a handle on the basics with our <a href="tutorial/basics/">tutorial</a></li>
+<li>Learn how to use <code>ludics</code> with our <a href="how-to/how-to/">how-to guides</a></li>
+<li>Explore the functionality with our API <a href="reference/functionality/">reference</a> section</li>
+<li>Dive deeper into evolutionary games with our <a href="explanation/explanation_reference/">explanation</a> section</li>
+<li>View the source code on <a href="https://github.com/hefos/ludics">github</a></li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="tutorial/basics/" class="btn btn-neutral float-right" title="Analyse a Public Goods Game">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+      <span><a href="tutorial/basics/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-04-23 14:57:56.685763+00:00
+-->

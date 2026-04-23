@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Simulate dynamics for large populations - ludics</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Simulate dynamics for large populations";
+        var mkdocs_page_input_path = "how-to/simulate_markov_chain.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> ludics
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorial/basics/">Analyse a Public Goods Game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-To Guides</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../install/">Install</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../choose_fitness_function/">Choose a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../define_fitness_function/">Define a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../population_dynamic/">Choose an evolutionary dynamic</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../transition_matrix/">Assemble the underlying Markov chain</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../absorption_matrix/">Compute absorption probabilities for absorbing processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../steady_state/">Compute the stationary distribution of ergodic processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../steady_state_precision/">Increase the precision of the approximate stationary distribution</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Simulate dynamics for large populations</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../compare_dynamics/">Compare evolutionary dynamics on a Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../heterogeneous_pgg/">Model heterogeneous contributions for the Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../symbolic_fitness/">Use symbolic payoffs for a 2-player game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../hybrid_population_dynamic/">Build a hybrid population dynamic</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/functionality/">List of functionality</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/bibliography/">Bibliography</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/state_representation/">How states are represented</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/markov_chain/">Evolutionary games and Markov chains</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/population_dynamics/">Population dynamics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/public_goods_game/">Public Goods Games</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ludics</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">How-To Guides</li>
+      <li class="breadcrumb-item active">Simulate dynamics for large populations</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="simulate-dynamics-for-large-populations">Simulate dynamics for large populations</h1>
+<p>Use the <code>simulate_markov_chain</code> function to approximate the long-run behaviour
+of the chain via forward simulation. This is useful when the state space is too
+large for exact computation of the transition or absorption matrix.</p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; def example_fitness_function(state):
+...     return np.array([np.sum(state) - player_action for player_action in state])
+
+&gt;&gt;&gt; initial_state = np.array([1, 1, 0])
+&gt;&gt;&gt; number_of_strategies = 2
+&gt;&gt;&gt; seed = 4
+&gt;&gt;&gt; warmup = 2
+&gt;&gt;&gt; iterations = 8
+&gt;&gt;&gt; choice_intensity = 2
+&gt;&gt;&gt; dynamic = ludics.compute_introspection_transition_probability
+
+&gt;&gt;&gt; visited_states, visit_counts = ludics.simulate_markov_chain(
+...     initial_state=initial_state,
+...     number_of_strategies=number_of_strategies,
+...     fitness_function=example_fitness_function,
+...     compute_transition_probability=dynamic,
+...     iterations=iterations,
+...     warmup=warmup,
+...     seed=seed,
+...     choice_intensity=choice_intensity,
+... )
+
+&gt;&gt;&gt; visited_states
+[(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 0), (1, 0, 0)]
+
+&gt;&gt;&gt; visit_counts
+Counter({(1, 1, 0): 4, (1, 0, 0): 2})
+
+</code></pre>
+<p><strong>NOTE</strong>: Only 6 states are recorded because of :code:<code>warmup=2</code> which ensures
+the first 2 states are ignored.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../steady_state_precision/" class="btn btn-neutral float-left" title="Increase the precision of the approximate stationary distribution"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../compare_dynamics/" class="btn btn-neutral float-right" title="Compare evolutionary dynamics on a Public Goods Game">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../steady_state_precision/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../compare_dynamics/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
