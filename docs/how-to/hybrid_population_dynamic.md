@@ -12,7 +12,7 @@ Use the `build_hybrid_population_dynamic` function:
 ...     ludics.compute_introspection_transition_probability
 ... ])
 
->>> ludics.main.build_hybrid_population_dynamic(population_dynamic_array)
+>>> ludics.build_hybrid_population_dynamic(population_dynamic_array)
 <function ...>
 
 ```
@@ -20,7 +20,7 @@ Use the `build_hybrid_population_dynamic` function:
 This can be passed directly into `generate_transition_matrix`
 
 ```py
->>> import ludics.main
+>>> import ludics
 >>> import numpy as np
 >>> import ludics.fitness_functions
 
@@ -36,7 +36,7 @@ This can be passed directly into `generate_transition_matrix`
 >>> N = 3
 >>> number_of_strategies = 2
 >>> state_space = ludics.get_state_space(N=N, k=number_of_strategies)
->>> hybrid_population_dynamic = ludics.main.build_hybrid_population_dynamic(population_dynamic_array)
+>>> hybrid_population_dynamic = ludics.build_hybrid_population_dynamic(population_dynamic_array)
 >>> r = 2
 >>> contribution_vector = np.array([1, 2, 3])
 >>> choice_intensity = 1
