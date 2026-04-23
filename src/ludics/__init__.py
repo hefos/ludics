@@ -20,6 +20,7 @@ from ludics.main import (
     calculate_steady_state,
     get_neighbourhood_states,
     simulate_markov_chain,
+    build_hybrid_population_dynamic
 )
 
 __all__ = [
@@ -44,4 +45,5 @@ __all__ = [
     "calculate_steady_state",
     "get_neighbourhood_states",
     "simulate_markov_chain",
+    "build_hybrid_population_dynamic"
 ]
