@@ -1,7 +1,7 @@
 # calculate_absorption_matrix
 
 ```
-ludics.main.calculate_absorption_matrix(transition_matrix)
+ludics.calculate_absorption_matrix(transition_matrix)
 ```
 
 Calculates the absorption matrix from a symbolic transition matrix

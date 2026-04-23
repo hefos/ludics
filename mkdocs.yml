@@ -27,6 +27,7 @@ nav:
       - Compare evolutionary dynamics on a Public Goods Game: how-to/compare_dynamics.md
       - Model heterogeneous contributions for the Public Goods Game: how-to/heterogeneous_pgg.md
       - Use symbolic payoffs for a 2-player game: how-to/symbolic_fitness.md
+      - Build a hybrid population dynamic: how-to/hybrid_population_dynamic.md
   - Reference:
       - List of functionality: reference/functionality.md
       - Bibliography: reference/bibliography.md

@@ -1,4 +1,4 @@
-import ludics.main
+import ludics
 import sympy as sym
 import numpy as np
 import ludics.fitness_functions as ff
@@ -145,7 +145,7 @@ def test_homogeneous_pgg_fitness_function_for_no_contribution():
 def test_general_four_state_player_fitness_function_for_whole_state_space():
     """Tests that all players are assigned the correct values in all possible
     states of the four-state system where N=2, k=2"""
-    four_state_space = ludics.main.get_state_space(N=2, k=2)
+    four_state_space = ludics.get_state_space(N=2, k=2)
 
     expected_return_a = np.array(
         [

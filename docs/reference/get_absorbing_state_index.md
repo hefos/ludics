@@ -1,7 +1,7 @@
 # get_absorbing_state_index
 
 ```
-ludics.main.get_absorbing_state_index(state_space)
+ludics.get_absorbing_state_index(state_space)
 ```
 
 Returns the index(s) of absorbing states in the state space

@@ -1,4 +1,4 @@
-import ludics.main
+import ludics
 import numpy as np
 import sympy as sym
 import pytest
@@ -31,7 +31,7 @@ def test_compute_moran_transition_probability_for_trivial_fitness_function():
     target = np.array((1, 1, 0))
     selection_intensity = 0.5
     assert (
-        ludics.main.compute_moran_transition_probability(
+        ludics.compute_moran_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -42,7 +42,7 @@ def test_compute_moran_transition_probability_for_trivial_fitness_function():
     source = np.array((0, 1, 0))
     target = np.array((1, 1, 1))
     assert (
-        ludics.main.compute_moran_transition_probability(
+        ludics.compute_moran_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -53,7 +53,7 @@ def test_compute_moran_transition_probability_for_trivial_fitness_function():
     source = np.array((0, 0, 0))
     target = np.array((0, 0, 0))
     assert (
-        ludics.main.compute_moran_transition_probability(
+        ludics.compute_moran_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -94,7 +94,7 @@ def test_compute_moran_transition_probability_for_specific_fitness_function():
 
     source = np.array((0, 1, 0))
     target = np.array((1, 1, 0))
-    assert ludics.main.compute_moran_transition_probability(
+    assert ludics.compute_moran_transition_probability(
         source=source,
         target=target,
         fitness_function=fitness_function,
@@ -103,7 +103,7 @@ def test_compute_moran_transition_probability_for_specific_fitness_function():
     source = np.array((0, 1, 1))
     target = np.array((0, 0, 0))
     assert (
-        ludics.main.compute_moran_transition_probability(
+        ludics.compute_moran_transition_probability(
             source=source,
             target=target,
             fitness_function=fitness_function,
@@ -114,7 +114,7 @@ def test_compute_moran_transition_probability_for_specific_fitness_function():
     source = np.array((1, 1, 0))
     target = np.array((1, 1, 0))
     assert (
-        ludics.main.compute_moran_transition_probability(
+        ludics.compute_moran_transition_probability(
             source=source,
             target=target,
             fitness_function=fitness_function,
@@ -167,7 +167,7 @@ def test_compute_moran_transition_probability_for_ordered_fitness_function():
 
     source = np.array((0, 1, 0))
     target = np.array((1, 1, 0))
-    assert ludics.main.compute_moran_transition_probability(
+    assert ludics.compute_moran_transition_probability(
         source=source,
         target=target,
         fitness_function=ordered_fitness_function,
@@ -176,7 +176,7 @@ def test_compute_moran_transition_probability_for_ordered_fitness_function():
     source = np.array((0, 1, 1))
     target = np.array((0, 0, 0))
     assert (
-        ludics.main.compute_moran_transition_probability(
+        ludics.compute_moran_transition_probability(
             source=source,
             target=target,
             fitness_function=ordered_fitness_function,
@@ -187,7 +187,7 @@ def test_compute_moran_transition_probability_for_ordered_fitness_function():
     source = np.array((1, 1, 0))
     target = np.array((1, 1, 0))
     assert (
-        ludics.main.compute_moran_transition_probability(
+        ludics.compute_moran_transition_probability(
             source=source,
             target=target,
             fitness_function=ordered_fitness_function,
@@ -228,7 +228,7 @@ def test_compute_moran_transition_probability_for_symbolic_fitness_function():
     x = sym.symbols("x")
     y = sym.symbols("y")
     epsilon = sym.Symbol("\epsilon")
-    assert ludics.main.compute_moran_transition_probability(
+    assert ludics.compute_moran_transition_probability(
         source=source,
         target=target,
         fitness_function=symbolic_fitness_function,
@@ -237,7 +237,7 @@ def test_compute_moran_transition_probability_for_symbolic_fitness_function():
     source = np.array((0, 1, 1))
     target = np.array((0, 0, 0))
     assert (
-        ludics.main.compute_moran_transition_probability(
+        ludics.compute_moran_transition_probability(
             source=source,
             target=target,
             fitness_function=symbolic_fitness_function,
@@ -248,7 +248,7 @@ def test_compute_moran_transition_probability_for_symbolic_fitness_function():
     source = np.array((1, 1, 0))
     target = np.array((1, 1, 0))
     assert (
-        ludics.main.compute_moran_transition_probability(
+        ludics.compute_moran_transition_probability(
             source=source,
             target=target,
             fitness_function=symbolic_fitness_function,
@@ -258,7 +258,7 @@ def test_compute_moran_transition_probability_for_symbolic_fitness_function():
     )
     source = np.array((0, 1))
     target = np.array((0, 0))
-    assert ludics.main.compute_moran_transition_probability(
+    assert ludics.compute_moran_transition_probability(
         source=source,
         target=target,
         fitness_function=symbolic_fitness_function,
@@ -268,12 +268,12 @@ def test_compute_moran_transition_probability_for_symbolic_fitness_function():
     source = np.array((0, 1))
     target1 = np.array((0, 0))
     target2 = np.array((1, 1))
-    assert 1 - ludics.main.compute_moran_transition_probability(
+    assert 1 - ludics.compute_moran_transition_probability(
         source=source,
         target=target1,
         fitness_function=symbolic_fitness_function,
         selection_intensity=epsilon,
-    ) - ludics.main.compute_moran_transition_probability(
+    ) - ludics.compute_moran_transition_probability(
         source=source,
         target=target2,
         fitness_function=symbolic_fitness_function,
@@ -303,7 +303,7 @@ def test_compute_moran_transition_probability_for_kwargs_fitness_function():
     expected_transition_probability = 2 / 21
 
     assert (
-        ludics.main.compute_moran_transition_probability(
+        ludics.compute_moran_transition_probability(
             source=source,
             target=target,
             fitness_function=kwargs_fitness_function,
@@ -336,7 +336,7 @@ def test_generate_state_space_for_N_eq_3_and_k_eq_2():
             (1, 1, 1),
         ]
     )
-    obtained_state_space = ludics.main.get_state_space(N=N, k=k)
+    obtained_state_space = ludics.get_state_space(N=N, k=k)
     np.testing.assert_array_equal(
         sorted(tuple(x) for x in obtained_state_space),
         sorted(tuple(x) for x in expected_state_space),
@@ -355,7 +355,7 @@ def test_generate_state_space_for_N_eq_3_and_k_eq_1():
     expected_state_space = [
         (0, 0, 0),
     ]
-    obtained_state_space = ludics.main.get_state_space(N=N, k=k)
+    obtained_state_space = ludics.get_state_space(N=N, k=k)
     np.testing.assert_allclose(
         sorted(expected_state_space), sorted(obtained_state_space)
     )
@@ -375,7 +375,7 @@ def test_generate_state_space_for_N_eq_1_and_k_eq_3():
         (1,),
         (2,),
     ]
-    obtained_state_space = ludics.main.get_state_space(N=N, k=k)
+    obtained_state_space = ludics.get_state_space(N=N, k=k)
     np.testing.assert_allclose(
         sorted(expected_state_space), sorted(obtained_state_space)
     )
@@ -416,10 +416,10 @@ def test_generate_transition_matrix_for_trivial_fitness_function():
         ]
     )
     np.testing.assert_array_almost_equal(
-        ludics.main.generate_transition_matrix(
+        ludics.generate_transition_matrix(
             state_space=state_space,
             fitness_function=trivial_fitness_function,
-            compute_transition_probability=ludics.main.compute_moran_transition_probability,
+            compute_transition_probability=ludics.compute_moran_transition_probability,
             selection_intensity=0.5,
         ),
         expected_transition_matrix,
@@ -474,10 +474,10 @@ def test_generate_transition_matrix_for_ordered_fitness_function():
     )
 
     np.testing.assert_allclose(
-        ludics.main.generate_transition_matrix(
+        ludics.generate_transition_matrix(
             state_space=state_space,
             fitness_function=ordered_fitness_function,
-            compute_transition_probability=ludics.main.compute_moran_transition_probability,
+            compute_transition_probability=ludics.compute_moran_transition_probability,
             selection_intensity=0.3,
         ),
         expected_transition_matrix,
@@ -511,10 +511,10 @@ def test_generate_transition_matrix_for_different_state_space():
         ]
     )
     np.testing.assert_allclose(
-        ludics.main.generate_transition_matrix(
+        ludics.generate_transition_matrix(
             state_space=state_space,
             fitness_function=trivial_fitness_function,
-            compute_transition_probability=ludics.main.compute_moran_transition_probability,
+            compute_transition_probability=ludics.compute_moran_transition_probability,
             selection_intensity=0.5,
         ),
         expected_transition_matrix,
@@ -579,10 +579,10 @@ def test_generate_transition_matrix_for_symbolic_fitness_function():
         ]
     )
     np.testing.assert_array_almost_equal(
-        ludics.main.generate_transition_matrix(
+        ludics.generate_transition_matrix(
             state_space=state_space,
             fitness_function=symbolic_fitness_function,
-            compute_transition_probability=ludics.main.compute_moran_transition_probability,
+            compute_transition_probability=ludics.compute_moran_transition_probability,
             selection_intensity=epsilon,
         ),
         expected_transition_matrix,
@@ -597,16 +597,16 @@ def test_generate_transition_matrix_with_individual_to_action_mutation_probabili
     def trivial_fitness_function(state):
         return np.array([1 for _ in state])
 
-    state_space = ludics.main.get_state_space(N=2, k=2)
+    state_space = ludics.get_state_space(N=2, k=2)
 
     individual_to_action_mutation_probability = np.array([[0.2, 0.15], [0.1, 0.05]])
 
     epsilon = 0
 
-    actual_transition_matrix = ludics.main.generate_transition_matrix(
+    actual_transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=trivial_fitness_function,
-        compute_transition_probability=ludics.main.compute_moran_transition_probability,
+        compute_transition_probability=ludics.compute_moran_transition_probability,
         selection_intensity=epsilon,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
@@ -633,16 +633,16 @@ def test_generate_transition_matrix_with_individual_to_action_mutation_probabili
     def trivial_fitness_function(state):
         return np.array([1 for _ in state])
 
-    state_space = ludics.main.get_state_space(N=2, k=2)
+    state_space = ludics.get_state_space(N=2, k=2)
 
     individual_to_action_mutation_probability = np.array([[0.01, 0.15], [0.05, 0.2]])
 
     beta = 1
 
-    actual_transition_matrix = ludics.main.generate_transition_matrix(
+    actual_transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=trivial_fitness_function,
-        compute_transition_probability=ludics.main.compute_fermi_transition_probability,
+        compute_transition_probability=ludics.compute_fermi_transition_probability,
         choice_intensity=beta,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
@@ -669,17 +669,17 @@ def test_generate_transition_matrix_with_individual_to_action_mutation_probabili
     def trivial_fitness_function(state):
         return np.array([1 for _ in state])
 
-    state_space = ludics.main.get_state_space(N=2, k=2)
+    state_space = ludics.get_state_space(N=2, k=2)
 
     individual_to_action_mutation_probability = np.array([[0.01, 0.1], [0.15, 0.2]])
 
     beta = 1
     epsilon = 0
 
-    actual_transition_matrix = ludics.main.generate_transition_matrix(
+    actual_transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=trivial_fitness_function,
-        compute_transition_probability=ludics.main.compute_imitation_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_imitation_introspection_transition_probability,
         choice_intensity=beta,
         selection_intensity=epsilon,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
@@ -707,16 +707,16 @@ def test_generate_transition_matrix_with_individual_to_action_mutation_probabili
     def trivial_fitness_function(state):
         return np.array([1 for _ in state])
 
-    state_space = ludics.main.get_state_space(N=2, k=2)
+    state_space = ludics.get_state_space(N=2, k=2)
 
     individual_to_action_mutation_probability = np.array([[0.1, 0.2], [0.3, 0.4]])
 
     beta = 1
 
-    actual_transition_matrix = ludics.main.generate_transition_matrix(
+    actual_transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=trivial_fitness_function,
-        compute_transition_probability=ludics.main.compute_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_introspection_transition_probability,
         choice_intensity=beta,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
         number_of_strategies=2,
@@ -766,10 +766,10 @@ def test_generate_transition_matrix_for_symbolic_fitness_function_with_mutation(
 
     mu_sum_p1 = mu_11 + mu_12
     mu_sum_p2 = mu_21 + mu_22
-    actual_matrix = ludics.main.generate_transition_matrix(
+    actual_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=symbolic_fitness_function,
-        compute_transition_probability=ludics.main.compute_moran_transition_probability,
+        compute_transition_probability=ludics.compute_moran_transition_probability,
         selection_intensity=epsilon,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
@@ -874,10 +874,10 @@ def test_generate_transition_matrix_for_kwargs_fitness_function():
     )
     np.testing.assert_array_almost_equal(
         expected_transition_matrix,
-        ludics.main.generate_transition_matrix(
+        ludics.generate_transition_matrix(
             state_space=state_space,
             fitness_function=kwargs_fitness_function,
-            compute_transition_probability=ludics.main.compute_moran_transition_probability,
+            compute_transition_probability=ludics.compute_moran_transition_probability,
             selection_intensity=0.5,
             c=c,
             r=r,
@@ -916,7 +916,7 @@ def test_get_absorbing_state_index_for_N_eq_2_k_eq_4():
 
     np.testing.assert_array_equal(
         expected_absorbing_states,
-        ludics.main.get_absorbing_state_index(state_space=state_space),
+        ludics.get_absorbing_state_index(state_space=state_space),
     )
 
 
@@ -947,7 +947,7 @@ def test_get_absorbing_state_index_for_no_absorbing_states():
 
     expected_absorbing_states = None
 
-    assert expected_absorbing_states == ludics.main.get_absorbing_state_index(
+    assert expected_absorbing_states == ludics.get_absorbing_state_index(
         state_space=non_absorbing_state_space
     )
 
@@ -971,7 +971,7 @@ def test_get_absorbing_state_index_for_symbolic_state_space():
     expected_absorbing_states = np.array([1, 2])
     np.testing.assert_array_equal(
         expected_absorbing_states,
-        ludics.main.get_absorbing_state_index(state_space=symbolic_state_space),
+        ludics.get_absorbing_state_index(state_space=symbolic_state_space),
     )
 
 
@@ -1012,7 +1012,7 @@ def test_get_absorbing_states_for_standard_state_space():
 
     np.testing.assert_array_equal(
         expected_absorbing_states,
-        ludics.main.get_absorbing_states(state_space=state_space),
+        ludics.get_absorbing_states(state_space=state_space),
     )
 
 
@@ -1042,7 +1042,7 @@ def test_get_absorbing_states_for_no_absorbing_states():
     )
 
     assert (
-        ludics.main.get_absorbing_states(state_space=non_absorbing_state_space) is None
+        ludics.get_absorbing_states(state_space=non_absorbing_state_space) is None
     )
 
 
@@ -1070,7 +1070,7 @@ def test_get_absorbing_states_for_symbolic_state_space():
 
     np.testing.assert_array_equal(
         expected_absorbing_states,
-        ludics.main.get_absorbing_states(state_space=symbolic_state_space),
+        ludics.get_absorbing_states(state_space=symbolic_state_space),
     )
 
 
@@ -1102,7 +1102,7 @@ def test_get_absorption_probabilities_for_trivial_transition_matrix_and_standard
         3: np.array([0, 0, 2, 1], dtype=float),
     }
 
-    actual = ludics.main.get_absorption_probabilities(
+    actual = ludics.get_absorption_probabilities(
         transition_matrix=transition_matrix,
         state_space=state_space,
         exponent_coefficient=50,
@@ -1135,7 +1135,7 @@ def test_extract_Q_for_numeric_transition_matrix():
     )
 
     np.testing.assert_array_equal(
-        expected_Q, ludics.main.extract_Q(transition_matrix=transition_matrix)
+        expected_Q, ludics.extract_Q(transition_matrix=transition_matrix)
     )
 
 
@@ -1165,7 +1165,7 @@ def test_extract_Q_for_symbolic_transition_matrix():
     )
 
     np.testing.assert_array_equal(
-        expected_Q, ludics.main.extract_Q(transition_matrix=transition_matrix)
+        expected_Q, ludics.extract_Q(transition_matrix=transition_matrix)
     )
 
 
@@ -1196,7 +1196,7 @@ def test_extract_Q_for_mixed_transition_matrix():
     )
 
     np.testing.assert_array_equal(
-        expected_Q, ludics.main.extract_Q(transition_matrix=transition_matrix)
+        expected_Q, ludics.extract_Q(transition_matrix=transition_matrix)
     )
 
 
@@ -1223,7 +1223,7 @@ def test_extract_R_numerical_for_numeric_transition_matrix():
     )
 
     np.testing.assert_array_equal(
-        expected_R, ludics.main.extract_R_numerical(transition_matrix=transition_matrix)
+        expected_R, ludics.extract_R_numerical(transition_matrix=transition_matrix)
     )
 
 
@@ -1254,7 +1254,7 @@ def test_extract_R_symbolic_for_mixed_transition_matrix():
     )
 
     np.testing.assert_array_equal(
-        expected_R, ludics.main.extract_R_symbolic(transition_matrix=transition_matrix)
+        expected_R, ludics.extract_R_symbolic(transition_matrix=transition_matrix)
     )
 
 
@@ -1285,7 +1285,7 @@ def test_extract_R_symbolic_for_purely_symbolic_transition_matrix():
     )
 
     np.testing.assert_array_equal(
-        expected_R, ludics.main.extract_R_symbolic(transition_matrix=transition_matrix)
+        expected_R, ludics.extract_R_symbolic(transition_matrix=transition_matrix)
     )
 
 
@@ -1308,7 +1308,7 @@ def test_compute_absorption_matrix_for_numeric_transition_matrix():
 
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
-        ludics.main.compute_absorption_matrix(transition_matrix=transition_matrix),
+        ludics.compute_absorption_matrix(transition_matrix=transition_matrix),
     )
 
 
@@ -1335,7 +1335,7 @@ def test_calculate_absorption_matrix_for_symbolic_transition_matrix():
 
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
-        ludics.main.calculate_absorption_matrix(transition_matrix=transition_matrix),
+        ludics.calculate_absorption_matrix(transition_matrix=transition_matrix),
     )
 
 
@@ -1358,7 +1358,7 @@ def test_compute_absorption_matrix_for_standard_transition_matrix():
 
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
-        ludics.main.compute_absorption_matrix(transition_matrix=transition_matrix),
+        ludics.compute_absorption_matrix(transition_matrix=transition_matrix),
     )
 
 
@@ -1384,7 +1384,7 @@ def test_calculate_absorption_matrix_for_standard_transition_matrix():
 
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
-        ludics.main.calculate_absorption_matrix(transition_matrix=transition_matrix),
+        ludics.calculate_absorption_matrix(transition_matrix=transition_matrix),
     )
 
 
@@ -1418,19 +1418,19 @@ def test_generate_absorption_matrix_functions_accuracy_for_r_values():
         0.29600366,
     ]
 
-    state_space = ludics.main.get_state_space(N=3, k=2)
+    state_space = ludics.get_state_space(N=3, k=2)
 
-    transition_matrix = ludics.main.generate_transition_matrix(
+    transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=public_goods_fitness_function,
-        compute_transition_probability=ludics.main.compute_moran_transition_probability,
+        compute_transition_probability=ludics.compute_moran_transition_probability,
         selection_intensity=0.5,
         r=r,
         alpha=alpha,
         omega=omega,
     )
 
-    absorption_matrix = ludics.main.calculate_absorption_matrix(transition_matrix)
+    absorption_matrix = ludics.calculate_absorption_matrix(transition_matrix)
 
     symbolic_expression = sym.lambdify(
         (r, alpha, omega), sym.Matrix(absorption_matrix)[0, 1], "numpy"
@@ -1470,7 +1470,7 @@ def test_calculate_absorption_matrix_for_5_by_5_symbolic_transition_matrix():
 
     expected_absorption_matrix = ((identity - Q) ** -1) * R
 
-    obtained_absorption_matrix = ludics.main.calculate_absorption_matrix(
+    obtained_absorption_matrix = ludics.calculate_absorption_matrix(
         transition_matrix=transition_matrix
     )
 
@@ -1491,7 +1491,7 @@ def test_compute_steady_state_for_trivial_transition_matrix():
     expected_numeric_output = np.array([0.4, 0.6])
 
     np.testing.assert_allclose(
-        expected_numeric_output, ludics.main.compute_steady_state(numeric_matrix)
+        expected_numeric_output, ludics.compute_steady_state(numeric_matrix)
     )
 
 
@@ -1508,7 +1508,7 @@ def test_compute_steady_state_for_absorbing_transition_matrix():
 
     np.testing.assert_allclose(
         expected_numeric_output,
-        ludics.main.compute_steady_state(numeric_matrix),
+        ludics.compute_steady_state(numeric_matrix),
         rtol=1**-5,
     )
 
@@ -1527,7 +1527,7 @@ def test_calculate_steady_state_for_trivial_transition_matrix():
 
     expected_symbolic_output = sym.Matrix([[0.5 + p + q, 0.5 - p - q]])
 
-    assert expected_symbolic_output - ludics.main.calculate_steady_state(
+    assert expected_symbolic_output - ludics.calculate_steady_state(
         symbolic_matrix
     ) == sym.zeros(rows=1, cols=2)
 
@@ -1545,7 +1545,7 @@ def test_calculate_steady_state_for_absorbing_symbolic_transition_matrix():
 
     expected_output = sym.Matrix([[0, 1, 0]])
 
-    assert expected_output - ludics.main.calculate_steady_state(
+    assert expected_output - ludics.calculate_steady_state(
         transition_matrix
     ) == sym.zeros(rows=1, cols=3)
 
@@ -1560,7 +1560,7 @@ def test_fermi_imitation_function_for_numeric_value():
 
     expected_fermi_value = 0.1824255238
 
-    actual_fermi_value = ludics.main.fermi_imitation_function(
+    actual_fermi_value = ludics.fermi_imitation_function(
         delta=delta, choice_intensity=choice_intensity
     )
 
@@ -1577,7 +1577,7 @@ def test_fermi_imitation_function_for_symbolic_value():
 
     expected_fermi_value = 1 / (1 + sym.E ** (delta * choice_intensity))
 
-    actual_fermi_value = ludics.main.fermi_imitation_function(
+    actual_fermi_value = ludics.fermi_imitation_function(
         delta=delta, choice_intensity=choice_intensity
     )
 
@@ -1596,7 +1596,7 @@ def test_compute_fermi_transition_probability_for_trivial_fitness_function():
     target = np.array([1, 1])
     choice_intensity = 0.5
 
-    actual_probability = ludics.main.compute_fermi_transition_probability(
+    actual_probability = ludics.compute_fermi_transition_probability(
         source=source,
         target=target,
         fitness_function=trivial_fitness_function,
@@ -1620,7 +1620,7 @@ def test_compute_fermi_transition_probability_for_symbolic_fitness_function():
     target = np.array([1, 1, 1])
     beta = sym.Symbol("beta")
 
-    actual_probability = ludics.main.compute_fermi_transition_probability(
+    actual_probability = ludics.compute_fermi_transition_probability(
         source=source,
         target=target,
         fitness_function=symbolic_fitness_function,
@@ -1649,7 +1649,7 @@ def test_compute_fermi_transition_probability_for_infeasible_states_and_no_chang
     target1 = np.array([1, 0])
     choice_intensity = 0.5
 
-    actual_probability1 = ludics.main.compute_fermi_transition_probability(
+    actual_probability1 = ludics.compute_fermi_transition_probability(
         source=source1,
         target=target1,
         fitness_function=trivial_fitness_function,
@@ -1663,7 +1663,7 @@ def test_compute_fermi_transition_probability_for_infeasible_states_and_no_chang
     source2 = np.array([0, 1])
     target2 = np.array([0, 1])
 
-    actual_probability2 = ludics.main.compute_fermi_transition_probability(
+    actual_probability2 = ludics.compute_fermi_transition_probability(
         source=source2,
         target=target2,
         fitness_function=trivial_fitness_function,
@@ -1688,7 +1688,7 @@ def test_compute_fermi_transition_probability_for_impossible_transition():
     choice_intensity = 0.5
     selection_intensity = 0.5
 
-    actual_probability = ludics.main.compute_fermi_transition_probability(
+    actual_probability = ludics.compute_fermi_transition_probability(
         source=source,
         target=target,
         fitness_function=trivial_fitness_function,
@@ -1716,7 +1716,7 @@ def test_compute_imitation_introspection_transition_probability_for_trivial_fite
     choice_intensity = 0.8
 
     actual_probability = (
-        ludics.main.compute_imitation_introspection_transition_probability(
+        ludics.compute_imitation_introspection_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -1746,7 +1746,7 @@ def test_compute_imitation_introspection_transition_probability_for_symbolic_fit
     epsilon = sym.Symbol("\epsilon")
 
     actual_probability = (
-        ludics.main.compute_imitation_introspection_transition_probability(
+        ludics.compute_imitation_introspection_transition_probability(
             source=source,
             target=target,
             fitness_function=symbolic_fitness_function,
@@ -1784,7 +1784,7 @@ def test_compute_imitation_introspection_transition_probability_for_infeasible_s
     selection_intensity = 0.8
 
     actual_probability1 = (
-        ludics.main.compute_imitation_introspection_transition_probability(
+        ludics.compute_imitation_introspection_transition_probability(
             source=source1,
             target=target1,
             fitness_function=trivial_fitness_function,
@@ -1801,7 +1801,7 @@ def test_compute_imitation_introspection_transition_probability_for_infeasible_s
     target2 = np.array([0, 1])
 
     actual_probability2 = (
-        ludics.main.compute_imitation_introspection_transition_probability(
+        ludics.compute_imitation_introspection_transition_probability(
             source=source2,
             target=target2,
             fitness_function=trivial_fitness_function,
@@ -1829,7 +1829,7 @@ def test_compute_imitation_introspection_for_impossible_transition():
     selection_intensity = 0.8
 
     actual_probability = (
-        ludics.main.compute_imitation_introspection_transition_probability(
+        ludics.compute_imitation_introspection_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -1858,7 +1858,7 @@ def test_compute_imitation_introspection_for_global_transition():
     selection_intensity = 0.5
 
     actual_probability = (
-        ludics.main.compute_imitation_introspection_transition_probability(
+        ludics.compute_imitation_introspection_transition_probability(
             source=source,
             target=target,
             fitness_function=heterogeneous_fitness_function,
@@ -1887,7 +1887,7 @@ def test_compute_introspection_transition_probability_for_trivial_fitness_functi
     choice_intensity = 0.5
     number_of_strategies = 3
 
-    actual_probability = ludics.main.compute_introspection_transition_probability(
+    actual_probability = ludics.compute_introspection_transition_probability(
         source=source,
         target=target,
         fitness_function=trivial_fitness_function,
@@ -1916,7 +1916,7 @@ def test_compute_introspection_transition_probability_for_symbolic_fitness_funct
     x_0 = sym.Symbol("x_0")
     x_2 = sym.Symbol("x_2")
 
-    actual_probability = ludics.main.compute_introspection_transition_probability(
+    actual_probability = ludics.compute_introspection_transition_probability(
         source=source,
         target=target,
         fitness_function=symbolic_fitness_function,
@@ -1946,7 +1946,7 @@ def test_compute_introspection_transition_probability_for_infeasible_states_and_
     choice_intensity = 0.5
     number_of_strategies = 2
 
-    actual_probability1 = ludics.main.compute_introspection_transition_probability(
+    actual_probability1 = ludics.compute_introspection_transition_probability(
         source=source1,
         target=target1,
         fitness_function=trivial_fitness_function,
@@ -1961,7 +1961,7 @@ def test_compute_introspection_transition_probability_for_infeasible_states_and_
     source2 = np.array([0, 1])
     target2 = np.array([0, 1])
 
-    actual_probability2 = ludics.main.compute_introspection_transition_probability(
+    actual_probability2 = ludics.compute_introspection_transition_probability(
         source=source2,
         target=target2,
         fitness_function=trivial_fitness_function,
@@ -1989,14 +1989,14 @@ def test_compute_steady_state_for_different_initial_dist():
     steady_state_2 = np.array([0, 0, 0, 1])
 
     np.testing.assert_array_equal(
-        ludics.main.compute_steady_state(
+        ludics.compute_steady_state(
             transition_matrix=transition_matrix, initial_dist=initial_dist_1
         ),
         steady_state_1,
     )
 
     np.testing.assert_array_equal(
-        ludics.main.compute_steady_state(
+        ludics.compute_steady_state(
             transition_matrix=transition_matrix, initial_dist=initial_dist_2
         ),
         steady_state_2,
@@ -2018,7 +2018,7 @@ def test_compute_aspiration_transition_probability_for_trivial_fitness_function(
 
     expected_transition_probability = 0.2074864437
     actual_transition_probability = (
-        ludics.main.compute_aspiration_transition_probability(
+        ludics.compute_aspiration_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -2047,7 +2047,7 @@ def test_compute_aspiration_transition_probability_for_heterogeneous_aspiration_
 
     expected_transition_probability = 0.2436861929
     actual_transition_probability = (
-        ludics.main.compute_aspiration_transition_probability(
+        ludics.compute_aspiration_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -2076,7 +2076,7 @@ def test_compute_aspiration_transition_probability_for_non_trivial_fitness_funct
 
     expected_transition_probability = 0.1500553342
     actual_transition_probability = (
-        ludics.main.compute_aspiration_transition_probability(
+        ludics.compute_aspiration_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -2105,7 +2105,7 @@ def test_compute_aspiration_transition_probability_for_infeasible_transition():
     target = np.array([1, 0, 1])
 
     assert (
-        ludics.main.compute_aspiration_transition_probability(
+        ludics.compute_aspiration_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -2131,7 +2131,7 @@ def test_compute_aspiration_transition_probability_fails_for_too_many_types():
     target = np.array([0, 1, 2])
 
     with pytest.raises(ValueError):
-        ludics.main.compute_aspiration_transition_probability(
+        ludics.compute_aspiration_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -2155,7 +2155,7 @@ def test_compute_aspiration_transition_probability_for_self_transition():
     target = np.array([0, 1, 1])
 
     assert (
-        ludics.main.compute_aspiration_transition_probability(
+        ludics.compute_aspiration_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -2176,7 +2176,7 @@ def test_get_neighbourhood_states_for_standard_state():
 
     expected_neighbourhood = np.array([[0, 0, 1], [1, 1, 1], [1, 0, 0]])
 
-    actual_neighbourhood = ludics.main.get_neighbourhood_states(
+    actual_neighbourhood = ludics.get_neighbourhood_states(
         state=state, number_of_strategies=number_of_strategies
     )
 
@@ -2206,7 +2206,7 @@ def test_get_neighbourhood_states_for_lots_of_strategies():
         ]
     )
 
-    actual_neighbourhood = ludics.main.get_neighbourhood_states(
+    actual_neighbourhood = ludics.get_neighbourhood_states(
         state=state, number_of_strategies=number_of_strategies
     )
 
@@ -2228,7 +2228,7 @@ def test_apply_mutation_probability_for_standard_mutation_vector():
 
     expected_mutation_transition_probability = 0.7
 
-    actual_mutation_transition_probability = ludics.main.apply_mutation_probability(
+    actual_mutation_transition_probability = ludics.apply_mutation_probability(
         source=source,
         target=target,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
@@ -2254,7 +2254,7 @@ def test_apply_mutation_probability_for_no_mutation_vector():
 
     expected_mutation_transition_probability = 0.8
 
-    actual_mutation_transition_probability = ludics.main.apply_mutation_probability(
+    actual_mutation_transition_probability = ludics.apply_mutation_probability(
         source=source,
         target=target,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
@@ -2281,7 +2281,7 @@ def test_apply_mutation_probability_for_infeasible_transition():
 
     expected_mutation_transition_probability = 0
 
-    actual_mutation_transition_probability = ludics.main.apply_mutation_probability(
+    actual_mutation_transition_probability = ludics.apply_mutation_probability(
         source=source,
         target=target,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
@@ -2317,11 +2317,11 @@ def test_simulate_markov_chain_for_trivial_fitness_function():
         tuple(np.array([0, 1, 1])),
     ]
 
-    actual_states_over_time, _ = ludics.main.simulate_markov_chain(
+    actual_states_over_time, _ = ludics.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_introspection_transition_probability,
         seed=seed,
         iterations=iterations,
         choice_intensity=choice_intensity,
@@ -2352,11 +2352,11 @@ def test_simulate_markov_chain_for_warmup():
         tuple(np.array([0, 1, 1])),
     ]
 
-    actual_states_over_time, _ = ludics.main.simulate_markov_chain(
+    actual_states_over_time, _ = ludics.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_introspection_transition_probability,
         seed=seed,
         iterations=iterations,
         warmup=warmup,
@@ -2388,11 +2388,11 @@ def test_simulate_markov_chain_for_moran_process():
         tuple(np.array([1, 1, 1])),
     ]
 
-    actual_states_over_time, _ = ludics.main.simulate_markov_chain(
+    actual_states_over_time, _ = ludics.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_moran_transition_probability,
+        compute_transition_probability=ludics.compute_moran_transition_probability,
         seed=seed,
         iterations=iterations,
         selection_intensity=selection_intensity,
@@ -2421,11 +2421,11 @@ def test_simulate_markov_chain_for_moran_process_counter():
         tuple(np.array([1, 1, 1])): 4,
     }
 
-    _, actual_state_distribution = ludics.main.simulate_markov_chain(
+    _, actual_state_distribution = ludics.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_moran_transition_probability,
+        compute_transition_probability=ludics.compute_moran_transition_probability,
         seed=seed,
         iterations=iterations,
         selection_intensity=selection_intensity,
@@ -2448,28 +2448,28 @@ def test_simulate_markov_chain_gives_correct_numeric_results_introspection():
     number_of_strategies = 2
     seed = 1
     iterations = 10000
-    state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
+    state_space = ludics.get_state_space(N=3, k=number_of_strategies)
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
-    transition_matrix = ludics.main.generate_transition_matrix(
+    transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_introspection_transition_probability,
         number_of_strategies=number_of_strategies,
         choice_intensity=1,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
 
-    expected_state_distribution = ludics.main.compute_steady_state(
+    expected_state_distribution = ludics.compute_steady_state(
         transition_matrix=transition_matrix
     )
 
-    _, states_and_counts = ludics.main.simulate_markov_chain(
+    _, states_and_counts = ludics.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
         seed=seed,
         iterations=iterations,
-        compute_transition_probability=ludics.main.compute_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_introspection_transition_probability,
         choice_intensity=choice_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
@@ -2497,28 +2497,28 @@ def test_simulate_markov_chain_gives_correct_numeric_results_moran():
     number_of_strategies = 2
     seed = 1
     iterations = 10000
-    state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
+    state_space = ludics.get_state_space(N=3, k=number_of_strategies)
 
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
-    transition_matrix = ludics.main.generate_transition_matrix(
+    transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_moran_transition_probability,
+        compute_transition_probability=ludics.compute_moran_transition_probability,
         selection_intensity=selection_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
 
-    expected_state_distribution = ludics.main.compute_steady_state(
+    expected_state_distribution = ludics.compute_steady_state(
         transition_matrix=transition_matrix
     )
 
-    _, states_and_counts = ludics.main.simulate_markov_chain(
+    _, states_and_counts = ludics.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
         seed=seed,
         iterations=iterations,
-        compute_transition_probability=ludics.main.compute_moran_transition_probability,
+        compute_transition_probability=ludics.compute_moran_transition_probability,
         selection_intensity=selection_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
@@ -2546,28 +2546,28 @@ def test_simulate_markov_chain_gives_correct_numeric_results_fermi():
     number_of_strategies = 2
     seed = 1
     iterations = 10000
-    state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
+    state_space = ludics.get_state_space(N=3, k=number_of_strategies)
 
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
-    transition_matrix = ludics.main.generate_transition_matrix(
+    transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_fermi_transition_probability,
+        compute_transition_probability=ludics.compute_fermi_transition_probability,
         choice_intensity=choice_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
 
-    expected_state_distribution = ludics.main.compute_steady_state(
+    expected_state_distribution = ludics.compute_steady_state(
         transition_matrix=transition_matrix
     )
 
-    _, states_and_counts = ludics.main.simulate_markov_chain(
+    _, states_and_counts = ludics.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
         seed=seed,
         iterations=iterations,
-        compute_transition_probability=ludics.main.compute_fermi_transition_probability,
+        compute_transition_probability=ludics.compute_fermi_transition_probability,
         choice_intensity=choice_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
@@ -2596,29 +2596,29 @@ def test_simulate_markov_chain_gives_correct_numeric_results_imispection():
     number_of_strategies = 2
     seed = 2
     iterations = 100000
-    state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
+    state_space = ludics.get_state_space(N=3, k=number_of_strategies)
 
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
-    transition_matrix = ludics.main.generate_transition_matrix(
+    transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_imitation_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_imitation_introspection_transition_probability,
         choice_intensity=choice_intensity,
         selection_intensity=selection_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
     )
 
-    expected_state_distribution = ludics.main.compute_steady_state(
+    expected_state_distribution = ludics.compute_steady_state(
         transition_matrix=transition_matrix
     )
 
-    _, states_and_counts = ludics.main.simulate_markov_chain(
+    _, states_and_counts = ludics.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
         seed=seed,
         iterations=iterations,
-        compute_transition_probability=ludics.main.compute_imitation_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_imitation_introspection_transition_probability,
         choice_intensity=choice_intensity,
         selection_intensity=selection_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
@@ -2647,31 +2647,31 @@ def test_simulate_markov_chain_gives_correct_numeric_results_aspiration():
     number_of_strategies = 2
     seed = 1
     iterations = 10000
-    state_space = ludics.main.get_state_space(N=3, k=number_of_strategies)
+    state_space = ludics.get_state_space(N=3, k=number_of_strategies)
     aspiration_vector = np.array([2, 2, 2])
 
     individual_to_action_mutation_probability = np.full((3, number_of_strategies), 0.2)
 
-    transition_matrix = ludics.main.generate_transition_matrix(
+    transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_aspiration_transition_probability,
+        compute_transition_probability=ludics.compute_aspiration_transition_probability,
         choice_intensity=choice_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
         aspiration_vector=aspiration_vector,
     )
 
-    expected_state_distribution = ludics.main.compute_steady_state(
+    expected_state_distribution = ludics.compute_steady_state(
         transition_matrix=transition_matrix
     )
 
-    _, states_and_counts = ludics.main.simulate_markov_chain(
+    _, states_and_counts = ludics.simulate_markov_chain(
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
         seed=seed,
         iterations=iterations,
-        compute_transition_probability=ludics.main.compute_aspiration_transition_probability,
+        compute_transition_probability=ludics.compute_aspiration_transition_probability,
         choice_intensity=choice_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
         aspiration_vector=aspiration_vector,
@@ -2705,7 +2705,7 @@ def test_generate_transition_matrix_for_multiple_population_dynamics():
     contribution_vector = np.array([1, 2, 3])
     choice_intensity = 1
     selection_intensity = 0.1
-    hybrid_population_dynamic = ludics.main.build_hybrid_population_dynamic(
+    hybrid_population_dynamic = ludics.build_hybrid_population_dynamic(
         population_dynamic_array
     )
 
@@ -2766,8 +2766,8 @@ def test_build_hybrid_dynamic_calls_correct_functions():
 
     population_dynamic_array = np.array(
         [
-            ludics.main.compute_fermi_transition_probability,
-            ludics.main.compute_introspection_transition_probability,
+            ludics.compute_fermi_transition_probability,
+            ludics.compute_introspection_transition_probability,
         ]
     )
     choice_intensity = 0.5
@@ -2776,7 +2776,7 @@ def test_build_hybrid_dynamic_calls_correct_functions():
     state_2 = np.array([1, 0])
     state_3 = np.array([0, 1])
 
-    hybrid_dynamic = ludics.main.build_hybrid_population_dynamic(
+    hybrid_dynamic = ludics.build_hybrid_population_dynamic(
         population_dynamic_array
     )
 

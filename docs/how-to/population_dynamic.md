@@ -20,7 +20,7 @@ Use the `compute_moran_transition_probability` function. Takes a
 `selection_intensity` argument in addition to standard parameters.
 
 ```py
->>> import ludics.main
+>>> import ludics
 >>> import numpy as np
 
 >>> def example_fitness_function(state):
@@ -30,7 +30,7 @@ Use the `compute_moran_transition_probability` function. Takes a
 >>> target = np.array([1,1,2])
 >>> selection_intensity = 0.5
 
->>> ludics.main.compute_moran_transition_probability(
+>>> ludics.compute_moran_transition_probability(
 ... source=source,
 ... target=target,
 ... selection_intensity=selection_intensity,

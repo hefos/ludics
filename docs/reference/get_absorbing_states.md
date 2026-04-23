@@ -1,7 +1,7 @@
 # get_absorbing_states
 
 ```
-ludics.main.get_absorbing_states(state_space)
+ludics.get_absorbing_states(state_space)
 ```
 
 Returns the absorbing states in the state space

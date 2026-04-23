@@ -1,7 +1,7 @@
 # compute_introspection_transition_probability
 
 ```
-ludics.main.compute_introspection_transition_probability(source, target, fitness_function, choice_intensity, number_of_strategies, **kwargs)
+ludics.compute_introspection_transition_probability(source, target, fitness_function, choice_intensity, number_of_strategies, **kwargs)
 ```
 
 Calculates the probability of transitioning from `source` to `target` with

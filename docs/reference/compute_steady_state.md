@@ -1,7 +1,7 @@
 # compute_steady_state
 
 ```
-ludics.main.compute_steady_state(transition_matrix, tolerance=10**-6, initial_dist=None)
+ludics.compute_steady_state(transition_matrix, tolerance=10**-6, initial_dist=None)
 ```
 
 Approximates the steady state of a Markov chain with a numeric transition matrix by iterating through state

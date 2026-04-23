@@ -1,7 +1,7 @@
 # get_state_space
 
 ```
-ludics.main.get_state_space(N, k)
+ludics.get_state_space(N, k)
 ```
 
 Generates a state space

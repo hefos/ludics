@@ -1,7 +1,7 @@
 # fermi_imitation_function
 
 ```
-ludics.main.fermi_imitation_function(delta, choice_intensity=0.5, **kwargs)
+ludics.fermi_imitation_function(delta, choice_intensity=0.5, **kwargs)
 ```
 
 returns the value of the Fermi logit function $\frac{1}{1 +

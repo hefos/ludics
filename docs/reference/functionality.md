@@ -4,7 +4,7 @@ Below is a list of functionality included in `ludics`
 
 ---
 
-## `ludics.main`
+## `ludics`
 
 ---
 

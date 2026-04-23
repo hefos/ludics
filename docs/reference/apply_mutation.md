@@ -1,7 +1,7 @@
 # apply_mutation_probability
 
 ```
-ludics.main.apply_mutation_probability(
+ludics.apply_mutation_probability(
     source, target, individual_to_action_mutation_probability, transition_probability)
 ```
 

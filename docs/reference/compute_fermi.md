@@ -1,7 +1,7 @@
 # compute_fermi_transition_probability
 
 ```
-ludics.main.compute_fermi_transition_probability(source, target, fitness_function, choice_intensity, **kwargs)
+ludics.compute_fermi_transition_probability(source, target, fitness_function, choice_intensity, **kwargs)
 ```
 
 Calculates the probability of transitioning from `source` to `target` with

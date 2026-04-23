@@ -1,7 +1,7 @@
 # compute_moran_transition_probability
 
 ```
-ludics.main.compute_moran_transition_probablity(source, target, fitness_function, selection_intensity, **kwargs)
+ludics.compute_moran_transition_probablity(source, target, fitness_function, selection_intensity, **kwargs)
 ```
 
 Calculates the probability of transitioning from `source` to `target` in the
