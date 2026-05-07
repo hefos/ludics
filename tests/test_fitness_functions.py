@@ -31,7 +31,7 @@ def test_heterogeneous_pgg_fitness_function_for_heterogeneous_numeric_contributi
 
     heterogeneous_contributions = np.array([1, 3, 4, 8])
     state = np.array([1, 1, 1, 1])
-    r = np.array([2.1,2.1,2.1,2.1])
+    r = 2.1
 
     actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
         state=state,
@@ -54,16 +54,16 @@ def test_heterogeneous_pgg_fitness_function_for_heterogeneous_symbolic_contribut
 
     heterogeneous_contributions = np.array([a, b])
     state = np.array([1, 1])
-    r = np.array([sym.Symbol("r"),sym.Symbol("r")])
+    r_vector = np.array([sym.Symbol(r"$r_1$"),sym.Symbol(r"$r_2$")])
 
     actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
         state=state,
         contribution_vector=heterogeneous_contributions,
-        r=r,
+        r=r_vector,
     )
 
-    expected_return_p1 = r * (a/2 + b/2) - a
-    expected_return_p2 = r * (a/2 + b/2) - b
+    expected_return_p1 = r_vector[0] * (a/2 + b/2) - a
+    expected_return_p2 = r_vector[1] * (a/2 + b/2) - b
 
     expected_return = np.array([expected_return_p1, expected_return_p2])
 
