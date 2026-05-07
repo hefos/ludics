@@ -16,7 +16,7 @@ contributes 3 units.
 >>> import numpy as np
 
 >>> N = 3
->>> r = np.array([1.5,1.5,1.5])
+>>> r = 1.5
 >>> contribution_vector = np.array([1.0, 2.0, 3.0])
 >>> choice_intensity = 1.0
 
