@@ -1,7 +1,7 @@
-# homogeneous_pgg_fitness_function
+# public_goods_game_fitness_function
 
 ```
-ludics.fitness_functions.homogeneous_pgg_fitness_function(state, alpha, r, **kwargs)
+ludics.fitness_functions.public_goods_game_fitness_function(state, alpha, r, **kwargs)
 ```
 
 Calculates each player's payoff in a homogeneous public goods game in a given

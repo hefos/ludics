@@ -24,7 +24,7 @@ Use the following to calculate the fitness of each individual in the state:
 >>> r = 2
 >>> alpha = 3
 
->>> ludics.fitness_functions.homogeneous_pgg_fitness_function(
+>>> ludics.fitness_functions.public_goods_game_fitness_function(
 ...     state=state,
 ...     alpha=alpha,
 ...     r=r,
@@ -35,13 +35,13 @@ array([0., 3., 3., 0.])
 
 ### Heterogeneous public goods game
 
-The heterogeneous public goods game requires parameters `r` and
-`contribution_vector`, and provides the fitness of players in the state
+The heterogeneous public goods game requires a _numpy.array_ value of
+`alpha`, and provides the fitness of players in the state
 according to a heterogeneous public goods game where player $i$ contributes
-`contribution_vector[i]`. It works as follows:
+`alpha[i]`. It works as follows:
 
-Using `heterogeneous_pgg_fitness_function`, you can also allow a
-heterogeneous `r`. This multiplies the share of the public good which is
+Using `public_goods_game_fitness_function`, you can also provide a
+heterogeneous `r` by passing a _numpy.array_. This multiplies the share of the public good which is
 distributed to each player, after the total good is divided between all
 players.
 
@@ -52,8 +52,8 @@ players.
 >>> contribution_vector = np.array([2,3,4])
 >>> r_vector = np.array([1.5,2,2.5])
 >>> state = np.array([1,1,1])
->>> ludics.fitness_functions.heterogeneous_pgg_fitness_function(state=state,
-... contribution_vector=contribution_vector, r=r_vector)
+>>> ludics.fitness_functions.public_goods_game_fitness_function(state=state,
+... alpha=contribution_vector, r=r_vector)
 array([2.5, 3. , 3.5])
 
 ```

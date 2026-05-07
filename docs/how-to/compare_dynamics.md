@@ -43,7 +43,7 @@ Moran and Fermi produce **absorbing** chains. Introspection produces an
 ```py
 >>> tm_moran = ludics.generate_transition_matrix(
 ...     state_space=state_space,
-...     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
 ...     selection_intensity=0.5,
 ...     r=r,
@@ -64,7 +64,7 @@ array([[0.80645161, 0.19354839],
 ```py
 >>> tm_fermi = ludics.generate_transition_matrix(
 ...     state_space=state_space,
-...     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     compute_transition_probability=ludics.compute_fermi_transition_probability,
 ...     choice_intensity=1.0,
 ...     r=r,
@@ -88,7 +88,7 @@ the same strategy, so the chain has no absorbing states.
 ```py
 >>> tm_intro = ludics.generate_transition_matrix(
 ...     state_space=state_space,
-...     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     compute_transition_probability=ludics.compute_introspection_transition_probability,
 ...     choice_intensity=1.0,
 ...     number_of_strategies=2,

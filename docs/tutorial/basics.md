@@ -53,7 +53,7 @@ rational.
 >>> import ludics.fitness_functions
 >>> import numpy as np
 
->>> ludics.fitness_functions.homogeneous_pgg_fitness_function(
+>>> ludics.fitness_functions.public_goods_game_fitness_function(
 ...     state=np.array([0, 1]),
 ...     alpha=2,
 ...     r=1.5,
@@ -88,7 +88,7 @@ one state to a neighbouring state in a single step:
 ...     source=source,
 ...     target=target,
 ...     selection_intensity=0.5,
-...     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     alpha=2,
 ...     r=1.5,
 ... )
@@ -114,7 +114,7 @@ moving from state $i$ to state $j$:
 >>> ludics.generate_transition_matrix(
 ...     state_space=state_space,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
-...     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     selection_intensity=0.5,
 ...     alpha=2,
 ...     r=1.5,
@@ -140,7 +140,7 @@ absorbing state $j$ when starting from transient state $i$:
 >>> transition_matrix = ludics.generate_transition_matrix(
 ...     state_space=state_space,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
-...     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     selection_intensity=0.5,
 ...     alpha=2,
 ...     r=1.5,

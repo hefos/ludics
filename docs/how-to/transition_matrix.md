@@ -12,7 +12,7 @@ Use the `generate_transition_matrix` function:
 >>> state_space = ludics.get_state_space(N=2, k=2)
 >>> ludics.generate_transition_matrix(
 ...     state_space=state_space,
-...     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
 ...     selection_intensity=selection_intensity,
 ...     alpha=alpha,
@@ -49,7 +49,7 @@ Pass the `individual_to_action_mutation_probability` argument:
 
 >>> ludics.generate_transition_matrix(
 ...     state_space=state_space,
-...     fitness_function=ludics.fitness_functions.homogeneous_pgg_fitness_function,
+...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
 ...     selection_intensity=selection_intensity,
 ...     alpha=alpha,

@@ -7,7 +7,7 @@ each player in the state.
 ## Public Goods Games
 
 For a public goods game, the state must contain only 0s (defectors) and 1s
-(contributors).
+(contributors). To define a public goods game, use `public_goods_game_fitness_function`
 
 ### Homogeneous public goods game
 
@@ -22,7 +22,7 @@ by `r` and split equally.
 >>> r = 2
 >>> alpha = 3
 
->>> ludics.fitness_functions.homogeneous_pgg_fitness_function(
+>>> ludics.fitness_functions.public_goods_game_fitness_function(
 ...     state=state,
 ...     alpha=alpha,
 ...     r=r,
@@ -45,10 +45,10 @@ return, where $i$ multiplies their share of the public good by `r[i]`.
 >>> r = np.array([2,2,2,4])
 >>> contribution_vector = np.array([1, 2, 3, 4])
 
->>> ludics.fitness_functions.heterogeneous_pgg_fitness_function(
+>>> ludics.fitness_functions.public_goods_game_fitness_function(
 ...     state=state,
 ...     r=r,
-...     contribution_vector=contribution_vector,
+...     alpha=contribution_vector,
 ... )
 array([2.5, 1.5, 3.5, 3. ])
 
