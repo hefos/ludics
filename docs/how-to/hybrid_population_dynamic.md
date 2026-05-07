@@ -37,14 +37,14 @@ This can be passed directly into `generate_transition_matrix`
 >>> number_of_strategies = 2
 >>> state_space = ludics.get_state_space(N=N, k=number_of_strategies)
 >>> hybrid_population_dynamic = ludics.build_hybrid_population_dynamic(population_dynamic_array)
->>> r = 2
+>>> r = np.array([2,2,2])
 >>> contribution_vector = np.array([1, 2, 3])
 >>> choice_intensity = 1
 >>> selection_intensity = 0.1
 
 >>> ludics.generate_transition_matrix(
 ...     state_space=state_space,
-...     fitness_function=ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function,
+...     fitness_function=ludics.fitness_functions.heterogeneous_pgg_fitness_function,
 ...     compute_transition_probability=hybrid_population_dynamic,
 ...     r=r,
 ...     contribution_vector=contribution_vector,

@@ -34,22 +34,23 @@ array([0., 3., 3., 0.])
 ### Heterogeneous public goods game
 
 Players contribute different amounts given by `contribution_vector`, where
-player $i$ contributes `contribution_vector[i]`.
+player $i$ contributes `contribution_vector[i]`. They also receive a different
+return, where $i$ multiplies their share of the public good by `r[i]`.
 
 ```py
 >>> import ludics.fitness_functions
 >>> import numpy as np
 
 >>> state = np.array([1, 1, 0, 1])
->>> r = 2
+>>> r = np.array([2,2,2,4])
 >>> contribution_vector = np.array([1, 2, 3, 4])
 
->>> ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function(
+>>> ludics.fitness_functions.heterogeneous_pgg_fitness_function(
 ...     state=state,
 ...     r=r,
 ...     contribution_vector=contribution_vector,
 ... )
-array([ 2.5,  1.5,  3.5, -0.5])
+array([2.5, 1.5, 3.5, 3. ])
 
 ```
 

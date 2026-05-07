@@ -1,8 +1,8 @@
 # Model heterogeneous contributions for the Public Goods Game
 
-Players often differ in how much they can contribute to a public good.
-`heterogeneous_contribution_pgg_fitness_function` models a PGG where each
-player has a distinct contribution level.
+Players often differ in how much they can contribute to and receive from a public good.
+`heterogeneous_pgg_fitness_function` models a PGG where each
+player has a distinct contribution level and rate of return.
 
 See [The public goods game](../explanation/public_goods_game.md) for the
 payoff formula.
@@ -16,14 +16,14 @@ contributes 3 units.
 >>> import numpy as np
 
 >>> N = 3
->>> r = 1.5
+>>> r = np.array([1.5,1.5,1.5])
 >>> contribution_vector = np.array([1.0, 2.0, 3.0])
 >>> choice_intensity = 1.0
 
 >>> state_space = ludics.get_state_space(N=N, k=2)
 >>> transition_matrix = ludics.generate_transition_matrix(
 ...     state_space=state_space,
-...     fitness_function=ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function,
+...     fitness_function=ludics.fitness_functions.heterogeneous_pgg_fitness_function,
 ...     compute_transition_probability=ludics.compute_fermi_transition_probability,
 ...     choice_intensity=choice_intensity,
 ...     r=r,
@@ -43,18 +43,17 @@ High contributors bear a greater individual cost relative to their share of
 the pool (since $r < N$). States where the high contributor is the lone
 contributor fix on defection with the highest probability (~99%).
 
-`ludics` also allows for a heterogeneous `r` value by using the
-`fully_heterogeneous_pgg_fitness_function` function
+Below is the fitness of a state with heterogeneous returns $r$.
 
 ```py
 >>> import ludics.fitness_functions
 >>> import numpy as np
 
 >>> contribution_vector = np.array([2,3,4])
->>> r_vector = np.array([1.5,2,2.5])
+>>> r = np.array([1.5,2,2.5])
 >>> state = np.array([1,1,1])
->>> ludics.fitness_functions.fully_heterogeneous_pgg_fitness_function(state=state,
-... contribution_vector=contribution_vector, r_vector=r_vector)
+>>> ludics.fitness_functions.heterogeneous_pgg_fitness_function(state=state,
+... contribution_vector=contribution_vector, r=r)
 array([2.5, 3. , 3.5])
 
 ```

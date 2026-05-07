@@ -40,24 +40,7 @@ The heterogeneous public goods game requires parameters `r` and
 according to a heterogeneous public goods game where player $i$ contributes
 `contribution_vector[i]`. It works as follows:
 
-```py
->>> import ludics.fitness_functions
->>> import numpy as np
-
->>> state = np.array([1, 1, 0, 1])
->>> r = 2
->>> contribution_vector = np.array([1, 2, 3, 4])
-
->>> ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function(
-...     state=state,
-...     r=r,
-...     contribution_vector=contribution_vector,
-... )
-array([ 2.5,  1.5,  3.5, -0.5])
-
-```
-
-Using `fully_heterogeneous_fitness_function`, you can also allow a
+Using `heterogeneous_pgg_fitness_function`, you can also allow a
 heterogeneous `r`. This multiplies the share of the public good which is
 distributed to each player, after the total good is divided between all
 players.
@@ -69,8 +52,8 @@ players.
 >>> contribution_vector = np.array([2,3,4])
 >>> r_vector = np.array([1.5,2,2.5])
 >>> state = np.array([1,1,1])
->>> ludics.fitness_functions.fully_heterogeneous_pgg_fitness_function(state=state,
-... contribution_vector=contribution_vector, r_vector=r_vector)
+>>> ludics.fitness_functions.heterogeneous_pgg_fitness_function(state=state,
+... contribution_vector=contribution_vector, r=r_vector)
 array([2.5, 3. , 3.5])
 
 ```

@@ -4,11 +4,12 @@ import numpy as np
 import ludics.fitness_functions
 
 
-def test_heterogeneous_pgg_fitness_function_for_homogeneous_contribution():
+def test_heterogeneous_pgg_fitness_function_for_homogeneous_contribution_and_return():
     """
     Tests that heterogeneous_pgg_fitness_function correctly
     handles a homogeneous contribution. Simultaneously shows that the function
-    takes into account each player's choice of contribution"""
+    takes into account each player's choice of contribution. Also tests that a
+    float value of r is successfully passed"""
 
     homogeneous_contributions = np.array([2, 2, 2])
     state = np.array([1, 0, 1])
@@ -30,7 +31,7 @@ def test_heterogeneous_pgg_fitness_function_for_heterogeneous_numeric_contributi
 
     heterogeneous_contributions = np.array([1, 3, 4, 8])
     state = np.array([1, 1, 1, 1])
-    r = 2.1
+    r = np.array([2.1,2.1,2.1,2.1])
 
     actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
         state=state,
@@ -53,7 +54,7 @@ def test_heterogeneous_pgg_fitness_function_for_heterogeneous_symbolic_contribut
 
     heterogeneous_contributions = np.array([a, b])
     state = np.array([1, 1])
-    r = sym.Symbol("r")
+    r = np.array([sym.Symbol("r"),sym.Symbol("r")])
 
     actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
         state=state,
@@ -76,7 +77,7 @@ def test_heterogeneous_pgg_fitness_function_for_heterogeneous_no_contribution():
 
     heterogeneous_contributions = np.array([8, 41, 28, 19])
     state = np.array([0, 0, 0, 0])
-    r = 3
+    r = np.array([3,3,3,3])
 
     actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
         state=state,
