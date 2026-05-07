@@ -48,8 +48,8 @@ Below is a list of functionality included in `ludics`
 
 ### Public goods games
 
-- [homogeneous_pgg_fitness_function](homogeneous_pgg.md)
-- [heterogeneous_contribution_pgg_fitness_function](heterogeneous_pgg.md)
+- [public_goods_game_fitness_function](homogeneous_pgg.md)
+- [public_goods_game_fitness_function](heterogeneous_pgg.md)
 
 ### Symbolic fitness functions
 

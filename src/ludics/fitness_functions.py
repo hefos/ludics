@@ -1,12 +1,35 @@
 import numpy as np
 import sympy as sym
 
-
-def heterogeneous_contribution_pgg_fitness_function(
-    state, r, contribution_vector, **kwargs
+def public_goods_game_fitness_function(
+    state, r, alpha, **kwargs
 ):
-    """Public goods fitness function where players contribute a different
-    amount.
+    """Public goods fitness function. In this fitness function, player $i$'s
+    fitness is defined as:
+
+    $(\frac{r_i \alpha_i}{N} - \alpha_i$
+
+    where $\alpha_i$ is their contribution and $r_i$ is their rate of return.
+    We also allow a homogeneous value of $\alpha$ and $r$ where all players
+    contribute the same or have the same rate of return. 
+
+    To model a homogeneous public goods game, pass a float value of r and/or
+    alpha. For example:
+
+    r = 1.8
+    alpha = 2
+    state = np.array([1,1,0])
+    ludics.fitness_functions.public_goods_game_fitness_function(r=r,
+    alpha=alpha, state=state)
+
+    To model a heterogeneous public goods game, pass a numpy.array value of r
+    and/or alpha. For example:
+
+    r= np.array([1.5, 2, 2.5])
+    alpha = np.array([1,2,3])
+    state = np.array([1,1,0])
+    ludics.fitness_functions.public_goods_game_fitness_function(r=r,
+    alpha=alpha, state=state)
 
     Parameters
     -----------
@@ -14,62 +37,22 @@ def heterogeneous_contribution_pgg_fitness_function(
     state: numpy.array, the ordered set of actions each player takes; 1 for
     contributing, 0 for free-riding.
 
-    r: float, the parameter which the public goods is multiplied by
+    r: float or numpy.array, the parameter which the public goods is multiplied 
+    by for each player
 
-    contribution_vector: numpy.array, the value which each player contributes
+    alpha: float or numpy.array, the value which each player contributes
 
     Returns
     -------
 
-    numpy.array: an ordered vector of each player's fitness."""
+    numpy.array: an ordered vector of each player's fitness in a given state
+    when playing a public goods game."""
 
-    total_goods = (
-        r
-        * sum(
-            action * contribution
-            for action, contribution in zip(state, contribution_vector)
-        )
-        / len(state)
-    )
+    total_goods = sum(state * alpha)/ len(state)
 
-    payoff_vector = np.array(
-        [
-            total_goods - (action * contribution)
-            for action, contribution in zip(state, contribution_vector)
-        ]
-    )
+    payoff_vector = (r *total_goods) - (state * alpha)
 
     return payoff_vector
-
-
-def homogeneous_pgg_fitness_function(state, alpha, r, **kwargs):
-    """
-    Public goods fitness function where all players contribute the same amount.
-    They therefore have a return of 1 + (selection_intensity * payoff), This
-    is the selection intensity $\epsilon$, which determines the effect of
-    payoff on a player's fitness.
-
-    Parameters
-    -----------
-    state: numpy.array, the ordered set of actions each player takes
-
-    alpha: float, each player's contribution
-
-    r: float, the parameter which the public goods is multiplied by
-
-    epsilon: float, the selection intensity determining the effect of payoff on
-    a player's fitness. Must satisfy $0 < \epsilon < \frac{N}{(N-r)\alpha}$ if r<N
-
-    Returns
-    -------
-    numpy.array: an ordered array of each player's fitness"""
-    homogeneous_contribution_vector = np.array([alpha for _ in enumerate(state)])
-    return heterogeneous_contribution_pgg_fitness_function(
-        state=state,
-        r=r,
-        contribution_vector=homogeneous_contribution_vector,
-        **kwargs,
-    )
 
 
 def general_four_state_fitness_function(state, **kwargs):

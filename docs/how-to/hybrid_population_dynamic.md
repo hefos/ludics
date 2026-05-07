@@ -44,10 +44,10 @@ This can be passed directly into `generate_transition_matrix`
 
 >>> ludics.generate_transition_matrix(
 ...     state_space=state_space,
-...     fitness_function=ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function,
+...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     compute_transition_probability=hybrid_population_dynamic,
 ...     r=r,
-...     contribution_vector=contribution_vector,
+...     alpha=contribution_vector,
 ...     choice_intensity=choice_intensity,
 ...     selection_intensity=selection_intensity,
 ...     number_of_strategies=number_of_strategies
