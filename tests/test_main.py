@@ -2711,7 +2711,7 @@ def test_generate_transition_matrix_for_multiple_population_dynamics():
 
     actual_transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
-        fitness_function=ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function,
+        fitness_function=ludics.fitness_functions.heterogeneous_pgg_fitness_function,
         compute_transition_probability=hybrid_population_dynamic,
         r=r,
         contribution_vector=contribution_vector,

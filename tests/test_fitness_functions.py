@@ -4,9 +4,9 @@ import numpy as np
 import ludics.fitness_functions
 
 
-def test_heterogeneous_contribution_pgg_fitness_function_for_homogeneous_contribution():
+def test_heterogeneous_pgg_fitness_function_for_homogeneous_contribution():
     """
-    Tests that heterogeneous_contribution_pgg_fitness_function correctly
+    Tests that heterogeneous_pgg_fitness_function correctly
     handles a homogeneous contribution. Simultaneously shows that the function
     takes into account each player's choice of contribution"""
 
@@ -14,7 +14,7 @@ def test_heterogeneous_contribution_pgg_fitness_function_for_homogeneous_contrib
     state = np.array([1, 0, 1])
     r = 1.8
 
-    actual_return = ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function(
+    actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
         state=state, contribution_vector=homogeneous_contributions, r=r
     )
 
@@ -23,16 +23,16 @@ def test_heterogeneous_contribution_pgg_fitness_function_for_homogeneous_contrib
     np.testing.assert_allclose(actual_return, expected_return)
 
 
-def test_heterogeneous_contribution_pgg_fitness_function_for_heterogeneous_numeric_contribution():
+def test_heterogeneous_pgg_fitness_function_for_heterogeneous_numeric_contribution():
     """
-    Tests that heterogeneous_contribution_pgg_fitness_function returns the
+    Tests that heterogeneous_pgg_fitness_function returns the
     correct values for a purely numerical hetereogeneous contribution"""
 
     heterogeneous_contributions = np.array([1, 3, 4, 8])
     state = np.array([1, 1, 1, 1])
     r = 2.1
 
-    actual_return = ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function(
+    actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
         state=state,
         contribution_vector=heterogeneous_contributions,
         r=r,
@@ -43,9 +43,9 @@ def test_heterogeneous_contribution_pgg_fitness_function_for_heterogeneous_numer
     np.testing.assert_allclose(actual_return, expected_return)
 
 
-def test_heterogeneous_contribution_pgg_fitness_function_for_heterogeneous_symbolic_contribution():
+def test_heterogeneous_pgg_fitness_function_for_heterogeneous_symbolic_contribution():
     """
-    Tests that heterogeneous_contribution_pgg_fitness_function returns the
+    Tests that heterogeneous_pgg_fitness_function returns the
     correct values for a purely numerical hetereogeneous contribution"""
 
     a = sym.Symbol("a")
@@ -55,30 +55,30 @@ def test_heterogeneous_contribution_pgg_fitness_function_for_heterogeneous_symbo
     state = np.array([1, 1])
     r = sym.Symbol("r")
 
-    actual_return = ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function(
+    actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
         state=state,
         contribution_vector=heterogeneous_contributions,
         r=r,
     )
 
-    expected_return_p1 = r * (a + b) / 2 - a
-    expected_return_p2 = r * (a + b) / 2 - b
+    expected_return_p1 = r * (a/2 + b/2) - a
+    expected_return_p2 = r * (a/2 + b/2) - b
 
     expected_return = np.array([expected_return_p1, expected_return_p2])
 
     np.testing.assert_array_equal(actual_return, expected_return)
 
 
-def test_heterogeneous_contribution_pgg_fitness_function_for_heterogeneous_no_contribution():
+def test_heterogeneous_pgg_fitness_function_for_heterogeneous_no_contribution():
     """
-    Tests that heterogeneous_contribution_pgg_fitness_function returns the
+    Tests that heterogeneous_pgg_fitness_function returns the
     correct values when no players contribute"""
 
     heterogeneous_contributions = np.array([8, 41, 28, 19])
     state = np.array([0, 0, 0, 0])
     r = 3
 
-    actual_return = ludics.fitness_functions.heterogeneous_contribution_pgg_fitness_function(
+    actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
         state=state,
         contribution_vector=heterogeneous_contributions,
         r=r,
@@ -188,56 +188,56 @@ def test_general_four_state_player_fitness_function_for_whole_state_space():
             ludics.fitness_functions.general_four_state_fitness_function(four_state_space[i]),
         )
 
-def test_fully_heterogeneous_pgg_fitness_function_for_homogeneous_contribution():
+def test_heterogeneous_pgg_fitness_function_for_homogeneous_contribution():
     """
-    Tests that fully_heterogeneous_pgg_fitness_function correctly
+    Tests that heterogeneous_pgg_fitness_function correctly
     handles a homogeneous contribution. Simultaneously shows that the function
     takes into account each player's action type"""
 
     homogeneous_contributions = np.array([2, 2, 2])
     state = np.array([1, 0, 1])
-    r_vector = np.array([1.8, 1.8, 1.8])
+    r = np.array([1.8, 1.8, 1.8])
 
-    actual_return = ludics.fitness_functions.fully_heterogeneous_pgg_fitness_function(
-        state=state, contribution_vector=homogeneous_contributions, r_vector=r_vector
+    actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
+        state=state, contribution_vector=homogeneous_contributions, r=r
     )
 
     expected_return = np.array([0.4, 2.4, 0.4])
 
     np.testing.assert_allclose(actual_return, expected_return)
 
-def test_fully_heterogeneous_pgg_fitness_function_for_heterogeneous_contribution_and_homogeneous_r():
+def test_heterogeneous_pgg_fitness_function_for_heterogeneous_contribution_and_homogeneous_r():
     """
-    Tests that fully_heterogeneous_pgg_fitness_function correctly
+    Tests that heterogeneous_pgg_fitness_function correctly
     handles a heterogeneous contribution with a homogeneous r."""
 
     heterogeneous_contributions = np.array([1, 3, 4, 8])
     state = np.array([1, 1, 1, 1])
-    r_vector = np.array([2.1,2.1,2.1,2.1])
+    r = np.array([2.1,2.1,2.1,2.1])
 
-    actual_return = ludics.fitness_functions.fully_heterogeneous_pgg_fitness_function(
+    actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
         state=state,
         contribution_vector=heterogeneous_contributions,
-        r_vector=r_vector,
+        r=r,
     )
 
     expected_return = np.array([7.4, 5.4, 4.4, 0.4])
 
     np.testing.assert_allclose(actual_return, expected_return)
 
-def test_fully_heterogeneous_pgg_fitness_function_for_homoogeneous_contribution_and_heterogeneous_r():
+def test_heterogeneous_pgg_fitness_function_for_homoogeneous_contribution_and_heterogeneous_r():
     """
-    Tests that fully_heterogeneous_pgg_fitness_function correctly
+    Tests that heterogeneous_pgg_fitness_function correctly
     handles a homogeneous contribution with a heterogeneous r."""
 
     heterogeneous_contributions = np.array([2,2,2])
     state = np.array([1, 1, 1])
-    r_vector = np.array([1,1.5,2])
+    r = np.array([1,1.5,2])
 
-    actual_return = ludics.fitness_functions.fully_heterogeneous_pgg_fitness_function(
+    actual_return = ludics.fitness_functions.heterogeneous_pgg_fitness_function(
         state=state,
         contribution_vector=heterogeneous_contributions,
-        r_vector=r_vector,
+        r=r,
     )
 
     expected_return = np.array([0,1,2])
