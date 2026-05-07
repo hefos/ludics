@@ -4,8 +4,32 @@ import sympy as sym
 def public_goods_game_fitness_function(
     state, r, alpha, **kwargs
 ):
-    """Public goods fitness function where players contribute a different
-    amount and have a different rate of return.
+    """Public goods fitness function. In this fitness function, player $i$'s
+    fitness is defined as:
+
+    $(\frac{r_i \alpha_i}{N} - \alpha_i$
+
+    where $\alpha_i$ is their contribution and $r_i$ is their rate of return.
+    We also allow a homogeneous value of $\alpha$ and $r$ where all players
+    contribute the same or have the same rate of return. 
+
+    To model a homogeneous public goods game, pass a float value of r and/or
+    alpha. For example:
+
+    r = 1.8
+    alpha = 2
+    state = np.array([1,1,0])
+    ludics.fitness_functions.public_goods_game_fitness_function(r=r,
+    alpha=alpha, state=state)
+
+    To model a heterogeneous public goods game, pass a numpy.array value of r
+    and/or alpha. For example:
+
+    r= np.array([1.5, 2, 2.5])
+    alpha = np.array([1,2,3])
+    state = np.array([1,1,0])
+    ludics.fitness_functions.public_goods_game_fitness_function(r=r,
+    alpha=alpha, state=state)
 
     Parameters
     -----------
@@ -13,14 +37,16 @@ def public_goods_game_fitness_function(
     state: numpy.array, the ordered set of actions each player takes; 1 for
     contributing, 0 for free-riding.
 
-    r: numpy.array, the parameter which the public goods is multiplied by
+    r: float or numpy.array, the parameter which the public goods is multiplied 
+    by for each player
 
-    contribution_vector: numpy.array, the value which each player contributes
+    alpha: float or numpy.array, the value which each player contributes
 
     Returns
     -------
 
-    numpy.array: an ordered vector of each player's fitness."""
+    numpy.array: an ordered vector of each player's fitness in a given state
+    when playing a public goods game."""
 
     total_goods = sum(state * alpha)/ len(state)
 
