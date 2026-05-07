@@ -50,6 +50,7 @@ Below is a list of functionality included in `ludics`
 
 - [homogeneous_pgg_fitness_function](homogeneous_pgg.md)
 - [heterogeneous_contribution_pgg_fitness_function](heterogeneous_pgg.md)
+- [fully_heterogeneous_pgg_fitness_function](fully_heterogeneous_pgg_fitness_function.md)
 
 ### Symbolic fitness functions
 

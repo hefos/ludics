@@ -42,3 +42,19 @@ array([[0.99330284, 0.00669716],
 High contributors bear a greater individual cost relative to their share of
 the pool (since $r < N$). States where the high contributor is the lone
 contributor fix on defection with the highest probability (~99%).
+
+`ludics` also allows for a heterogeneous `r` value by using the
+`fully_heterogeneous_pgg_fitness_function` function
+
+```py
+>>> import ludics.fitness_functions
+>>> import numpy as np
+
+>>> contribution_vector = np.array([2,3,4])
+>>> r_vector = np.array([1.5,2,2.5])
+>>> state = np.array([1,1,1])
+>>> ludics.fitness_functions.fully_heterogeneous_pgg_fitness_function(state=state,
+... contribution_vector=contribution_vector, r_vector=r_vector)
+array([2.5, 3. , 3.5])
+
+```
