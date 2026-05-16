@@ -2,7 +2,7 @@
 
 # Ludics
 
-A library for the study of heterogeneous population dynamics.
+A python library for the study of heterogeneous population dynamics.
 
 ## Usage
 
