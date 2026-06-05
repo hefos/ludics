@@ -1,7 +1,7 @@
 # Choose an evolutionary dynamic
 
 A population dynamic defines how the population transitions between states.
-There are five dynamics in `ludics`, falling into two categories:
+There are four dynamics in `ludics`, falling into two categories:
 
 **Extrinsic dynamics** (Moran, Fermi): players update
 by comparing themselves to others. The resulting Markov chain is **absorbing**
