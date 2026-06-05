@@ -18,7 +18,8 @@ nav:
       - Install: how-to/install.md
       - Choose a fitness function: how-to/choose_fitness_function.md
       - Define a fitness function: how-to/define_fitness_function.md
-      - Choose an evolutionary dynamic: how-to/population_dynamic.md
+      - Choose a population dynamic: how-to/population_dynamic.md
+      - Define a population dynamic: how-to/define_pop_dynamic.md
       - Assemble the underlying Markov chain: how-to/transition_matrix.md
       - Compute absorption probabilities for absorbing processes: how-to/absorption_matrix.md
       - Compute the stationary distribution of ergodic processes: how-to/steady_state.md

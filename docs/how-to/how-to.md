@@ -5,6 +5,7 @@ Below is a list of our How-to Guides
 - [Installing `ludics`](install.md)
 - [Choosing a fitness function](fitness_function.md)
 - [Choosing a population dynamic](population_dynamic.md)
+- [Define your own population dynamic](define_pop_dynamic.md)
 - [Build a hybrid population dynamic](hybrid_population_dynamic.md)
 - [Creating a transition matrix](transition_matrix.md)
 - [Finding the absorption matrix](absorption_matrix.md)
