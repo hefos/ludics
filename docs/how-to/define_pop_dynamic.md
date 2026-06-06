@@ -3,19 +3,16 @@
 A population dynamic can be defined by creating 
 a function satisfying the following:
 
-- takes two states (`source` and `target`) and 
-    a fitness function `fitness_function`
-- returns 0 if the states aren't neighbours 
-    and `None` if the states are the same
-- returns a value in $(0,1)$ otherwise
+- Takes two states (`source` and `target`) and a `fitness_function`.
+- Returns 0 if the states aren't neighbours and `None` if the states are the
+    same.
+- Returns a value in $(0,1)$ otherwise.
 
 This can then be passed to `generate_transition_matrix` as `compute_transition_probability`
 
-An example of this would be the definition of the 
-`peer pressure` population dynamic, where players 
-accept a new strategy based on the total fitness 
-of that strategy in the population. We would define 
-this using the following function:
+An example of this would be the definition of the `peer pressure` population
+dynamic, where players accept a new strategy based on the total fitness of that
+strategy in the population. We would define this using the following function:
 
 ```py
 >>> import ludics
