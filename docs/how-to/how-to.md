@@ -13,5 +13,6 @@ Below is a list of our How-to Guides
 - [Choose the precision of a steady state calculation](steady_state_precision.md)
 - [Simulating the Markov chain](simulate_markov_chain.md)
 - [Model a public goods game](heterogeneous_pgg.md)
+- [Model a homogeneous population](homogeneous_pop.md)
 - [Use a symbolic fitness function for a two player game](symbolic_fitness.md)
 - [Compare population dynamics](compare_dynamics.md)
