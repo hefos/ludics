@@ -491,52 +491,6 @@ def get_absorbing_states(state_space):
         else np.array([state_space[index] for index in index_array])
     )
 
-
-def get_absorption_probabilities(
-    transition_matrix, state_space, exponent_coefficient=50
-):
-    """Given a transition matrix and a corresponding state space
-
-    generate the absorption probabilities. This does not yet support a
-
-    symbolic transition matrix input
-
-    Parameters
-    -------------
-    state_space: numpy.array, a state space
-
-    transition matrix: numpy.array, a matrix of transition probabilities corresponding to the state space
-
-    Returns
-    -------------
-    Dictionary of values: tuple([starting state]): [[absorbing state 1, absorption probability 1], [absorbing state 2, absorption probability 2]]
-    """
-
-    absorption_index = get_absorbing_state_index(state_space=state_space)
-
-    absorbing_transition_matrix = np.linalg.matrix_power(
-        transition_matrix, exponent_coefficient
-    )
-
-    # TODO this method of getting absorption probabilities will change, but we need to set up benchmarks first
-
-    absorbing_collums = np.array(
-        [absorbing_transition_matrix[:, index] for index in absorption_index]
-    )
-
-    combined_values = np.array(
-        [
-            np.ravel(np.column_stack((absorption_index, absorbing_collums[:, k])))
-            for k, y in enumerate(absorbing_collums.transpose())
-        ]
-    )
-
-    return {
-        state_index: combined_values[state_index]
-        for state_index, state in enumerate(state_space)
-    }
-
-
 def extract_Q(transition_matrix):
     """
     For a transition matrix, compute the corresponding matrix Q

@@ -1073,45 +1073,6 @@ def test_get_absorbing_states_for_symbolic_state_space():
         ludics.get_absorbing_states(state_space=symbolic_state_space),
     )
 
-
-def test_get_absorption_probabilities_for_trivial_transition_matrix_and_standard_state_space():
-    """Tests the get_absorption_probabilities function for a transition matrix that guarentees absorption into a certain absorbing state."""
-
-    state_space = np.array(
-        [
-            [0, 0],
-            [1, 0],
-            [1, 1],
-            [1, 0],
-        ]
-    )
-
-    transition_matrix = np.array(
-        [
-            [1, 0, 0, 0],
-            [1 / 2, 1 / 2, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 1 / 2, 1 / 2],
-        ]
-    )
-
-    expected = {
-        0: np.array([0, 1, 2, 0], dtype=float),
-        1: np.array([0, 1, 2, 0], dtype=float),
-        2: np.array([0, 0, 2, 1], dtype=float),
-        3: np.array([0, 0, 2, 1], dtype=float),
-    }
-
-    actual = ludics.get_absorption_probabilities(
-        transition_matrix=transition_matrix,
-        state_space=state_space,
-        exponent_coefficient=50,
-    )
-
-    for key in expected:
-        np.testing.assert_allclose(expected[key], actual[key])
-
-
 def test_extract_Q_for_numeric_transition_matrix():
     """
     Tests the extract_Q function for a transition matrix with numeric values
