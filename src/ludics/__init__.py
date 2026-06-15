@@ -10,7 +10,6 @@ from ludics.main import (
     generate_transition_matrix,
     get_absorbing_state_index,
     get_absorbing_states,
-    get_absorption_probabilities,
     extract_Q,
     extract_R_numerical,
     extract_R_symbolic,
