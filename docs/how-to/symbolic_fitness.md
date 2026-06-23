@@ -45,7 +45,7 @@ array([f_1(c), f_2(c)], dtype=object)
 ...     state_space=state_space,
 ...     fitness_function=ludics.fitness_functions.general_four_state_fitness_function,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
-...     selection_intensity=1,
+...     selection_intensity=0.5,
 ... )
 
 ```

@@ -50,12 +50,12 @@ Moran and Fermi produce **absorbing** chains. Introspection produces an
 ...     alpha=alpha,
 ... )
 >>> ludics.compute_absorption_matrix(tm_moran)
-array([[0.80645161, 0.19354839],
-       [0.80645161, 0.19354839],
-       [0.48387097, 0.51612903],
-       [0.80645161, 0.19354839],
-       [0.48387097, 0.51612903],
-       [0.48387097, 0.51612903]])
+array([[0.9, 0.1],
+       [0.9, 0.1],
+       [0.6, 0.4],
+       [0.9, 0.1],
+       [0.6, 0.4],
+       [0.6, 0.4]])
 
 ```
 

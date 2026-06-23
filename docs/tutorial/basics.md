@@ -70,8 +70,9 @@ earns 1.5 and the cooperator earns -0.5, as expected when $r < N$.
 An evolutionary dynamic determines how the population transitions between
 states. Here we use the **Moran process**: fitter players are more likely to
 reproduce and pass on their strategy. The `selection_intensity` parameter
-controls how strongly fitness differences influence the outcome (0 = neutral
-drift, larger values = stronger selection).
+controls how strongly fitness differences influence the outcome (0: neutral
+drift, 1: fitness = payoffs, larger values = stronger selection). It must
+always be chosen such that all players admit a positive fitness.
 
 `compute_moran_transition_probability` returns the probability of moving from
 one state to a neighbouring state in a single step:
@@ -92,7 +93,7 @@ one state to a neighbouring state in a single step:
 ...     alpha=2,
 ...     r=1.5,
 ... )
-np.float64(0.35)
+np.float64(0.4166666666666667)
 
 ```
 
@@ -119,10 +120,10 @@ moving from state $i$ to state $j$:
 ...     alpha=2,
 ...     r=1.5,
 ... )
-array([[1.  , 0.  , 0.  , 0.  ],
-       [0.35, 0.5 , 0.  , 0.15],
-       [0.35, 0.  , 0.5 , 0.15],
-       [0.  , 0.  , 0.  , 1.  ]])
+array([[1.        , 0.        , 0.        , 0.        ],
+       [0.41666667, 0.5       , 0.        , 0.08333333],
+       [0.41666667, 0.        , 0.5       , 0.08333333],
+       [0.        , 0.        , 0.        , 1.        ]])
 
 ```
 
@@ -147,8 +148,8 @@ absorbing state $j$ when starting from transient state $i$:
 ... )
 
 >>> ludics.compute_absorption_matrix(transition_matrix)
-array([[0.7, 0.3],
-       [0.7, 0.3]])
+array([[0.83333333, 0.16666667],
+       [0.83333333, 0.16666667]])
 
 ```
 

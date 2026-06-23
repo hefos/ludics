@@ -43,7 +43,7 @@ np.float64(0.1111111111111111)
 **Note:** `selection_intensity` must satisfy the following equation for all
 players $i$:
 
-$1 +$ `selection_intensity` $\cdot$ `fitness_function(state)[i]` $\gt 0$
+$1 -$ `selection_intensity` $+$ `selection_intensity` $\cdot$ `fitness_function(state)[i]` $\gt 0$
 
 ## Fermi imitation dynamics
 
@@ -70,7 +70,7 @@ np.float64(0.1111111111111111)
 
 ```
 
-**Note:** `selection_intensity` must satisfy $1 +$ `selection_intensity`
+**Note:** `selection_intensity` must satisfy $1 -$ `selection_intensity` $+$ `selection_intensity`
 $\cdot$ `fitness_function(state)[i]` $> 0$ for all players $i$.
 
 ## Fermi imitation dynamics
