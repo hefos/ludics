@@ -72,7 +72,7 @@ def compute_moran_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
-    fitness = 1 + (selection_intensity * fitness_function(source, **kwargs))
+    fitness = 1 - selection_intensity + (selection_intensity * fitness_function(source, **kwargs))
     denominator = fitness.sum() * len(source)
     numerator = fitness[source == target[different_indices]].sum()
     return numerator / denominator
@@ -160,7 +160,7 @@ def compute_fermi_transition_probability(
     return (scalar * np.array(changes)).sum()
 
 
-def compute_imitation_introspection_transition_probability(
+def compute_introspective_imitation_transition_probability(
     source, target, fitness_function, choice_intensity, selection_intensity, **kwargs
 ):
     """
@@ -206,7 +206,7 @@ def compute_imitation_introspection_transition_probability(
     fitness_before = fitness[different_indices][0]
     fitness_after = fitness_function(target, **kwargs)[different_indices][0]
 
-    selection_fitness = 1 + (selection_intensity * fitness)
+    selection_fitness = 1 - selection_intensity + (selection_intensity * fitness)
     selection_denominator = selection_fitness.sum() * len(source)
     selection_numerator = selection_fitness[source == target[different_indices]].sum()
     selection_probability = selection_numerator / selection_denominator

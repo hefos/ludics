@@ -79,7 +79,7 @@ def test_compute_moran_transition_probability_for_specific_fitness_function():
 
     correct value. Here we see (0,1,0) -> (1,1,0) with a correct
 
-    value of 1/11, and then we see a transition with Hamming distance
+    value of 1/12, and then we see a transition with Hamming distance
 
     2, correct value 0, and then a transition with Hamming distance
 
@@ -99,7 +99,7 @@ def test_compute_moran_transition_probability_for_specific_fitness_function():
         target=target,
         fitness_function=fitness_function,
         selection_intensity=0.5,
-    ) == 1.5 / (3 * 5.5)
+    ) == 1/12
     source = np.array((0, 1, 1))
     target = np.array((0, 0, 0))
     assert (
@@ -142,7 +142,7 @@ def test_compute_moran_transition_probability_for_ordered_fitness_function():
 
     compute_moran_transition_probability returns the correct value. Here we see (0,1,0) -> (1,1,0)
 
-    with an expected value of 4/33, and then we see a transition with Hamming
+    with an expected value of 2/15, and then we see a transition with Hamming
 
     distance 2, correct value 0, and then a transition with Hamming distance
 
@@ -171,8 +171,8 @@ def test_compute_moran_transition_probability_for_ordered_fitness_function():
         source=source,
         target=target,
         fitness_function=ordered_fitness_function,
-        selection_intensity=0.5,
-    ) == 2 / (3 * 5.5)
+        selection_intensity=1,
+    ) == 2 / 15
     source = np.array((0, 1, 1))
     target = np.array((0, 0, 0))
     assert (
@@ -225,15 +225,15 @@ def test_compute_moran_transition_probability_for_symbolic_fitness_function():
 
     source = np.array((0, 1, 0))
     target = np.array((1, 1, 0))
-    x = sym.symbols("x")
-    y = sym.symbols("y")
+    x = sym.Symbol("x")
+    y = sym.Symbol("y")
     epsilon = sym.Symbol("\epsilon")
-    assert ludics.compute_moran_transition_probability(
+    assert sym.simplify(ludics.compute_moran_transition_probability(
         source=source,
         target=target,
         fitness_function=symbolic_fitness_function,
         selection_intensity=epsilon,
-    ) == (1 + epsilon * x) / ((3 * (1 + epsilon * x)) + (6 * (1 + epsilon * y)))
+    )) == sym.simplify((1 - epsilon + epsilon * x) / ((3 * (1 - epsilon + epsilon * x)) + (6 * (1 - epsilon + epsilon * y))))
     source = np.array((0, 1, 1))
     target = np.array((0, 0, 0))
     assert (
@@ -263,7 +263,7 @@ def test_compute_moran_transition_probability_for_symbolic_fitness_function():
         target=target,
         fitness_function=symbolic_fitness_function,
         selection_intensity=epsilon,
-    ) == (1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+    ) == (1 - epsilon + epsilon * y) / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y))
 
     source = np.array((0, 1))
     target1 = np.array((0, 0))
@@ -280,8 +280,8 @@ def test_compute_moran_transition_probability_for_symbolic_fitness_function():
         selection_intensity=epsilon,
     ) == (
         1
-        - ((1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)))
-        - (1 + epsilon * x) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+        - ((1 - epsilon + epsilon * y) / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y)))
+        - (1 - epsilon + epsilon * x) / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y))
     )
 
 
@@ -299,19 +299,19 @@ def test_compute_moran_transition_probability_for_kwargs_fitness_function():
     target = np.array((1, 1, 0))
     c = 2
     r = 3
+    selection_intensity=0.1
 
-    expected_transition_probability = 2 / 21
+    expected_transition_probability = 0.1047619048
 
-    assert (
+    np.testing.assert_almost_equal(
         ludics.compute_moran_transition_probability(
             source=source,
             target=target,
             fitness_function=kwargs_fitness_function,
-            selection_intensity=0.5,
+            selection_intensity=selection_intensity,
             c=c,
             r=r,
-        )
-        == expected_transition_probability
+        ), expected_transition_probability
     )
 
 
@@ -405,14 +405,14 @@ def test_generate_transition_matrix_for_trivial_fitness_function():
     )
     expected_transition_matrix = np.array(
         [
-            [0.55555556, 0.0, 0.0, 0.11111111, 0.11111111, 0.0, 0.22222222, 0.0],
-            [0.0, 0.55555556, 0.0, 0.11111111, 0.0, 0.11111111, 0.22222222, 0.0],
-            [0.0, 0.0, 0.55555556, 0.0, 0.11111111, 0.11111111, 0.22222222, 0.0],
-            [0.11111111, 0.11111111, 0.0, 0.55555556, 0.0, 0.0, 0.0, 0.22222222],
-            [0.11111111, 0.0, 0.11111111, 0.0, 0.55555556, 0.0, 0.0, 0.22222222],
-            [0.0, 0.11111111, 0.11111111, 0.0, 0.0, 0.55555556, 0.0, 0.22222222],
-            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
-            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+            [0.55555556, 0, 0, 0.11111111, 0.11111111, 0, 0.22222222, 0],
+            [0, 0.55555556, 0, 0.11111111, 0, 0.11111111, 0.22222222, 0],
+            [0, 0, 0.55555556, 0, 0.11111111, 0.11111111, 0.22222222, 0],
+            [0.11111111, 0.11111111, 0, 0.55555556, 0, 0, 0, 0.22222222],
+            [0.11111111, 0, 0.11111111, 0, 0.55555556, 0, 0, 0.22222222],
+            [0, 0.11111111, 0.11111111, 0, 0, 0.55555556, 0, 0.22222222],
+            [0, 0, 0, 0, 0, 0, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 1],
         ]
     )
     np.testing.assert_array_almost_equal(
@@ -460,16 +460,19 @@ def test_generate_transition_matrix_for_ordered_fitness_function():
             (1, 1, 1),
         ]
     )
+
+    selection_intensity=0.5
+
     expected_transition_matrix = np.array(
         [
-            [0.57037037, 0.0, 0.0, 0.0962963, 0.0962963, 0.0, 0.23703704, 0.0],
-            [0.0, 0.54814815, 0.0, 0.11851852, 0.0, 0.11851852, 0.21481481, 0.0],
-            [0.0, 0.0, 0.57037037, 0.0, 0.0962963, 0.0962963, 0.23703704, 0.0],
-            [0.0962963, 0.0962963, 0.0, 0.57037037, 0.0, 0.0, 0.0, 0.23703704],
-            [0.11851852, 0.0, 0.11851852, 0.0, 0.54814815, 0.0, 0.0, 0.21481481],
-            [0.0, 0.0962963, 0.0962963, 0.0, 0.0, 0.57037037, 0.0, 0.23703704],
-            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
-            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+            [7/12, 0, 0, 1/12, 1/12, 0, 3/12, 0],
+            [0, 13/24, 0, 1/8, 0, 1/8, 5/24, 0],
+            [0, 0, 7/12, 0, 1/12, 1/12, 3/12, 0],
+            [1/12, 1/12, 0, 7/12, 0, 0, 0, 3/12],
+            [1/8, 0, 1/8, 0, 13/24, 0, 0, 5/24],
+            [0, 1/12, 1/12, 0, 0, 7/12, 0, 3/12],
+            [0, 0, 0, 0, 0, 0, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 1],
         ]
     )
 
@@ -478,7 +481,7 @@ def test_generate_transition_matrix_for_ordered_fitness_function():
             state_space=state_space,
             fitness_function=ordered_fitness_function,
             compute_transition_probability=ludics.compute_moran_transition_probability,
-            selection_intensity=0.3,
+            selection_intensity=selection_intensity,
         ),
         expected_transition_matrix,
     )
@@ -499,15 +502,15 @@ def test_generate_transition_matrix_for_different_state_space():
     )
     expected_transition_matrix = np.array(
         [
-            [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            [0.25, 0.5, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0],
-            [0.25, 0.0, 0.5, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            [0.25, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.25],
-            [0.25, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.25],
-            [0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.5, 0.0, 0.25],
-            [0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.5, 0.25],
-            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0.25, 0.5, 0, 0.25, 0, 0, 0, 0, 0],
+            [0.25, 0, 0.5, 0.25, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0.25, 0, 0, 0, 0.5, 0, 0, 0, 0.25],
+            [0.25, 0, 0, 0, 0, 0.5, 0, 0, 0.25],
+            [0, 0, 0, 0.25, 0, 0, 0.5, 0, 0.25],
+            [0, 0, 0, 0.25, 0, 0, 0, 0.5, 0.25],
+            [0, 0, 0, 0, 0, 0, 0, 0, 1],
         ]
     )
     np.testing.assert_allclose(
@@ -548,32 +551,32 @@ def test_generate_transition_matrix_for_symbolic_fitness_function():
         [
             [1, 0, 0, 0],
             [
-                (1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)),
+                (1 - epsilon + epsilon * y) / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y)),
                 (
                     1
                     - (
-                        (1 + epsilon * y)
-                        / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                        (1 - epsilon + epsilon * y)
+                        / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y))
                     )
-                    - (1 + epsilon * x)
-                    / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                    - (1 - epsilon + epsilon * x)
+                    / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y))
                 ),
                 0,
-                (1 + epsilon * x) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)),
+                (1 - epsilon + epsilon * x) / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y)),
             ],
             [
-                (1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)),
+                (1 - epsilon + epsilon * y) / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y)),
                 0,
                 (
                     1
                     - (
-                        (1 + epsilon * y)
-                        / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                        (1 - epsilon + epsilon * y)
+                        / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y))
                     )
-                    - (1 + epsilon * x)
-                    / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                    - (1 - epsilon + epsilon * x)
+                    / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y))
                 ),
-                (1 + epsilon * x) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)),
+                (1 - epsilon + epsilon * x) / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y)),
             ],
             [0, 0, 0, 1],
         ]
@@ -613,10 +616,10 @@ def test_generate_transition_matrix_with_individual_to_action_mutation_probabili
 
     expected_transition_matrix = np.array(
         [
-            [0.9, 0.025, 0.075, 0.0],
-            [0.2625, 0.5, 0.0, 0.2375],
-            [0.2625, 0.0, 0.5, 0.2375],
-            [0.0, 0.1, 0.05, 0.85],
+            [0.9, 0.025, 0.075, 0],
+            [0.2625, 0.5, 0, 0.2375],
+            [0.2625, 0, 0.5, 0.2375],
+            [0, 0.1, 0.05, 0.85],
         ]
     )
 
@@ -649,10 +652,10 @@ def test_generate_transition_matrix_with_individual_to_action_mutation_probabili
 
     expected_transition_matrix = np.array(
         [
-            [0.825, 0.1, 0.075, 0.0],
-            [0.2125, 1 - 0.2125 - 0.285, 0.0, 0.285],
-            [0.215, 0.0, 1 - 0.215 - 0.2875, 0.2875],
-            [0.0, 0.005, 0.025, 0.97],
+            [0.825, 0.1, 0.075, 0],
+            [0.2125, 1 - 0.2125 - 0.285, 0, 0.285],
+            [0.215, 0, 1 - 0.215 - 0.2875, 0.2875],
+            [0, 0.005, 0.025, 0.97],
         ]
     )
 
@@ -679,7 +682,7 @@ def test_generate_transition_matrix_with_individual_to_action_mutation_probabili
     actual_transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=trivial_fitness_function,
-        compute_transition_probability=ludics.compute_imitation_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_introspective_imitation_transition_probability,
         choice_intensity=beta,
         selection_intensity=epsilon,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
@@ -687,10 +690,10 @@ def test_generate_transition_matrix_with_individual_to_action_mutation_probabili
 
     expected_transition_matrix = np.array(
         [
-            [0.85, 0.1, 0.05, 0.0],
-            [0.15625, 1 - 0.15625 - 0.16125, 0.0, 0.16125],
-            [0.11625, 0.0, 1 - 0.11625 - 0.18125, 0.18125],
-            [0.0, 0.005, 0.075, 1 - 0.005 - 0.075],
+            [0.85, 0.1, 0.05, 0],
+            [0.15625, 1 - 0.15625 - 0.16125, 0, 0.16125],
+            [0.11625, 0, 1 - 0.11625 - 0.18125, 0.18125],
+            [0, 0.005, 0.075, 1 - 0.005 - 0.075],
         ]
     )
 
@@ -724,10 +727,10 @@ def test_generate_transition_matrix_with_individual_to_action_mutation_probabili
 
     expected_transition_matrix = np.array(
         [
-            [1 - 0.275 - 0.275, 0.275, 0.275, 0.0],
-            [0.225, 1 - 0.225 - 0.275, 0.0, 0.275],
-            [0.225, 0.0, 1 - 0.225 - 0.275, 0.275],
-            [0.0, 0.225, 0.225, 1 - 0.225 - 0.225],
+            [1 - 0.275 - 0.275, 0.275, 0.275, 0],
+            [0.225, 1 - 0.225 - 0.275, 0, 0.275],
+            [0.225, 0, 1 - 0.225 - 0.275, 0.275],
+            [0, 0.225, 0.225, 1 - 0.225 - 0.225],
         ]
     )
 
@@ -778,35 +781,35 @@ def test_generate_transition_matrix_for_symbolic_fitness_function_with_mutation(
         [
             [1 - mu_22 / 2 - mu_12 / 2, mu_22 / 2, mu_12 / 2, 0],
             [
-                ((1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)))
+                ((1 - epsilon + epsilon * y) / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y)))
                 * (1 - mu_sum_p2)
                 + mu_21 / 2,
                 (
                     1
                     - (
                         (
-                            (1 + epsilon * y)
-                            / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                            (1 - epsilon + epsilon * y)
+                            / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y))
                         )
                         * (1 - mu_sum_p2)
                         + mu_21 / 2
                     )
                     - (
                         (
-                            (1 + epsilon * x)
-                            / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                            (1 - epsilon + epsilon * x)
+                            / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y))
                         )
                         * (1 - mu_sum_p1)
                         + mu_12 / 2
                     )
                 ),
                 0,
-                ((1 + epsilon * x) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)))
+                ((1 - epsilon + epsilon * x) / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y)))
                 * (1 - mu_sum_p1)
                 + mu_12 / 2,
             ],
             [
-                ((1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)))
+                ((1 - epsilon + epsilon * y) / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y)))
                 * (1 - mu_sum_p1)
                 + mu_11 / 2,
                 0,
@@ -814,22 +817,22 @@ def test_generate_transition_matrix_for_symbolic_fitness_function_with_mutation(
                     1
                     - (
                         (
-                            (1 + epsilon * y)
-                            / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                            (1 - epsilon + epsilon * y)
+                            / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y))
                         )
                         * (1 - mu_sum_p1)
                         + mu_11 / 2
                     )
                     - (
                         (
-                            (1 + epsilon * x)
-                            / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                            (1 - epsilon + epsilon * x)
+                            / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y))
                         )
                         * (1 - mu_sum_p2)
                         + mu_22 / 2
                     )
                 ),
-                ((1 + epsilon * x) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)))
+                ((1 - epsilon + epsilon * x) / (2 * (1 - epsilon + epsilon * x) + 2 * (1 - epsilon + epsilon * y)))
                 * (1 - mu_sum_p2)
                 + mu_22 / 2,
             ],
@@ -866,10 +869,10 @@ def test_generate_transition_matrix_for_kwargs_fitness_function():
     r = 4
     expected_transition_matrix = np.array(
         [
-            [1.0, 0.0, 0.0, 0.0],
-            [0.33333333, 0.5, 0.0, 0.16666667],
-            [0.33333333, 0.0, 0.5, 0.16666667],
-            [0.0, 0.0, 0.0, 1.0],
+            [1, 0, 0, 0],
+            [7/22, 1/2, 0, 2/11],
+            [7/22, 0, 1/2, 2/11],
+            [0, 0, 0, 1],
         ]
     )
     np.testing.assert_array_almost_equal(
@@ -878,7 +881,7 @@ def test_generate_transition_matrix_for_kwargs_fitness_function():
             state_space=state_space,
             fitness_function=kwargs_fitness_function,
             compute_transition_probability=ludics.compute_moran_transition_probability,
-            selection_intensity=0.5,
+            selection_intensity=0.25,
             c=c,
             r=r,
         ),
@@ -1356,30 +1359,26 @@ def test_generate_absorption_matrix_functions_accuracy_for_r_values():
 
     r values"""
 
-    def public_goods_fitness_function(state, alpha, r, omega):
+    def public_goods_fitness_function(state, alpha, r):
         number_of_contributors = state.sum()
-        big_bit = r * alpha * (number_of_contributors) / (len(state))
-        payoff = np.array([big_bit - alpha * x for x in state])
-        return (1) + (omega * payoff)
+        public_good = r * alpha * (number_of_contributors) / (len(state))
+        payoff = np.array([public_good - alpha * x for x in state])
+        return payoff
 
     r = sym.Symbol("r")
-    alpha = sym.Symbol("a")
-    omega = sym.Symbol("w")
+    alpha = sym.Symbol(r"$\alpha$")
 
-    r_test_values = np.array([0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4])
+    r_test_values = np.array([1.5, 1.75, 2, 2.25, 2.5])
 
     expected_results = [
-        0.2883263,
-        0.28963365,
-        0.29085873,
-        0.29200983,
-        0.29309407,
-        0.29411765,
-        0.29508594,
-        0.29600366,
+        1/6,
+        3/14,
+        1/4,
+        5/18,
+        3/10
     ]
 
-    state_space = ludics.get_state_space(N=3, k=2)
+    state_space = ludics.get_state_space(N=2, k=2)
 
     transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
@@ -1388,16 +1387,15 @@ def test_generate_absorption_matrix_functions_accuracy_for_r_values():
         selection_intensity=0.5,
         r=r,
         alpha=alpha,
-        omega=omega,
     )
 
     absorption_matrix = ludics.calculate_absorption_matrix(transition_matrix)
 
     symbolic_expression = sym.lambdify(
-        (r, alpha, omega), sym.Matrix(absorption_matrix)[0, 1], "numpy"
+        (r, alpha), sym.Matrix(absorption_matrix)[0, 1], "numpy"
     )
 
-    obtained_results = symbolic_expression(r_test_values, 2, 0.2)
+    obtained_results = symbolic_expression(r_test_values, 2)
 
     np.testing.assert_array_almost_equal(expected_results, obtained_results)
 
@@ -1662,9 +1660,9 @@ def test_compute_fermi_transition_probability_for_impossible_transition():
     np.testing.assert_almost_equal(actual_probability, expected_probability)
 
 
-def test_compute_imitation_introspection_transition_probability_for_trivial_fitenss_function():
+def test_compute_introspective_imitation_transition_probability_for_trivial_fitenss_function():
     """
-    Tests that the compute_imitation_introspection_transition_probability
+    Tests that the compute_introspective_imitation_transition_probability
     function returns the correct value for a trivial fitness function."""
 
     def trivial_fitness_function(state, **kwargs):
@@ -1677,7 +1675,7 @@ def test_compute_imitation_introspection_transition_probability_for_trivial_fite
     choice_intensity = 0.8
 
     actual_probability = (
-        ludics.compute_imitation_introspection_transition_probability(
+        ludics.compute_introspective_imitation_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -1686,16 +1684,16 @@ def test_compute_imitation_introspection_transition_probability_for_trivial_fite
         )
     )
 
-    expected_probability = 0.08999667145
+    expected_probability = 0.0903538011
 
     np.testing.assert_almost_equal(
         actual_probability, expected_probability, err_msg=actual_probability
     )
 
 
-def test_compute_imitation_introspection_transition_probability_for_symbolic_fitness_function():
+def test_compute_introspective_imitation_transition_probability_for_symbolic_fitness_function():
     """
-    Tests whether the compute_imitation_introspection_transition_probability
+    Tests whether the compute_introspective_imitation_transition_probability
     function returns the correct expression for a symbolic fitness function"""
 
     def symbolic_fitness_function(state, **kwargs):
@@ -1707,7 +1705,7 @@ def test_compute_imitation_introspection_transition_probability_for_symbolic_fit
     epsilon = sym.Symbol("\epsilon")
 
     actual_probability = (
-        ludics.compute_imitation_introspection_transition_probability(
+        ludics.compute_introspective_imitation_transition_probability(
             source=source,
             target=target,
             fitness_function=symbolic_fitness_function,
@@ -1718,8 +1716,8 @@ def test_compute_imitation_introspection_transition_probability_for_symbolic_fit
 
     x = sym.Symbol("x")
     y = sym.Symbol("y")
-    fy = 1 + epsilon * y
-    fx = 1 + epsilon * x
+    fy = 1 - epsilon + epsilon * y
+    fx = 1 - epsilon + epsilon * x
 
     expected_probability = (
         (1 / 5)
@@ -1731,9 +1729,9 @@ def test_compute_imitation_introspection_transition_probability_for_symbolic_fit
     assert sym.simplify(actual_probability - expected_probability) == 0
 
 
-def test_compute_imitation_introspection_transition_probability_for_infeasible_states_and_no_change():
+def test_compute_introspective_imitation_transition_probability_for_infeasible_states_and_no_change():
     """
-    Tests whether compute_imitation_introspection_transition_probability returns the correct
+    Tests whether compute_introspective_imitation_transition_probability returns the correct
     values when the state transition is not of hamming distance 1"""
 
     def trivial_fitness_function(state):
@@ -1745,7 +1743,7 @@ def test_compute_imitation_introspection_transition_probability_for_infeasible_s
     selection_intensity = 0.8
 
     actual_probability1 = (
-        ludics.compute_imitation_introspection_transition_probability(
+        ludics.compute_introspective_imitation_transition_probability(
             source=source1,
             target=target1,
             fitness_function=trivial_fitness_function,
@@ -1762,7 +1760,7 @@ def test_compute_imitation_introspection_transition_probability_for_infeasible_s
     target2 = np.array([0, 1])
 
     actual_probability2 = (
-        ludics.compute_imitation_introspection_transition_probability(
+        ludics.compute_introspective_imitation_transition_probability(
             source=source2,
             target=target2,
             fitness_function=trivial_fitness_function,
@@ -1776,8 +1774,8 @@ def test_compute_imitation_introspection_transition_probability_for_infeasible_s
     _ = trivial_fitness_function(source1)  # prevents unused function warning
 
 
-def test_compute_imitation_introspection_for_impossible_transition():
-    """Tests compute_imitation_introspection_transition_probability for a
+def test_compute_introspective_imitation_for_impossible_transition():
+    """Tests compute_introspective_imitation_transition_probability for a
     transition which introduces a new strategy to the population"""
 
     def trivial_fitness_function(state, **kwargs):
@@ -1790,7 +1788,7 @@ def test_compute_imitation_introspection_for_impossible_transition():
     selection_intensity = 0.8
 
     actual_probability = (
-        ludics.compute_imitation_introspection_transition_probability(
+        ludics.compute_introspective_imitation_transition_probability(
             source=source,
             target=target,
             fitness_function=trivial_fitness_function,
@@ -1804,8 +1802,8 @@ def test_compute_imitation_introspection_for_impossible_transition():
     np.testing.assert_almost_equal(actual_probability, expected_probability)
 
 
-def test_compute_imitation_introspection_for_global_transition():
-    """Tests compute_imitation_introspection_transition_probability for a
+def test_compute_introspective_imitation_for_global_transition():
+    """Tests compute_introspective_imitation_transition_probability for a
     transition which gives a different fitness to the changing player in the
     new state."""
 
@@ -1815,11 +1813,11 @@ def test_compute_imitation_introspection_for_global_transition():
     source = np.array([1, 1, 0, 0])
     target = np.array([1, 1, 1, 0])
 
-    choice_intensity = 0.8
+    choice_intensity = 0.5
     selection_intensity = 0.5
 
     actual_probability = (
-        ludics.compute_imitation_introspection_transition_probability(
+        ludics.compute_introspective_imitation_transition_probability(
             source=source,
             target=target,
             fitness_function=heterogeneous_fitness_function,
@@ -1828,7 +1826,7 @@ def test_compute_imitation_introspection_for_global_transition():
         )
     )
 
-    expected_probability = 0.115558109
+    expected_probability = 0.1044369398
     np.testing.assert_almost_equal(
         actual_probability, expected_probability, err_msg=actual_probability
     )
@@ -1836,7 +1834,7 @@ def test_compute_imitation_introspection_for_global_transition():
 
 def test_compute_introspection_transition_probability_for_trivial_fitness_function():
     """
-    Tests that the compute_imitation_introspection_transition_probability
+    Tests that the compute_introspective_imitation_transition_probability
     function returns the correct value for a trivial fitness function."""
 
     def trivial_fitness_function(state, **kwargs):
@@ -1863,7 +1861,7 @@ def test_compute_introspection_transition_probability_for_trivial_fitness_functi
 
 def test_compute_introspection_transition_probability_for_symbolic_fitness_function():
     """
-    Tests that the compute_imitation_introspection_transition_probability
+    Tests that the compute_introspective_imitation_transition_probability
     function returns the correct value for a trivial fitness function."""
 
     def symbolic_fitness_function(state, **kwargs):
@@ -2563,7 +2561,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_imispection():
     transition_matrix = ludics.generate_transition_matrix(
         state_space=state_space,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.compute_imitation_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_introspective_imitation_transition_probability,
         choice_intensity=choice_intensity,
         selection_intensity=selection_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
@@ -2579,7 +2577,7 @@ def test_simulate_markov_chain_gives_correct_numeric_results_imispection():
         fitness_function=fitness_function,
         seed=seed,
         iterations=iterations,
-        compute_transition_probability=ludics.compute_imitation_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_introspective_imitation_transition_probability,
         choice_intensity=choice_intensity,
         selection_intensity=selection_intensity,
         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
@@ -2684,30 +2682,30 @@ def test_generate_transition_matrix_for_multiple_population_dynamics():
     expected_transition_matrix = np.array(
         [
             [1 - 0.08964714046, 0.08964714046, 0, 0, 0, 0, 0, 0],
-            [0.2436861929, 0.657500404, 0, 0.007904312196, 0, 0.09090909091, 0, 0],
+            [0.2436861929, 1 - 0.2436861929 - 0.007904312196 - 0.08888888889, 0, 0.007904312196, 0, 0.08888888889, 0, 0],
             [
                 0.293599026,
                 0,
-                0.5195316113177778,
+                1 - 0.08964714046 - 0.293599026 - 0.09578544061,
                 0.08964714046,
                 0,
                 0,
-                0.0972222222222222,
+                0.09578544061,
                 0,
             ],
-            [0, 0.146799513, 0.2436861929, 0.4031650878, 0, 0, 0, 0.2063492063],
-            [0.229390681, 0, 0, 0, 0.6361386083, 0.08964714046, 0.04482357023, 0],
+            [0, 0.146799513, 0.2436861929, 1 - 0.146799513 - 0.2436861929 - 0.2048611111, 0, 0, 0, 0.2048611111],
+            [0.2301587302, 0, 0, 0, 1 - 0.2301587302 - 0.08964714046 - 0.04482357023, 0.08964714046, 0.04482357023, 0],
             [
                 0,
-                0.12418300653594769,
+                0.1254480287,
                 0,
                 0,
                 0.2436861929,
-                1 - 0.12418300653594769 - 0.2436861929 - 0.0527278824245936,
+                1 - 0.1254480287 - 0.2436861929 - 0.0527278824245936,
                 0,
                 0.0527278824245936,
             ],
-            [0, 0, 0.1212121212, 0, 0.146799513, 0, 0.6423412253, 0.08964714046],
+            [0, 0, 0.1222222222, 0, 0.146799513, 0, 1 - 0.08964714046 - 0.146799513 - 0.1222222222, 0.08964714046],
             [0, 0, 0, 0, 0, 0, 0.2436861929, 1 - 0.2436861929],
         ]
     )
