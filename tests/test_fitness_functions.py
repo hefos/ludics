@@ -273,6 +273,7 @@ def test_pairwise_interaction_fitness_function_for_asymmetric_game():
     d = np.array([2,2,2,1])
 
     actual_value = ludics.fitness_functions.pairwise_interaction_fitness_function(state=state,a=a,b=b,c=c,d=d)
+    
     expected_value = np.array([5/3, 10/3, 5, 5/3])
 
     np.testing.assert_allclose(actual_value, expected_value)
