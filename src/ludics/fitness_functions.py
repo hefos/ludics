@@ -115,6 +115,6 @@ def pairwise_interaction_fitness_function(state,a,b,c,d):
     """
     N = len(state)
     number_of_cooperators = np.sum(state)
-    cooperator_payoffs = np.array([((number_of_cooperators-1) * a[i] + (N - number_of_cooperators) * b[i])/(N-1) for i in range(N)])
-    defector_payoffs = np.array([((number_of_cooperators) * c[i] + (N - number_of_cooperators-1) * d[i])/(N-1) for i in range(N)])
-    return np.array([cooperator_payoffs[player] if action == 1 else defector_payoffs[player] for player, action in enumerate(state)])
+    cooperator_payoffs = ((number_of_cooperators-1) * a + (N - number_of_cooperators) * b)/(N-1)
+    defector_payoffs = ((number_of_cooperators) * c + (N - number_of_cooperators-1) * d)/(N-1)
+    return cooperator_payoffs * state + defector_payoffs * (1 - state)
