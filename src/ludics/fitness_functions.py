@@ -106,8 +106,8 @@ def pairwise_interaction_fitness_function(state,a,b,c,d):
     state: numpy.array, the ordered set of actions each player takes. 1 is a
     cooperator, 0 is a defector,
 
-    a,b,c,d: numpy.array, the entries to go into the payoff matrix. Entry i is the
-    respective payoff for player i's payoff matrix
+    a,b,c,d: float numpy.array, the entries to go into the payoff matrix. Entry i is the
+    respective payoff for player i's payoff matrix. Float values indicate a symmetric game
 
     Returns:
     ---------
