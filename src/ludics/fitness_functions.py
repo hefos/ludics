@@ -86,3 +86,35 @@ def general_four_state_fitness_function(state, **kwargs):
     return np.array(
         [sym.Function(f"f_{i + 1}")(state_symbol) for i, j in enumerate(state)]
     )
+
+def pairwise_interaction_fitness_function(state,a,b,c,d):
+    """
+    Returns the fitness of players in a symmetric pairwise interaction game. 
+    The payoff matrix for the row player is given by:
+    
+    |   |  C  |  D  | 
+    |---|-----|-----|
+    | C | a_i | b_i |
+    | D | c_i | d_i |
+
+    And a player's fitness is given by the mean payoff they receive when
+    interacting in a 2 player game with a random other member of the 
+    population.
+
+    Parameters:
+    -----------
+    state: numpy.array, the ordered set of actions each player takes. 1 is a
+    cooperator, 0 is a defector,
+
+    a,b,c,d: numpy.array, the entries to go into the payoff matrix. Entry i is the
+    respective payoff for player i's payoff matrix
+
+    Returns:
+    ---------
+    numpy.array: an ordered array of each player's fitness
+    """
+    N = len(state)
+    number_of_cooperators = np.sum(state)
+    cooperator_payoffs = np.array([((number_of_cooperators-1) * a[i] + (N - number_of_cooperators) * b[i])/(N-1) for i in range(N)])
+    defector_payoffs = np.array([((number_of_cooperators) * c[i] + (N - number_of_cooperators-1) * d[i])/(N-1) for i in range(N)])
+    return np.array([cooperator_payoffs[player] if action == 1 else defector_payoffs[player] for player, action in enumerate(state)])
