@@ -50,7 +50,7 @@ player 2 contributes 3 units, and `r` is homogeneous between all players.
 >>> N = 3
 >>> r = 1.5
 >>> contribution_vector = np.array([1.0, 2.0, 3.0])
->>> choice_intensity = 1.0
+>>> choice_intensity = np.full(shape=(3,3), fill_value=1)
 
 >>> state_space = ludics.get_state_space(N=N, k=2)
 >>> transition_matrix = ludics.generate_transition_matrix(

@@ -5,10 +5,11 @@ Use the `generate_transition_matrix` function:
 ```py
 >>> import ludics
 >>> import ludics.fitness_functions
+>>> import numpy as np
 
 >>> r = 1.5
 >>> alpha = 5
->>> selection_intensity = 0.2
+>>> selection_intensity = np.full(shape=(2,2), fill_value=0.2)
 >>> state_space = ludics.get_state_space(N=2, k=2)
 >>> ludics.generate_transition_matrix(
 ...     state_space=state_space,
@@ -39,7 +40,7 @@ Pass the `individual_to_action_mutation_probability` argument:
 
 >>> r = 1.5
 >>> alpha = 5
->>> selection_intensity = 0.2
+>>> selection_intensity = np.full(shape=(3,3), fill_value=0.2)
 >>> state_space = ludics.get_state_space(N=3, k=2)
 >>> mutation_probabilities = np.array([
 ...     [0.1, 0.2],

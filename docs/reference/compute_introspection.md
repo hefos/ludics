@@ -13,7 +13,8 @@ introspection dynamics
 - `target`: _numpy.array_ - the state being transitioned to
 - `fitness_function`: _func_ - takes a numpy.array and returns an
   `array of floats with the same shape
-- `choice_intensity`: _float_ - the choice intensity of the process
+- `choice_intensity`: _numpy.array_ - the choice intensity of the system, with
+  shape $(N,K)$, where $k$ is the number of strategies
 - `number_of_strategies`: _int_ - the number of strategies which players can play
 
 ### Returns:

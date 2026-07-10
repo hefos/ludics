@@ -25,6 +25,7 @@ a detailed explanation of this convention.
 
 ```py
 >>> import ludics
+>>> import numpy as np
 
 >>> N = 2
 >>> number_of_strategies = 2
@@ -72,7 +73,9 @@ states. Here we use the **Moran process**: fitter players are more likely to
 reproduce and pass on their strategy. The `selection_intensity` parameter
 controls how strongly fitness differences influence the outcome (0: neutral
 drift, 1: fitness = payoffs, larger values = stronger selection). It must
-always be chosen such that all players admit a positive fitness.
+always be chosen such that all players admit a positive fitness. For more 
+detail on how intensities work and why they are passed as a `numpy.array`, 
+see the explanation section on [intensities](../explanation/intensities.md).
 
 `compute_moran_transition_probability` returns the probability of moving from
 one state to a neighbouring state in a single step:
@@ -88,7 +91,7 @@ one state to a neighbouring state in a single step:
 >>> ludics.compute_moran_transition_probability(
 ...     source=source,
 ...     target=target,
-...     selection_intensity=0.5,
+...     selection_intensity=np.full(shape=(2,2), fill_value=0.5),
 ...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     alpha=2,
 ...     r=1.5,
@@ -116,7 +119,7 @@ moving from state $i$ to state $j$:
 ...     state_space=state_space,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
 ...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
-...     selection_intensity=0.5,
+...     selection_intensity=np.full(shape=(2,2), fill_value=0.5),
 ...     alpha=2,
 ...     r=1.5,
 ... )
@@ -138,11 +141,15 @@ the absorption matrix, whose entry $B_{ij}$ is the probability of fixing in
 absorbing state $j$ when starting from transient state $i$:
 
 ```py
+>>> import ludics
+>>> import ludics.fitness_functions
+>>> import numpy as np
+
 >>> transition_matrix = ludics.generate_transition_matrix(
 ...     state_space=state_space,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
 ...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
-...     selection_intensity=0.5,
+...     selection_intensity=np.full(shape=(2,2), fill_value=0.5),
 ...     alpha=2,
 ...     r=1.5,
 ... )

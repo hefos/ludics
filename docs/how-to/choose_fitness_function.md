@@ -54,6 +54,7 @@ array([2.5, 1.5, 3.5, 3. ])
 
 ```
 
+
 ## Symbolic fitness functions
 
 `ludics.fitness_functions` provides a general symbolic fitness function for

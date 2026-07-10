@@ -54,7 +54,11 @@ $$
 $$
 
 Where we denote the fitness of player $i$ in state $a$ by $f_i(a)$, and the set
-of states which differ from state $a$ in exactly one position by Neb($a$)
+of states which differ from state $a$ in exactly one position by Neb($a$). In
+`ludics`, we take $f_i(a) = 1 - \epsilon + \epsilon\pi_i(a)$, where $\epsilon$
+is the choice intensity of the system. We also allow for heterogeneous choice
+intensity, so that $\epsilon_{ij}$ depends on the player who is changing
+strategy.
 
 ## Fermi imitation dynamics
 
