@@ -137,8 +137,7 @@ def compute_fermi_transition_probability(
     choice_intensity: numpy.array: the choice intensity of the
     function. The lower the value, the higher the probability that a player will
     choose the higher fitness strategy in $\phi$. Entry ij is the rationality
-    with which player $i$ considers the strategy of player $j$. Shape must be (N,N), where 
-    K is the number of strategies
+    with which player $i$ considers the strategy of player $j$. Shape must be (N,N)
 
     Returns
     ---------
