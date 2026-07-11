@@ -48,6 +48,7 @@ Moran and Fermi produce **absorbing** chains. Introspection produces an
 ...     selection_intensity=np.full(shape=(N,N), fill_value=0.5),
 ...     r=r,
 ...     alpha=alpha,
+...     fitness_map=ludics.linear_fitness_map
 ... )
 >>> ludics.compute_absorption_matrix(tm_moran)
 array([[0.9, 0.1],

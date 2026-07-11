@@ -16,8 +16,9 @@ the mathematical definitions of each dynamic.
 
 ## The Moran process
 
-Use the `compute_moran_transition_probability` function. Takes a
-`selection_intensity` argument in addition to standard parameters.
+Use the `compute_moran_transition_probability` function. Takes
+`selection_intensity` and `fitness_map` arguments in addition to standard
+parameters.
 
 ```py
 >>> import ludics
@@ -34,7 +35,8 @@ Use the `compute_moran_transition_probability` function. Takes a
 ... source=source,
 ... target=target,
 ... selection_intensity=selection_intensity,
-... fitness_function=example_fitness_function
+... fitness_function=example_fitness_function,
+... fitness_map=ludics.linear_fitness_map
 ... )
 np.float64(0.1111111111111111)
 

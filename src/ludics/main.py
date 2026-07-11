@@ -36,9 +36,44 @@ def get_state_space(N, k):
 
     return state_space
 
+def linear_fitness_map(fitness, selection_intensity, **kwargs):
+    """
+    Takes a fitness vector and returns a linear mapping 
+    $1 - \epislon + \epsilon\pi$. Good for systems with
+    small payoff differences
+    
+    Parameters
+    -----------
+    fitness: numpy.array or float, the unscaled fitness of a state or player
+    
+    selection_intensity: float, the selection intensity of the system
+    
+    Returns
+    --------
+    numpy.array: the mapped fitness of the system"""
+
+    return 1 - selection_intensity + selection_intensity * fitness
+
+def exponential_fitness_map(fitness, selection_intensity, **kwargs):
+    """
+    Takes a fitness vector and returns an exponential mapping 
+    $e^{\epsilon * \pi}$. Good for systems with
+    large negative values
+    
+    Parameters
+    -----------
+    fitness: numpy.array or float, the unscaled fitness of a state or player
+    
+    selection_intensity: float, the selection intensity of the system
+    
+    Returns
+    --------
+    numpy.array: the mapped fitness of the system"""
+
+    return sym.E ** (selection_intensity * fitness)
 
 def compute_moran_transition_probability(
-    source, target, fitness_function, selection_intensity, **kwargs
+    source, target, fitness_function, selection_intensity, fitness_map, **kwargs
 ):
     """
     Given two states and a fitness function, returns the transition probability
@@ -64,6 +99,8 @@ def compute_moran_transition_probability(
     system. Entries may be floats or sympy.Symbol. Entry ij is the selection
     intensity when player $i$ copies player $j$. Shape must be (N,N)
 
+    fitness_map: func, a positive mapping to transform the fitness
+
     Returns
     ---------
     Float: the transition pobability from source to target
@@ -73,8 +110,8 @@ def compute_moran_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
-
-    fitness = 1 - selection_intensity[different_indices[0][0]] + (selection_intensity[different_indices[0][0]] * fitness_function(source, **kwargs))
+    
+    fitness = fitness_map(fitness=fitness_function(source, **kwargs), selection_intensity=selection_intensity[different_indices[0][0]], **kwargs)
     denominator = fitness.sum() * len(source)
     numerator = fitness[source == target[different_indices[0][0]]].sum()
     return numerator / denominator
@@ -164,7 +201,7 @@ def compute_fermi_transition_probability(
 
 
 def compute_introspective_imitation_transition_probability(
-    source, target, fitness_function, choice_intensity, selection_intensity, **kwargs
+    source, target, fitness_function, choice_intensity, selection_intensity, fitness_map, **kwargs
 ):
     """
     Given two states, a fitness function, and a choice intensity, returns the
@@ -198,6 +235,8 @@ def compute_introspective_imitation_transition_probability(
     system. Entries may be floats or sympy.Symbol. Entry ij is the selection
     intensity when player $i$ copies player $j$. Shape must be (N,N)
 
+    fitness_map: func, a positive mapping to transform the fitness
+
     Returns
     ---------
     Float: the transition pobability from source to target"""
@@ -212,7 +251,7 @@ def compute_introspective_imitation_transition_probability(
     fitness_before = fitness[different_indices][0]
     fitness_after = fitness_function(target, **kwargs)[different_indices][0]
 
-    selection_fitness = 1 - selection_intensity[different_indices[0][0]] + (selection_intensity[different_indices[0][0]] * fitness)
+    selection_fitness = fitness_map(fitness=fitness, selection_intensity=selection_intensity[different_indices[0][0]], **kwargs)
     selection_denominator = selection_fitness.sum() * len(source)
     selection_numerator = selection_fitness[source == target[different_indices]].sum()
     selection_probability = selection_numerator / selection_denominator
