@@ -62,7 +62,3 @@ matrix is of shape $(N,N)$.
   only defined for 2 strategies). Thus a player considers the rationality by
   which they switch away from (or do not switch away from) their current
   strategy. The shape of the choice intensity matrix is $(N,K)$
-
-
-
-

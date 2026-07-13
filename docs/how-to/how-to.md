@@ -16,3 +16,4 @@ Below is a list of our How-to Guides
 - [Use a symbolic fitness function for a two player game](symbolic_fitness.md)
 - [Compare population dynamics](compare_dynamics.md)
 - [Choose or Define a fitness map](fitness_map.md)
+- [Implement heterogeneous selection and choice intensity](heterogeneous_intensities.md)

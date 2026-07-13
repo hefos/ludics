@@ -22,14 +22,10 @@ implemented using `ludics.linear_fitness_map`:
 >>> import ludics
 
 >>> fitness = np.array([1,2,3])
->>> selection_intensity = np.array([
-... [0.1, 0.2, 0.3],
-... [0.1, 0.2, 0.3],
-... [0.1, 0.2, 0.3]
-... ])
+>>> selection_intensity = 0.2
 
->>> ludics.linear_fitness_map(fitness=fitness, selection_intensity=selection_intensity[0])
-array([1. , 1.2, 1.6])
+>>> ludics.linear_fitness_map(fitness=fitness, selection_intensity=selection_intensity)
+array([1. , 1.2, 1.4])
 
 ```
 
@@ -44,14 +40,10 @@ of $\epsilon$. In `ludics`, this is done using `exponential_fitness_map`:
 >>> import numpy as np
 >>> import ludics
 >>> fitness = np.array([0,1,2])
->>> selection_intensity = np.array([
-... [0.1, 0.2, 0.3],
-... [0.1, 0.2, 0.3],
-... [0.1, 0.2, 0.3]
-... ])
+>>> selection_intensity = 0.2
 
->>> ludics.exponential_fitness_map(fitness=fitness, selection_intensity=selection_intensity[0])
-array([1, 1.22140275816017, 1.82211880039051], dtype=object)
+>>> ludics.exponential_fitness_map(fitness=fitness, selection_intensity=selection_intensity)
+array([1, 1.22140275816017, 1.49182469764127], dtype=object)
 
 ```
 
@@ -73,12 +65,8 @@ An example of this is shown below:
 >>> def example_fitness_map(fitness, selection_intensity, **kwargs):
 ...     return (1 + np.tanh(fitness * selection_intensity))/2
 >>> fitness = np.array([0,1,2])
->>> selection_intensity = np.array([
-... [0.1, 0.2, 0.3],
-... [0.1, 0.2, 0.3],
-... [0.1, 0.2, 0.3]
-... ])
->>> example_fitness_map(fitness=fitness, selection_intensity=selection_intensity[0])
-array([0.5       , 0.59868766, 0.76852478])
+>>> selection_intensity = 0.2
+>>> example_fitness_map(fitness=fitness, selection_intensity=selection_intensity)
+array([0.5       , 0.59868766, 0.68997448])
 
 ```

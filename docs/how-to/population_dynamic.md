@@ -29,7 +29,7 @@ parameters.
 
 >>> source = np.array([0,1,2])
 >>> target = np.array([1,1,2])
->>> selection_intensity = np.full(shape=(3,3), fill_value=0.5)
+>>> selection_intensity = 0.5
 
 >>> ludics.compute_moran_transition_probability(
 ... source=source,
@@ -64,7 +64,7 @@ Use the `compute_fermi_transition_probability` function. Takes a
 
 >>> source = np.array([0, 1, 2])
 >>> target = np.array([1, 1, 2])
->>> choice_intensity = np.full(shape=(3,3), fill_value=0.5)
+>>> choice_intensity = 0.5
 
 >>> ludics.compute_fermi_transition_probability(
 ...     source=source,
@@ -95,7 +95,7 @@ standard parameters.
 
 >>> source = np.array([0, 1, 2])
 >>> target = np.array([1, 1, 2])
->>> choice_intensity = np.full(shape=(3,3), fill_value=0.5)
+>>> choice_intensity = 0.5
 
 >>> ludics.compute_introspection_transition_probability(
 ...     source=source,
@@ -128,7 +128,7 @@ parameters. State space must include exactly two actions.
 
 >>> source = np.array([0, 1, 1])
 >>> target = np.array([1, 1, 1])
->>> choice_intensity = np.full(shape=(3,2), fill_value=0.5)
+>>> choice_intensity = 0.5
 >>> aspiration_vector = np.array([3, 2, 1])
 
 >>> ludics.compute_aspiration_transition_probability(

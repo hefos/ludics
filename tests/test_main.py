@@ -3,7 +3,6 @@ import numpy as np
 import sympy as sym
 import pytest
 
-
 def test_compute_moran_transition_probability_for_trivial_fitness_function():
     """
     Tests whether the compute_moran_transition_probability
@@ -3135,3 +3134,262 @@ def test_exponential_fitness_map():
     expected_mapped_fitness = np.array([1, 1.2214027582, 4.9530324244, 2.4596031112])
 
     np.testing.assert_array_almost_equal(actual_mapped_fitness, expected_mapped_fitness)
+
+def test_compute_moran_transition_probability_for_homogeneous_intensity():
+    """
+    Tests that passing a float, np.float(32), and np.float(64) returns
+    the same value as passing a numpy.array in the Moran process"""
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i for _,i in enumerate(state)])
+
+    float_selection_intensity = 0.5
+    npfloat32_selection_intensity = np.float32(0.5)
+    npfloat64_selection_intensity = np.float64(0.5)
+    array_selection_intensity = np.full(shape=(3,3), fill_value=0.5)
+
+    source = np.array([1,1,0])
+    target = np.array([0,1,0])
+
+    float_transition_probability = ludics.compute_moran_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=float_selection_intensity,
+        fitness_map=ludics.linear_fitness_map
+    )
+
+    np32_transition_probability = ludics.compute_moran_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=npfloat32_selection_intensity,
+        fitness_map=ludics.linear_fitness_map
+    )
+
+    np64_transition_probability = ludics.compute_moran_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=npfloat64_selection_intensity,
+        fitness_map=ludics.linear_fitness_map
+    )
+    
+    array_transition_probability = ludics.compute_moran_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=array_selection_intensity,
+        fitness_map=ludics.linear_fitness_map
+    )
+
+    assert float_transition_probability == np32_transition_probability == np64_transition_probability == array_transition_probability
+
+
+def test_compute_fermi_transition_probability_for_homogeneous_intensity():
+    """
+    Tests that passing a float, np.float(32), and np.float(64) returns
+    the same value as passing a numpy.array in Fermi imitation dynamics"""
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i for _,i in enumerate(state)])
+
+    float_choice_intensity = 0.5
+    npfloat32_choice_intensity = np.float32(0.5)
+    npfloat64_choice_intensity = np.float64(0.5)
+    array_choice_intensity = np.full(shape=(3,3), fill_value=0.5)
+
+    source = np.array([1,1,0])
+    target = np.array([0,1,0])
+
+    float_transition_probability = ludics.compute_fermi_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=float_choice_intensity,
+    )
+
+    np32_transition_probability = ludics.compute_fermi_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=npfloat32_choice_intensity,
+    )
+
+    np64_transition_probability = ludics.compute_fermi_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=npfloat64_choice_intensity,
+    )
+    
+    array_transition_probability = ludics.compute_fermi_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=array_choice_intensity,
+    )
+
+    assert float_transition_probability == np32_transition_probability == np64_transition_probability == array_transition_probability
+
+def test_compute_introspection_transition_probability_for_homogeneous_intensity():
+    """
+    Tests that passing a float, np.float(32), and np.float(64) returns
+    the same value as passing a numpy.array in introspection dynamics"""
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i for _,i in enumerate(state)])
+
+    float_choice_intensity = 0.5
+    npfloat32_choice_intensity = np.float32(0.5)
+    npfloat64_choice_intensity = np.float64(0.5)
+    array_choice_intensity = np.full(shape=(3,13), fill_value=0.5)
+    number_of_strategies = 13
+
+    source = np.array([1,4,9])
+    target = np.array([12,4,9])
+
+    float_transition_probability = ludics.compute_introspection_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=float_choice_intensity,
+        number_of_strategies=number_of_strategies
+    )
+
+    np32_transition_probability = ludics.compute_introspection_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=npfloat32_choice_intensity,
+        number_of_strategies=number_of_strategies
+    )
+
+    np64_transition_probability = ludics.compute_introspection_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=npfloat64_choice_intensity,
+        number_of_strategies=number_of_strategies
+    )
+    
+    array_transition_probability = ludics.compute_introspection_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=array_choice_intensity,
+        number_of_strategies=number_of_strategies
+    )
+
+    assert float_transition_probability == np32_transition_probability == np64_transition_probability == array_transition_probability
+
+def test_compute_aspiration_transition_probability_for_homogeneous_intensity():
+    """
+    Tests that passing a float, np.float(32), and np.float(64) returns
+    the same value as passing a numpy.array in aspiration dynamics"""
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i for _,i in enumerate(state)])
+
+    float_choice_intensity = 0.5
+    npfloat32_choice_intensity = np.float32(0.5)
+    npfloat64_choice_intensity = np.float64(0.5)
+    array_choice_intensity = np.full(shape=(3,2), fill_value=0.5)
+    aspiration_vector = np.array([1,2,3])
+
+    source = np.array([1,0,1])
+    target = np.array([1,0,0])
+
+    float_transition_probability = ludics.compute_aspiration_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=float_choice_intensity,
+        aspiration_vector=aspiration_vector
+    )
+
+    np32_transition_probability = ludics.compute_aspiration_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=npfloat32_choice_intensity,
+        aspiration_vector=aspiration_vector
+    )
+
+    np64_transition_probability = ludics.compute_aspiration_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=npfloat64_choice_intensity,
+        aspiration_vector=aspiration_vector
+    )
+    
+    array_transition_probability = ludics.compute_aspiration_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=array_choice_intensity,
+        aspiration_vector=aspiration_vector
+    )
+
+    assert float_transition_probability == np32_transition_probability == np64_transition_probability == array_transition_probability
+
+
+def test_compute_introspective_imitation_transition_probability_for_homogeneous_intensity():
+    """
+    Tests that passing a float, np.float(32), and np.float(64) returns
+    the same value as passing a numpy.array in introspective imitation dynamics"""
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i for _,i in enumerate(state)])
+
+    float_selection_intensity = 0.5
+    npfloat32_selection_intensity = np.float32(0.5)
+    npfloat64_selection_intensity = np.float64(0.5)
+    array_selection_intensity = np.full(shape=(3,3), fill_value=0.5)
+
+    float_choice_intensity = 0.5
+    npfloat32_choice_intensity = np.float32(0.5)
+    npfloat64_choice_intensity = np.float64(0.5)
+    array_choice_intensity = np.full(shape=(3,2), fill_value=0.5)
+
+    source = np.array([0,1,0])
+    target = np.array([1,1,0])
+
+    float_transition_probability = ludics.compute_introspective_imitation_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=float_selection_intensity,
+        choice_intensity=float_choice_intensity,
+        fitness_map=ludics.linear_fitness_map
+    )
+
+    np32_transition_probability = ludics.compute_introspective_imitation_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=npfloat32_selection_intensity,
+        choice_intensity=npfloat32_choice_intensity,
+        fitness_map=ludics.linear_fitness_map
+    )
+
+    np64_transition_probability = ludics.compute_introspective_imitation_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=npfloat64_selection_intensity,
+        choice_intensity=npfloat64_choice_intensity,
+        fitness_map=ludics.linear_fitness_map
+    )
+    
+    array_transition_probability = ludics.compute_introspective_imitation_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=array_selection_intensity,
+        choice_intensity=array_choice_intensity,
+        fitness_map=ludics.linear_fitness_map
+    )
+
+    assert float_transition_probability == np32_transition_probability == np64_transition_probability == array_transition_probability

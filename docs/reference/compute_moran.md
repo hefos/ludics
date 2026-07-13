@@ -13,10 +13,12 @@ Moran process
 - `target`: _numpy.array_ - the state being transitioned to
 - `fitness_function`: _func_ - takes a numpy.array and returns an
   `array of floats with the same shape
-- `selection_intensity`: _numpy.array_ - the selection intensity of the process.
-  Must have shape $(N,N)$
+- `selection_intensity`: _numpy.array_ or _float_ - the selection intensity of the process.
+  Must have shape $(N,N)$ if passed as an array
 - `fitness_map`: _func_ - the mapping of the fitness by selection intensity onto
-  a strictly positive value. Must accept parameters `fitness`, `selection_intensity`, and `**kwargs`
+  a strictly positive value. Must accept parameters `fitness`,
+  `selection_intensity`, and `**kwargs`. By default, this is set to the
+  `linear_fitness_map` function.
 
 ### Returns:
 

@@ -73,15 +73,14 @@ def exponential_fitness_map(fitness, selection_intensity, **kwargs):
     return sym.E ** (selection_intensity * fitness)
 
 def compute_moran_transition_probability(
-    source, target, fitness_function, selection_intensity, fitness_map, **kwargs
+    source, target, fitness_function, selection_intensity, fitness_map=linear_fitness_map, **kwargs
 ):
     """
     Given two states and a fitness function, returns the transition probability
     when moving from the source state to the target state. Must move between
     states with a Hamming distance of 1.
 
-    Returns 0 if Hamming distance > 1.
-    Returns None if Hamming distance = 0.
+    Returns 0 if Hamming distance > 1. Returns None if Hamming distance = 0.
 
 
     $\frac{\sum_{v_i = u_{i*}}{f(v_i)}}{\sum_{v_i}f(v_i)}$
@@ -99,7 +98,8 @@ def compute_moran_transition_probability(
     system. Entries may be floats or sympy.Symbol. Entry ij is the selection
     intensity when player $i$ copies player $j$. Shape must be (N,N)
 
-    fitness_map: func, a positive mapping to transform the fitness
+    fitness_map: func, a positive mapping to transform the fitness. Linear by
+    default.
 
     Returns
     ---------
@@ -110,6 +110,9 @@ def compute_moran_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
+
+    if isinstance(selection_intensity, (int, float, np.floating, np.integer)):
+        selection_intensity = np.full(shape=(len(source), len(source)), fill_value=selection_intensity)
     
     fitness = fitness_map(fitness=fitness_function(source, **kwargs), selection_intensity=selection_intensity[different_indices[0][0]], **kwargs)
     denominator = fitness.sum() * len(source)
@@ -185,6 +188,10 @@ def compute_fermi_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
+    
+    if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
+        choice_intensity = np.full(shape=(len(source), len(source)), fill_value=choice_intensity)
+
     fitness = fitness_function(source, **kwargs)
 
     changes = [
@@ -201,7 +208,7 @@ def compute_fermi_transition_probability(
 
 
 def compute_introspective_imitation_transition_probability(
-    source, target, fitness_function, choice_intensity, selection_intensity, fitness_map, **kwargs
+    source, target, fitness_function, choice_intensity, selection_intensity, fitness_map=linear_fitness_map, **kwargs
 ):
     """
     Given two states, a fitness function, and a choice intensity, returns the
@@ -225,17 +232,18 @@ def compute_introspective_imitation_transition_probability(
     fitness_function: func, The fitness function which maps a state to a
     numpy.array
 
-    choice_intensity: numpy.array: the choice intensity of the
-    function. The lower the value, the higher the probability that a player will
-    choose the higher fitness strategy in $\phi$. Entry ik is the rationality
-    with which player $i$ considers strategy $k$. Shape must be (N,K), where 
-    K is the number of strategies
+    choice_intensity: numpy.array: the choice intensity of the function. The
+    lower the value, the higher the probability that a player will choose the
+    higher fitness strategy in $\phi$. Entry ik is the rationality with which
+    player $i$ considers strategy $k$. Shape must be (N,K), where K is the
+    number of strategies
 
     selection_intensity: numpy.array: the selection intensity $\epsilon$ of the
     system. Entries may be floats or sympy.Symbol. Entry ij is the selection
     intensity when player $i$ copies player $j$. Shape must be (N,N)
 
-    fitness_map: func, a positive mapping to transform the fitness
+    fitness_map: func, a positive mapping to transform the fitness. Linear by
+    default
 
     Returns
     ---------
@@ -246,6 +254,12 @@ def compute_introspective_imitation_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
+    
+    if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
+        choice_intensity = np.full(shape=(len(source), np.max(target)+1), fill_value=choice_intensity)
+    
+    if isinstance(selection_intensity, (int, float, np.floating, np.integer)):
+        selection_intensity = np.full(shape=(len(source), len(source)), fill_value=selection_intensity)
 
     fitness = fitness_function(source, **kwargs)
     fitness_before = fitness[different_indices][0]
@@ -308,6 +322,9 @@ def compute_introspection_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
+    
+    if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
+        choice_intensity = np.full(shape=(len(source), number_of_strategies), fill_value=choice_intensity)
 
     fitness = fitness_function(source, **kwargs)
     fitness_before = fitness[different_indices][0]
@@ -368,6 +385,9 @@ def compute_aspiration_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
+
+    if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
+        choice_intensity = np.full(shape=(len(source), 2), fill_value=choice_intensity)
 
     fitness = fitness_function(source, **kwargs)
     fitness_before = fitness[different_indices][0]

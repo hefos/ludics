@@ -39,8 +39,8 @@ This can be passed directly into `generate_transition_matrix`
 >>> hybrid_population_dynamic = ludics.build_hybrid_population_dynamic(population_dynamic_array)
 >>> r = 2
 >>> contribution_vector = np.array([1, 2, 3])
->>> choice_intensity = np.full(shape=(3,3), fill_value=1)
->>> selection_intensity = np.full(shape=(3,3), fill_value=0.1)
+>>> choice_intensity = 1
+>>> selection_intensity = 0.1
 >>> fitness_map=ludics.linear_fitness_map
 
 >>> ludics.generate_transition_matrix(

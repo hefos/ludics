@@ -41,11 +41,12 @@ array([f_1(c), f_2(c)], dtype=object)
 >>> import numpy as np
 
 >>> state_space = ludics.get_state_space(N=2, k=2)
+>>> selection_intensity = 0.5
 >>> transition_matrix = ludics.generate_transition_matrix(
 ...     state_space=state_space,
 ...     fitness_function=ludics.fitness_functions.general_four_state_fitness_function,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
-...     selection_intensity=np.full(shape=(2,2), fill_value=0.5),
+...     selection_intensity=selection_intensity,
 ...     fitness_map=ludics.linear_fitness_map
 ... )
 

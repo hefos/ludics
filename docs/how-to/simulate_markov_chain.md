@@ -16,7 +16,7 @@ large for exact computation of the transition or absorption matrix.
 >>> seed = 4
 >>> warmup = 2
 >>> iterations = 8
->>> choice_intensity = np.full(shape=(3,2), fill_value=2)
+>>> choice_intensity = 2
 >>> dynamic = ludics.compute_introspection_transition_probability
 
 >>> visited_states, visit_counts = ludics.simulate_markov_chain(
