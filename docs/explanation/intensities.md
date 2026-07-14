@@ -9,22 +9,6 @@ comparison of payoffs, or through fitness proportional selection.
 In `ludics`, we catagorise intensities into the _selection intensity_ $\epsilon$
 and the _choice intensity_ $\beta$. 
 
-- Selection intensity controls the rationality of selection. When players are
-chosen with a probability proportional to their fitness, $\epsilon$ controls how
-significant a player's payoff is to this selection. A high selection intensity
-results in a high probability of players with a high fitness proportional to the
-population being selected.
-- Choice intensity controls the rationality of decision making. When players
-compare payoffs directly, as in Fermi imitation dynamics or Introspection
-dynamics, choice intensity controls the rationality of the decision made. With a
-higher choice intensity, players will accept the higher payoff strategy in the
-comparison with a higher probability. 
-
-`ludics` has the functionality to model both heterogeneous selection and choice
-intensity. A heterogeneous intensity has a different effect based on the
-population dynamic and type of intensity. The following sections show how each
-intensity is modelled in each population dynamic.
-
 ## Selection intensity
 
 Selection intensity is used in fitness proportional selection to control how
@@ -40,7 +24,9 @@ the transition probabilities. If $\epsilon = 1$, fitness is equal to the payoff.
 The value of $\epsilon$ must by chosen such that all players admit a strictly
 positive fitness. 
 
-`ludics` allows heterogeneous selection intensity. That is, a matrix $\epsilon$,
+### Heterogeneous Selection Intensity
+
+`ludics` allows heterogeneous selection intensities. That is, a matrix $\epsilon$,
 with entries $\epsilon_{ij}$. In this case, the transition probability in the
 Moran process becomes:
 
@@ -49,21 +35,24 @@ $$
 $$
 
 A greater $\epsilon_{ij}$ indicates that player $i$ has a bias towards selecting
-player $j$; that is, player $i$ sees an inflated value for player $j$'s fitness.
-On the other hand, a lower $\epsilon_{ij}$ indicates that player $i$ is bias
-against player $j$, seeing a decreased fitness for said player.
+player $j$; in other words, player $i$ sees an inflated value for player $j$'s
+fitness. On the other hand, a lower $\epsilon_{ij}$ indicates that player $i$ is
+bias against player $j$, seeing a decreased fitness for said player.
 
 ## Choice intensity
 
 For population dynamcis which decides whether or not to update using the Fermi
 imitation function $\frac{1}{1 + e^{\beta\Delta(\pi)}}$, choice intensity
 $\beta$ controls the rationality of the decision. A higher $\beta$ leads to
-players caring more about the payoff difference when making decision.
-Conversely, a value of $\beta=0$ gives neutral drift.
+players caring more about the payoff difference when making decision, and as
+$\beta \to \infty$, players accept the higher payoff strategy in the comparison
+almost certainly. Conversely, a value of $\beta=0$ gives neutral drift.
 
-A heterogeneous value of $\beta$ is implemented differently depending on the
-process. For the three dynamics included in `ludics` which feature choice
-intensity, it is implemented as follows:
+### Heterogeneous Choice Intensity
+
+A heterogeneous value of $\beta$ works differently depending on the process. For
+the three dynamics included in `ludics` which feature choice intensity, it is
+implemented as follows:
 
 - Fermi imitation dynamics: $\beta_{ij}$ is the rationality with which
 player $i$ accepts the strategy of player $j$. As such, the choice intensity
