@@ -29,6 +29,11 @@ Below is a list of functionality included in `ludics`
 - [compute_aspiration_transition_probability](compute_aspiration.md)
 - [build_hybrid_population_dynamic](build_hybrid_dynamic.md)
 
+### Fitness Maps
+
+- [linear_fitness_map](linear_fitness_map.md)
+- [exponential_fitness_map](exponential_fitness_map.md)
+
 ### Additional Functionality
 
 - [fermi_imitation_function](fermi_function.md)

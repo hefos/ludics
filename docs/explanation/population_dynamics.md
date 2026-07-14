@@ -54,7 +54,11 @@ $$
 $$
 
 Where we denote the fitness of player $i$ in state $a$ by $f_i(a)$, and the set
-of states which differ from state $a$ in exactly one position by Neb($a$)
+of states which differ from state $a$ in exactly one position by Neb($a$). In
+`ludics`, we take $f_i(a) = 1 - \epsilon + \epsilon\pi_i(a)$, where $\epsilon$
+is the selection intensity of the system. We also allow for heterogeneous choice
+intensity, so that $\epsilon_{ij}$ depends on the player $i$ who is changing
+strategy, and the player $j$ who is being considered.
 
 ## Fermi imitation dynamics
 
@@ -65,7 +69,7 @@ This follows the algorithm:
    chosen to have their strategy considered
 2. Player $i$ accepts player $j$'s strategy with a probability according
    to the Fermi logit function
-   $\phi(\Delta(f)) = \frac{1}{1 + e^{\beta(\Delta(f))}}$
+   $\phi(\Delta(f)) = \frac{1}{1 + e^{\beta{(\Delta(f))}}$
    where $\Delta(f) = f_i(a) - f_j(a)$ is the difference between player $i$'s
    fitness and player $j$'s fitness
 

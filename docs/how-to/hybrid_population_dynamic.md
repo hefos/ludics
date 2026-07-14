@@ -41,6 +41,7 @@ This can be passed directly into `generate_transition_matrix`
 >>> contribution_vector = np.array([1, 2, 3])
 >>> choice_intensity = 1
 >>> selection_intensity = 0.1
+>>> fitness_map=ludics.linear_fitness_map
 
 >>> ludics.generate_transition_matrix(
 ...     state_space=state_space,
@@ -50,7 +51,8 @@ This can be passed directly into `generate_transition_matrix`
 ...     alpha=contribution_vector,
 ...     choice_intensity=choice_intensity,
 ...     selection_intensity=selection_intensity,
-...     number_of_strategies=number_of_strategies
+...     number_of_strategies=number_of_strategies,
+...     fitness_map=ludics.linear_fitness_map
 ... )
 array([[0.91035286, 0.08964714, 0.        , 0.        , 0.        ,
         0.        , 0.        , 0.        ],

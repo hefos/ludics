@@ -16,8 +16,9 @@ the mathematical definitions of each dynamic.
 
 ## The Moran process
 
-Use the `compute_moran_transition_probability` function. Takes a
-`selection_intensity` argument in addition to standard parameters.
+Use the `compute_moran_transition_probability` function. Takes
+`selection_intensity` and `fitness_map` arguments in addition to standard
+parameters.
 
 ```py
 >>> import ludics
@@ -34,7 +35,8 @@ Use the `compute_moran_transition_probability` function. Takes a
 ... source=source,
 ... target=target,
 ... selection_intensity=selection_intensity,
-... fitness_function=example_fitness_function
+... fitness_function=example_fitness_function,
+... fitness_map=ludics.linear_fitness_map
 ... )
 np.float64(0.1111111111111111)
 
@@ -45,33 +47,8 @@ players $i$:
 
 $1 -$ `selection_intensity` $+$ `selection_intensity` $\cdot$ `fitness_function(state)[i]` $\gt 0$
 
-## Fermi imitation dynamics
-
-Use the `compute_fermi_transition_probability` function. Takes a `choice_intensity` argument in addition to standard parameters
-
-```py
->>> import ludics
->>> import numpy as np
-
->>> def example_fitness_function(state):
-...     return np.array([np.sum(state) - player_action for player_action in state])
-
->>> source = np.array([0, 1, 2])
->>> target = np.array([1, 1, 2])
->>> selection_intensity = 0.5
-
->>> ludics.compute_moran_transition_probability(
-...     source=source,
-...     target=target,
-...     selection_intensity=selection_intensity,
-...     fitness_function=example_fitness_function,
-... )
-np.float64(0.1111111111111111)
-
-```
-
-**Note:** `selection_intensity` must satisfy $1 -$ `selection_intensity` $+$ `selection_intensity`
-$\cdot$ `fitness_function(state)[i]` $> 0$ for all players $i$.
+`selection_intensity` is passed as a numpy.array. If player $i$ changes, then
+player $j$'s fitness is scaled by entry $(i,j)$ during selection.
 
 ## Fermi imitation dynamics
 
@@ -98,6 +75,10 @@ Use the `compute_fermi_transition_probability` function. Takes a
 0.0629234447996909
 
 ```
+
+`choice_intensity` controls the rationality of the Fermi function. It is passed
+as a `numpy.array` with shape (N,N). Like `selection_intensity`, player $i$
+considers player $j$'s fitness with rationality equal to entry $(i,j)$.
 
 ## Introspection dynamics
 
@@ -127,6 +108,11 @@ standard parameters.
 
 ```
 
+In introspection dynamics, `choice_intensity` is given as an (N,K) numpy.array,
+where $K$ is the number of strategies. Entry $(i,k)$ is the rationality used by
+player $i$ when considering strategy $k$. For a homogeneous value, `np.full` can
+be used.
+
 ## Aspiration dynamics
 
 Use the `compute_aspiration_transition_probability` function. Takes
@@ -155,6 +141,3 @@ parameters. State space must include exactly two actions.
 0.207486443733952
 
 ```
-
-**Note:** `selection_intensity` must satisfy $1 +$ `selection_intensity`
-$\cdot$ `fitness_function(state)[i]` $> 0$ for all players $i$.

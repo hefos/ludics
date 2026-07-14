@@ -5,6 +5,7 @@ Use the `generate_transition_matrix` function:
 ```py
 >>> import ludics
 >>> import ludics.fitness_functions
+>>> import numpy as np
 
 >>> r = 1.5
 >>> alpha = 5
@@ -15,6 +16,7 @@ Use the `generate_transition_matrix` function:
 ...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
 ...     selection_intensity=selection_intensity,
+...     fitness_map=ludics.linear_fitness_map,
 ...     alpha=alpha,
 ...     r=r,
 ... )
@@ -52,6 +54,7 @@ Pass the `individual_to_action_mutation_probability` argument:
 ...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
 ...     selection_intensity=selection_intensity,
+...     fitness_map=ludics.linear_fitness_map,
 ...     alpha=alpha,
 ...     r=r,
 ...     individual_to_action_mutation_probability=mutation_probabilities,

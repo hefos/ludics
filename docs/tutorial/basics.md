@@ -25,6 +25,7 @@ a detailed explanation of this convention.
 
 ```py
 >>> import ludics
+>>> import numpy as np
 
 >>> N = 2
 >>> number_of_strategies = 2
@@ -69,10 +70,20 @@ earns 1.5 and the cooperator earns -0.5, as expected when $r < N$.
 
 An evolutionary dynamic determines how the population transitions between
 states. Here we use the **Moran process**: fitter players are more likely to
-reproduce and pass on their strategy. The `selection_intensity` parameter
+reproduce and pass on their strategy.
+
+The `selection_intensity` parameter
 controls how strongly fitness differences influence the outcome (0: neutral
 drift, 1: fitness = payoffs, larger values = stronger selection). It must
-always be chosen such that all players admit a positive fitness.
+always be chosen such that all players admit a positive fitness. For more 
+detail on how intensities work and why they are passed as a `numpy.array`, 
+see the explanation section on [intensities](../explanation/intensities.md).
+
+The `fitness_map` parameter maps each player's payoff to a strictly positive
+value controlled by `selection_intensity`. This is because the Moran process is
+only defined for positive fitnesses. To read more about the choice of fitness
+map, see the how-to section on [choosing a fitness
+map](../how-to/fitness_map.md)
 
 `compute_moran_transition_probability` returns the probability of moving from
 one state to a neighbouring state in a single step:
@@ -138,6 +149,10 @@ the absorption matrix, whose entry $B_{ij}$ is the probability of fixing in
 absorbing state $j$ when starting from transient state $i$:
 
 ```py
+>>> import ludics
+>>> import ludics.fitness_functions
+>>> import numpy as np
+
 >>> transition_matrix = ludics.generate_transition_matrix(
 ...     state_space=state_space,
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,

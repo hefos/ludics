@@ -33,7 +33,7 @@ Moran and Fermi produce **absorbing** chains. Introspection produces an
 
 >>> N = 3
 >>> r = 1.5
->>> alpha = 1.0
+>>> alpha = 1
 >>> state_space = ludics.get_state_space(N=N, k=2)
 
 ```
@@ -48,6 +48,7 @@ Moran and Fermi produce **absorbing** chains. Introspection produces an
 ...     selection_intensity=0.5,
 ...     r=r,
 ...     alpha=alpha,
+...     fitness_map=ludics.linear_fitness_map
 ... )
 >>> ludics.compute_absorption_matrix(tm_moran)
 array([[0.9, 0.1],
@@ -66,7 +67,7 @@ array([[0.9, 0.1],
 ...     state_space=state_space,
 ...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     compute_transition_probability=ludics.compute_fermi_transition_probability,
-...     choice_intensity=1.0,
+...     choice_intensity=1,
 ...     r=r,
 ...     alpha=alpha,
 ... )
@@ -90,7 +91,7 @@ the same strategy, so the chain has no absorbing states.
 ...     state_space=state_space,
 ...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     compute_transition_probability=ludics.compute_introspection_transition_probability,
-...     choice_intensity=1.0,
+...     choice_intensity=1,
 ...     number_of_strategies=2,
 ...     r=r,
 ...     alpha=alpha,

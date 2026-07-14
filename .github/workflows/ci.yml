@@ -17,7 +17,7 @@ jobs:
         run: uv python install
       - name: Run tests
         run: |
-          uv run pytest tests
+          uv run pytest --cov=ludics --cov-fail-under=100 --cov-report=term-missing tests/
           uv run pytest --doctest-glob="*.md" docs
       - name: Run ruff
         run: |

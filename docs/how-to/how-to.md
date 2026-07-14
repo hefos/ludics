@@ -15,3 +15,5 @@ Below is a list of our How-to Guides
 - [Model a public goods game](heterogeneous_pgg.md)
 - [Use a symbolic fitness function for a two player game](symbolic_fitness.md)
 - [Compare population dynamics](compare_dynamics.md)
+- [Choose or define a fitness map](fitness_map.md)
+- [Implement heterogeneous selection and choice intensity](heterogeneous_intensities.md)
