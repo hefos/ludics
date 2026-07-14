@@ -3393,3 +3393,52 @@ def test_compute_introspective_imitation_transition_probability_for_homogeneous_
     )
 
     assert float_transition_probability == np32_transition_probability == np64_transition_probability == array_transition_probability
+
+def test_compute_moran_transition_probability_default_fitness_map():
+    """
+    Tests that the default map of the Moran process works as expected"""
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i for _,i in enumerate(state)])
+
+    selection_intensity = 0.5
+
+    source = np.array([0,1])
+    target = np.array([0,0])
+
+    transition_probability = ludics.compute_moran_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=selection_intensity,
+    )
+
+    expected_transition_probability = 1/6
+
+    assert transition_probability == expected_transition_probability
+
+def test_compute_introspective_imitation_transition_probability_default_fitness_map():
+    """
+    Tests that the default map of introspective imitation dynamics works as
+    expected"""
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i for _,i in enumerate(state)])
+
+    selection_intensity = 0.5
+    choice_intensity = 0.2
+
+    source = np.array([0,1])
+    target = np.array([0,0])
+
+    transition_probability = ludics.compute_introspective_imitation_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=selection_intensity,
+        choice_intensity=choice_intensity
+    )
+
+    expected_transition_probability = 0.07502766711
+
+    np.testing.assert_almost_equal(transition_probability,expected_transition_probability)

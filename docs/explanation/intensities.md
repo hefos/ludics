@@ -1,13 +1,29 @@
 # Heterogeneous Intensities
 
-When studying population dynamics, population dynamics consider parameters
-$\epsilon$ and $\beta$, the _selection_ and _choice_ intensities respectively.
-These control the rationality of the process: how much the payoff difference is
-taken into account when selecting a player for consideration (selection
-intensity) or when choosing whether or not to accept a strategy (choice
-intensity). 
+Ppopulation dynamics consider intensity parameters which control the rationality
+of the process. When an intensity parameter is high, players will make the
+rational choice with a higher probability, accepting strategies which are judged
+to perform better with a higher probability, whether that be through direct
+comparison of payoffs, or through fitness proportional selection. 
 
-`ludics` models both heterogeneous selection and choice intensity. 
+In `ludics`, we catagorise intensities into the _selection intensity_ $\epsilon$
+and the _choice intensity_ $\beta$. 
+
+- Selection intensity controls the rationality of selection. When players are
+chosen with a probability proportional to their fitness, $\epsilon$ controls how
+significant a player's payoff is to this selection. A high selection intensity
+results in a high probability of players with a high fitness proportional to the
+population being selected.
+- Choice intensity controls the rationality of decision making. When players
+compare payoffs directly, as in Fermi imitation dynamics or Introspection
+dynamics, choice intensity controls the rationality of the decision made. With a
+higher choice intensity, players will accept the higher payoff strategy in the
+comparison with a higher probability. 
+
+`ludics` has the functionality to model both heterogeneous selection and choice
+intensity. A heterogeneous intensity has a different effect based on the
+population dynamic and type of intensity. The following sections show how each
+intensity is modelled in each population dynamic.
 
 ## Selection intensity
 

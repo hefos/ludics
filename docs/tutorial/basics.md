@@ -101,7 +101,6 @@ one state to a neighbouring state in a single step:
 ...     target=target,
 ...     selection_intensity=0.5,
 ...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
-...     fitness_map=ludics.linear_fitness_map,
 ...     alpha=2,
 ...     r=1.5,
 ... )
@@ -129,7 +128,6 @@ moving from state $i$ to state $j$:
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
 ...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     selection_intensity=0.5,
-...     fitness_map=ludics.linear_fitness_map,
 ...     alpha=2,
 ...     r=1.5,
 ... )
@@ -160,7 +158,6 @@ absorbing state $j$ when starting from transient state $i$:
 ...     compute_transition_probability=ludics.compute_moran_transition_probability,
 ...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
 ...     selection_intensity=0.5,
-...     fitness_map=ludics.linear_fitness_map,
 ...     alpha=2,
 ...     r=1.5,
 ... )

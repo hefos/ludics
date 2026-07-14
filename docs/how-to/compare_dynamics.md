@@ -33,7 +33,7 @@ Moran and Fermi produce **absorbing** chains. Introspection produces an
 
 >>> N = 3
 >>> r = 1.5
->>> alpha = 1.0
+>>> alpha = 1
 >>> state_space = ludics.get_state_space(N=N, k=2)
 
 ```
