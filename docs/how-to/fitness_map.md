@@ -46,9 +46,11 @@ of $\epsilon$. In `ludics`, this is done using `exponential_fitness_map`:
 >>> selection_intensity = 0.2
 
 >>> ludics.exponential_fitness_map(fitness=fitness, selection_intensity=selection_intensity)
-array([1, 1.22140275816017, 1.49182469764127], dtype=object)
+array([1.        , 1.22140276, 1.4918247 ])
 
 ```
+
+Currently, the exponential fitness map only supports numeric entries
 
 ### Defining A Fitness Map
 

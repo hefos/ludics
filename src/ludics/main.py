@@ -66,11 +66,11 @@ def exponential_fitness_map(fitness, selection_intensity, **kwargs):
     
     selection_intensity: float, the selection intensity of the system
     
-    Returns
+    Returns 
     --------
     numpy.array: the mapped fitness of the system"""
 
-    return sym.E ** (selection_intensity * fitness)
+    return np.exp(selection_intensity * fitness)
 
 def compute_moran_transition_probability(
     source, target, fitness_function, selection_intensity, fitness_map=linear_fitness_map, **kwargs

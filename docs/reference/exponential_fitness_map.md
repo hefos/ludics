@@ -9,7 +9,8 @@ Returns fitness mapped by the function $e^{\epsilon\pi_i(\mathbf{a})}$
 ### Parameters
 
 fitness: _numpy.array_ - the fitness of the players in the state. May also take a
-float for a single player's fitness
+float for a single player's fitness. Currently, this function only supports a
+numerical fitness values
 
 selection_intensity: _numpy.array_ - the selection intensity of the system
 
