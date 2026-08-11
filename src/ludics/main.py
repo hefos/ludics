@@ -36,6 +36,46 @@ def get_state_space(N, k):
 
     return state_space
 
+def get_different_indices(source, target):
+    """
+    Given a source and a target, returns the indices where they differ. Will
+    return an empty array if source==target.
+    
+    Parameters
+    -----------
+    source: numpy.array: the state being moved away from
+    
+    target: numpy.array: the state being moved towards
+    
+    Returns
+    --------
+    array: the list of indices where source and target differ"""
+
+    return np.where(source != target)[0]
+
+def check_valid_extrinsic_transition(source, target):
+    """
+    Given a source and a target, checks whether the states are a valid
+    transition using an extrinsic population dynamic. Returns True if the
+    different entry in target is also in source (i.e, (0,1,1) -> (0,1,0)) and
+    False if not (i.e, (0,1,1) -> (0,1,2)). Returns False for a self transition
+    as a state is not considered to be in it's own neighbourhood.
+    
+    Parameters
+    -----------
+    source: numpy.array, the state being moved away from target: numpy.array,
+    the state being moved towards
+    
+    Returns
+    --------
+    bool, whether or not the transition is valid in an extrinsic population
+    dynamic"""
+
+    different_indices = get_different_indices(source=source, target=target)
+    if len(different_indices) == 1:
+        return target[different_indices[0]] in source
+    return False
+
 def linear_fitness_map(fitness, selection_intensity, **kwargs):
     """
     Takes a fitness vector and returns a linear mapping 
@@ -105,18 +145,21 @@ def compute_moran_transition_probability(
     ---------
     Float: the transition pobability from source to target
     """
-    different_indices = np.where(source != target)
-    if len(different_indices[0]) > 1:
+    different_indices = get_different_indices(source=source, target=target)
+    if len(different_indices) > 1:
         return 0
-    if len(different_indices[0]) == 0:
+    if len(different_indices) == 0:
         return None
+    index_of_difference = different_indices[0]
+    if check_valid_extrinsic_transition(source=source, target=target) is False:
+        return 0
 
     if isinstance(selection_intensity, (int, float, np.floating, np.integer)):
         selection_intensity = np.full(shape=(len(source), len(source)), fill_value=selection_intensity)
     
-    fitness = fitness_map(fitness=fitness_function(source, **kwargs), selection_intensity=selection_intensity[different_indices[0][0]], **kwargs)
+    fitness = fitness_map(fitness=fitness_function(source, **kwargs), selection_intensity=selection_intensity[index_of_difference], **kwargs)
     denominator = fitness.sum() * len(source)
-    numerator = fitness[source == target[different_indices[0][0]]].sum()
+    numerator = fitness[source == target[index_of_difference]].sum()
     return numerator / denominator
 
 
@@ -183,11 +226,14 @@ def compute_fermi_transition_probability(
     ---------
     Float: the transition pobability from source to target"""
 
-    different_indices = np.where(source != target)
-    if len(different_indices[0]) > 1:
+    different_indices = get_different_indices(source=source, target=target)
+    if len(different_indices) > 1:
+            return 0
+    if len(different_indices) == 0:
+            return None
+    index_of_difference = different_indices[0]
+    if check_valid_extrinsic_transition(source=source, target=target) is False:
         return 0
-    if len(different_indices[0]) == 0:
-        return None
     
     if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
         choice_intensity = np.full(shape=(len(source), len(source)), fill_value=choice_intensity)
@@ -196,11 +242,11 @@ def compute_fermi_transition_probability(
 
     changes = [
         fermi_imitation_function(
-            delta=fitness[different_indices] - fitness[i],
-            choice_intensity=choice_intensity[different_indices[0][0]][i],
+            delta=fitness[index_of_difference] - fitness[i],
+            choice_intensity=choice_intensity[index_of_difference][i],
             **kwargs,
         )
-        for i in np.where(source == target[different_indices])
+        for i in np.where(source == target[index_of_difference])
     ]
 
     scalar = 1 / (len(source) * (len(source) - 1))
@@ -249,11 +295,14 @@ def compute_introspective_imitation_transition_probability(
     ---------
     Float: the transition pobability from source to target"""
 
-    different_indices = np.where(source != target)
-    if len(different_indices[0]) > 1:
+    different_indices = get_different_indices(source=source, target=target)
+    if len(different_indices) > 1:
+                return 0
+    if len(different_indices) == 0:
+                return None
+    index_of_difference = different_indices[0]
+    if check_valid_extrinsic_transition(source=source, target=target) is False:
         return 0
-    if len(different_indices[0]) == 0:
-        return None
     
     if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
         choice_intensity = np.full(shape=(len(source), np.max(target)+1), fill_value=choice_intensity)
@@ -262,18 +311,18 @@ def compute_introspective_imitation_transition_probability(
         selection_intensity = np.full(shape=(len(source), len(source)), fill_value=selection_intensity)
 
     fitness = fitness_function(source, **kwargs)
-    fitness_before = fitness[different_indices][0]
-    fitness_after = fitness_function(target, **kwargs)[different_indices][0]
+    fitness_before = fitness[index_of_difference]
+    fitness_after = fitness_function(target, **kwargs)[index_of_difference]
 
-    selection_fitness = fitness_map(fitness=fitness, selection_intensity=selection_intensity[different_indices[0][0]], **kwargs)
+    selection_fitness = fitness_map(fitness=fitness, selection_intensity=selection_intensity[index_of_difference], **kwargs)
     selection_denominator = selection_fitness.sum() * len(source)
-    selection_numerator = selection_fitness[source == target[different_indices]].sum()
+    selection_numerator = selection_fitness[source == target[index_of_difference]].sum()
     selection_probability = selection_numerator / selection_denominator
 
     delta = fitness_before - fitness_after
 
-    different_strategy = target[different_indices[0][0]]
-    choice_intensity_to_target = choice_intensity[different_indices[0][0]][different_strategy]
+    different_strategy = target[index_of_difference]
+    choice_intensity_to_target = choice_intensity[index_of_difference][different_strategy]
 
     return selection_probability * fermi_imitation_function(
         delta=delta, choice_intensity=choice_intensity_to_target

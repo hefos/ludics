@@ -3442,3 +3442,136 @@ def test_compute_introspective_imitation_transition_probability_default_fitness_
     expected_transition_probability = 0.07502766711
 
     np.testing.assert_almost_equal(transition_probability,expected_transition_probability)
+
+def test_compute_moran_transition_probability_returns_zero_for_infeasible_transition():
+    """Tests that when transitioning between two states which have distance 1 but have an
+    infeasible transition (here we use (0,1,1) -> (0,1,2)) the Moran process returns 0"""
+
+    def trivial_fitness_function(source):
+        return np.array([1 for _ in source])
+
+    selection_intensity=0.1
+    source = np.array([0,1,1])
+    target = np.array([0,1,2])
+
+    actual_transition_probability = ludics.compute_moran_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=selection_intensity
+    )
+
+    expected_transition_probability = 0
+
+    assert actual_transition_probability == expected_transition_probability
+
+def test_compute_fermi_transition_probability_returns_zero_for_infeasible_transition():
+    """Tests that when transitioning between two states which have distance 1 but have an
+    infeasible transition (here we use (0,1,1) -> (0,1,2)) Fermi imitation dynamics returns 0"""
+
+    def trivial_fitness_function(source):
+        return np.array([400 for _ in source])
+
+    choice_intensity=0.1
+    source = np.array([0,1,1])
+    target = np.array([0,1,2])
+
+    actual_transition_probability = ludics.compute_fermi_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=choice_intensity
+    )
+
+    expected_transition_probability = 0
+
+    assert actual_transition_probability == expected_transition_probability
+
+def test_compute_introspective_imitation_transition_probability_returns_zero_for_infeasible_transition():
+    """Tests that when transitioning between two states which have distance 1 but have an
+    infeasible transition (here we use (0,1,1) -> (0,1,2)) introspective imitation dynamics returns 0"""
+
+    def trivial_fitness_function(source):
+        return np.array([7 for _ in source])
+
+    choice_intensity=0.1
+    selection_intensity=0.1
+    source = np.array([0,1,1])
+    target = np.array([0,1,2])
+
+    actual_transition_probability = ludics.compute_introspective_imitation_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=choice_intensity,
+        selection_intensity=selection_intensity
+    )
+
+    expected_transition_probability = 0
+
+    assert actual_transition_probability == expected_transition_probability
+
+def test_get_different_indices_for_feasible_transition():
+    """
+    Tests that get_different_indices correctly returns an array with the right
+    index of difference for a feasible transition"""
+
+    source = np.array([0,1,1])
+    target = np.array([0,1,2])
+
+    actual_different_indices = ludics.get_different_indices(source=source, target=target)
+    expected_different_indices = np.array([2])
+
+    assert actual_different_indices == expected_different_indices
+
+def test_get_different_indices_for_infeasible_transition():
+    """
+    Tests that get_different_indices correctly returns an array with the right
+    index of difference for an infeasible transition"""
+
+    source = np.array([0,1,1])
+    target = np.array([0,2,2])
+
+    actual_different_indices = ludics.get_different_indices(source=source, target=target)
+    expected_different_indices = np.array([1,2])
+
+    np.testing.assert_array_equal(actual_different_indices,expected_different_indices)
+
+def test_get_different_indices_for_self_transition():
+    """
+    Tests that get_different_indices correctly returns an array with the right
+    index of difference for an infeasible transition"""
+
+    source = np.array([0,1,1])
+    target = np.array([0,1,1])
+
+    actual_different_indices = ludics.get_different_indices(source=source, target=target)
+    expected_different_indices = np.array([])
+
+    np.testing.assert_array_equal(actual_different_indices,expected_different_indices)
+
+def test_check_valid_extrinsic_transition_for_valid_extrinsic_transition():
+    """
+    Checks that check_valid_extrinsic_transition correctly returns True for a 
+    valid extrinsic transition"""
+
+    source = np.array([12,1])
+    target = np.array([12,12])
+    assert ludics.check_valid_extrinsic_transition(source=source, target=target) is True
+
+def test_check_valid_extrinsic_transition_for_invalid_extrinsic_transition():
+    """
+    Checks that check_valid_extrinsic_transition correctly returns False for an
+    invalid extrinsic transition"""
+
+    source = np.array([12,1])
+    target = np.array([12,15])
+    assert ludics.check_valid_extrinsic_transition(source=source, target=target) is False
+
+    source = np.array([12,1])
+    target = np.array([12,1])
+    assert ludics.check_valid_extrinsic_transition(source=source, target=target) is False
+
+    source = np.array([12,1])
+    target = np.array([15,12])
+    assert ludics.check_valid_extrinsic_transition(source=source, target=target) is False
