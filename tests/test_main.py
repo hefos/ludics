@@ -3442,3 +3442,71 @@ def test_compute_introspective_imitation_transition_probability_default_fitness_
     expected_transition_probability = 0.07502766711
 
     np.testing.assert_almost_equal(transition_probability,expected_transition_probability)
+
+def test_compute_moran_transition_probability_returns_zero_for_infeasible_transition():
+    """Tests that when transitioning between two states which have distance 1 but have an
+    infeasible transition (here we use (0,1,1) -> (0,1,2)) the Moran process returns 0"""
+
+    def trivial_fitness_function(source):
+        return np.array([1 for _ in source])
+
+    selection_intensity=0.1
+    source = np.array([0,1,1])
+    target = np.array([0,1,2])
+
+    actual_transition_probability = ludics.compute_moran_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=selection_intensity
+    )
+
+    expected_transition_probability = 0
+
+    assert actual_transition_probability == expected_transition_probability
+
+def test_compute_fermi_transition_probability_returns_zero_for_infeasible_transition():
+    """Tests that when transitioning between two states which have distance 1 but have an
+    infeasible transition (here we use (0,1,1) -> (0,1,2)) Fermi imitation dynamics returns 0"""
+
+    def trivial_fitness_function(source):
+        return np.array([400 for _ in source])
+
+    choice_intensity=0.1
+    source = np.array([0,1,1])
+    target = np.array([0,1,2])
+
+    actual_transition_probability = ludics.compute_fermi_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=choice_intensity
+    )
+
+    expected_transition_probability = 0
+
+    assert actual_transition_probability == expected_transition_probability
+
+def test_compute_introspective_imitation_transition_probability_returns_zero_for_infeasible_transition():
+    """Tests that when transitioning between two states which have distance 1 but have an
+    infeasible transition (here we use (0,1,1) -> (0,1,2)) introspective imitation dynamics returns 0"""
+
+    def trivial_fitness_function(source):
+        return np.array([7 for _ in source])
+
+    choice_intensity=0.1
+    selection_intensity=0.1
+    source = np.array([0,1,1])
+    target = np.array([0,1,2])
+
+    actual_transition_probability = ludics.compute_introspective_imitation_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        choice_intensity=choice_intensity,
+        selection_intensity=selection_intensity
+    )
+
+    expected_transition_probability = 0
+
+    assert actual_transition_probability == expected_transition_probability

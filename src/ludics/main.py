@@ -110,6 +110,8 @@ def compute_moran_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
+    if target[different_indices[0][0]] not in source:
+        return 0
 
     if isinstance(selection_intensity, (int, float, np.floating, np.integer)):
         selection_intensity = np.full(shape=(len(source), len(source)), fill_value=selection_intensity)
@@ -188,6 +190,8 @@ def compute_fermi_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
+    if target[different_indices[0][0]] not in source:
+        return 0
     
     if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
         choice_intensity = np.full(shape=(len(source), len(source)), fill_value=choice_intensity)
@@ -254,6 +258,8 @@ def compute_introspective_imitation_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
+    if target[different_indices[0][0]] not in source:
+        return 0
     
     if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
         choice_intensity = np.full(shape=(len(source), np.max(target)+1), fill_value=choice_intensity)
