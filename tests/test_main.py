@@ -3510,3 +3510,42 @@ def test_compute_introspective_imitation_transition_probability_returns_zero_for
     expected_transition_probability = 0
 
     assert actual_transition_probability == expected_transition_probability
+
+def test_get_different_indices_for_feasible_transition():
+    """
+    Tests that get_different_indices correctly returns an array with the right
+    index of difference for a feasible transition"""
+
+    source = np.array([0,1,1])
+    target = np.array([0,1,2])
+
+    actual_different_indices = ludics.get_different_indices(source=source, target=target)
+    expected_different_indices = np.array([2])
+
+    assert actual_different_indices == expected_different_indices
+
+def test_get_different_indices_for_infeasible_transition():
+    """
+    Tests that get_different_indices correctly returns an array with the right
+    index of difference for an infeasible transition"""
+
+    source = np.array([0,1,1])
+    target = np.array([0,2,2])
+
+    actual_different_indices = ludics.get_different_indices(source=source, target=target)
+    expected_different_indices = np.array([1,2])
+
+    np.testing.assert_array_equal(actual_different_indices,expected_different_indices)
+
+def test_get_different_indices_for_self_transition():
+    """
+    Tests that get_different_indices correctly returns an array with the right
+    index of difference for an infeasible transition"""
+
+    source = np.array([0,1,1])
+    target = np.array([0,1,1])
+
+    actual_different_indices = ludics.get_different_indices(source=source, target=target)
+    expected_different_indices = np.array([])
+
+    np.testing.assert_array_equal(actual_different_indices,expected_different_indices)
