@@ -53,6 +53,29 @@ def get_different_indices(source, target):
 
     return np.where(source != target)[0]
 
+def check_valid_extrinsic_transition(source, target):
+    """
+    Given a source and a target, checks whether the states are a valid
+    transition using an extrinsic population dynamic. Returns True if the
+    different entry in target is also in source (i.e, (0,1,1) -> (0,1,0)) and
+    False if not (i.e, (0,1,1) -> (0,1,2)). Returns False for a self transition
+    as a state is not considered to be in it's own neighbourhood.
+    
+    Parameters
+    -----------
+    source: numpy.array, the state being moved away from target: numpy.array,
+    the state being moved towards
+    
+    Returns
+    --------
+    bool, whether or not the transition is valid in an extrinsic population
+    dynamic"""
+
+    different_indices = get_different_indices(source=source, target=target)
+    if len(different_indices) == 1:
+        return target[different_indices[0]] in source
+    return False
+
 def linear_fitness_map(fitness, selection_intensity, **kwargs):
     """
     Takes a fitness vector and returns a linear mapping 
@@ -128,7 +151,7 @@ def compute_moran_transition_probability(
     if len(different_indices) == 0:
         return None
     index_of_difference = different_indices[0]
-    if target[index_of_difference] not in source:
+    if check_valid_extrinsic_transition(source=source, target=target) is False:
         return 0
 
     if isinstance(selection_intensity, (int, float, np.floating, np.integer)):
@@ -209,7 +232,7 @@ def compute_fermi_transition_probability(
     if len(different_indices) == 0:
             return None
     index_of_difference = different_indices[0]
-    if target[index_of_difference] not in source:
+    if check_valid_extrinsic_transition(source=source, target=target) is False:
         return 0
     
     if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
@@ -278,7 +301,7 @@ def compute_introspective_imitation_transition_probability(
     if len(different_indices) == 0:
                 return None
     index_of_difference = different_indices[0]
-    if target[index_of_difference] not in source:
+    if check_valid_extrinsic_transition(source=source, target=target) is False:
         return 0
     
     if isinstance(choice_intensity, (int, float, np.floating, np.integer)):

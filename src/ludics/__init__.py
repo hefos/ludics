@@ -22,7 +22,8 @@ from ludics.main import (
     build_hybrid_population_dynamic,
     linear_fitness_map,
     exponential_fitness_map,
-    get_different_indices
+    get_different_indices,
+    check_valid_extrinsic_transition
 )
 
 __all__ = [
@@ -50,5 +51,6 @@ __all__ = [
     "build_hybrid_population_dynamic",
     "linear_fitness_map",
     "exponential_fitness_map",
-    "get_different_indices"
+    "get_different_indices",
+    "check_valid_extrinsic_transition"
 ]

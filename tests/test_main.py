@@ -3549,3 +3549,29 @@ def test_get_different_indices_for_self_transition():
     expected_different_indices = np.array([])
 
     np.testing.assert_array_equal(actual_different_indices,expected_different_indices)
+
+def test_check_valid_extrinsic_transition_for_valid_extrinsic_transition():
+    """
+    Checks that check_valid_extrinsic_transition correctly returns True for a 
+    valid extrinsic transition"""
+
+    source = np.array([12,1])
+    target = np.array([12,12])
+    assert ludics.check_valid_extrinsic_transition(source=source, target=target) is True
+
+def test_check_valid_extrinsic_transition_for_invalid_extrinsic_transition():
+    """
+    Checks that check_valid_extrinsic_transition correctly returns False for an
+    invalid extrinsic transition"""
+
+    source = np.array([12,1])
+    target = np.array([12,15])
+    assert ludics.check_valid_extrinsic_transition(source=source, target=target) is False
+
+    source = np.array([12,1])
+    target = np.array([12,1])
+    assert ludics.check_valid_extrinsic_transition(source=source, target=target) is False
+
+    source = np.array([12,1])
+    target = np.array([15,12])
+    assert ludics.check_valid_extrinsic_transition(source=source, target=target) is False
