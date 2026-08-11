@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Implement Heterogeneous Intensities - ludics</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Implement Heterogeneous Intensities";
+        var mkdocs_page_input_path = "how-to/heterogeneous_intensities.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> ludics
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorial/basics/">Analyse a Public Goods Game</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-To Guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../install/">Install</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../choose_fitness_function/">Choose a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../define_fitness_function/">Define a fitness function</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../population_dynamic/">Choose a population dynamic</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../define_pop_dynamic/">Define a population dynamic</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../transition_matrix/">Assemble the underlying Markov chain</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../absorption_matrix/">Compute absorption probabilities for absorbing processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../steady_state/">Compute the stationary distribution of ergodic processes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../steady_state_precision/">Increase the precision of the approximate stationary distribution</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../simulate_markov_chain/">Simulate dynamics for large populations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../compare_dynamics/">Compare evolutionary dynamics on a Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../heterogeneous_pgg/">Model heterogeneous contributions for the Public Goods Game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../symbolic_fitness/">Use symbolic payoffs for a 2-player game</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../hybrid_population_dynamic/">Build a hybrid population dynamic</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/functionality/">List of functionality</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/bibliography/">Bibliography</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/state_representation/">How states are represented</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/markov_chain/">Evolutionary games and Markov chains</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/population_dynamics/">Population dynamics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/public_goods_game/">Public Goods Games</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ludics</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Implement Heterogeneous Intensities</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="implement-heterogeneous-intensities">Implement Heterogeneous Intensities</h1>
+<p>This section shows how to implement heterogeneous choice and selection
+intensities into each of the population dynamics included in <code>ludics</code>. For more
+information about heterogeneous selection and choice intensities, see the
+<a href="../../explanation/intensities/">explanation page</a>.</p>
+<h3 id="the-moran-process">The Moran Process</h3>
+<p>In the Moran process, <code>selection_intensity</code> can be passed as a <em>float</em>, or as a
+<em>numpy.array</em> with shape <span class="arithmatex">\((N,N)\)</span>, where entry <span class="arithmatex">\(i,j\)</span> is the selection intensity
+when player <span class="arithmatex">\(i\)</span> copies player <span class="arithmatex">\(j\)</span></p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; def trivial_fitness_function(state, **kwargs):
+...         return np.array([2 for i in state])
+
+&gt;&gt;&gt; source = np.array([1,0,1,0])
+&gt;&gt;&gt; target = np.array([0,0,1,0])
+
+&gt;&gt;&gt; selection_intensity = np.array([
+...         [0.1,0.2,0.3,0.4],
+...         [0.05, 0.01, 0.02, 0.03],
+...         [0.06, 0.07, 0.08, 0.09],
+...         [0.5,0.6,0.7,0.8]
+... ])
+
+&gt;&gt;&gt; ludics.compute_moran_transition_probability(
+...     source=source,
+...     target=target,
+...     fitness_function=trivial_fitness_function,
+...     selection_intensity=selection_intensity,
+... )
+np.float64(0.13)
+
+</code></pre>
+<h3 id="fermi-imitation-dynamics">Fermi Imitation Dynamics</h3>
+<p>Fermi imitation dynamics takes <code>choice_intensity</code> as a parameter. This can be
+passed as a <em>float</em>, or as a <em>numpy.array</em>, with shape <span class="arithmatex">\((N,N)\)</span>, where entry
+<span class="arithmatex">\(i,j\)</span> is the choice intensity when player <span class="arithmatex">\(i\)</span> copies player <span class="arithmatex">\(j\)</span>.</p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; def trivial_fitness_function(state, **kwargs):
+...         return np.array([i+1 for i,_ in enumerate(state)])
+
+&gt;&gt;&gt; source = np.array([1,0,1,0])
+&gt;&gt;&gt; target = np.array([1,0,0,0])
+
+&gt;&gt;&gt; choice_intensity = np.array([
+...         [0.1,0.2,0.3,0.4],
+...         [0.05, 0.01, 0.02, 0.03],
+...         [0.06, 0.07, 0.08, 0.09],
+...         [0.5,0.6,0.7,0.8]
+... ])
+
+&gt;&gt;&gt; ludics.compute_fermi_transition_probability(
+...     source=source,
+...     target=target,
+...     fitness_function=trivial_fitness_function,
+...     choice_intensity=choice_intensity,
+... )
+0.0837493305937842
+
+</code></pre>
+<h3 id="introspection-dynamics">Introspection Dynamics</h3>
+<p>Introspection dynamics takes a <code>choice_intensity</code> parameter. This can be passed
+as a <em>float</em>, or as a <em>numpy.array</em> with shape <span class="arithmatex">\((N,K)\)</span>, where <span class="arithmatex">\(K\)</span> is the number
+of strategies in the population. Entry <span class="arithmatex">\(i,j\)</span> is the choice intensity when player
+<span class="arithmatex">\(i\)</span> considers strategy <span class="arithmatex">\(j\)</span>, as represented by numeric states (for more
+information on state representation, see
+<a href="../../explanation/state_representation/">here</a>)</p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; def trivial_fitness_function(state, **kwargs):
+...         return np.array([i for _,i in enumerate(state)])
+
+&gt;&gt;&gt; source = np.array([1,0,0])
+&gt;&gt;&gt; target = np.array([0,0,0])
+
+&gt;&gt;&gt; choice_intensity = np.array([
+...     [0.1,0.2],
+...     [0.05, 0.12],
+...     [0.06, 0.07],
+... ])
+
+&gt;&gt;&gt; ludics.compute_introspection_transition_probability(
+...     source=source,
+...     target=target,
+...     fitness_function=trivial_fitness_function,
+...     choice_intensity=choice_intensity,
+...     number_of_strategies=2
+... )
+0.158340270840353
+
+</code></pre>
+<h3 id="aspiration-dynamics">Aspiration Dynamics</h3>
+<p>Aspiration dynamics takes a <code>choice_intensity</code> parameter. This can be passed
+as a <em>float</em>, or as a <em>numpy.array</em> with shape <span class="arithmatex">\((N,2)\)</span>. Entry <span class="arithmatex">\(i,j\)</span> is the
+choice intensity when player <span class="arithmatex">\(i\)</span> considers changing away from strategy
+<span class="arithmatex">\(j\)</span>, as represented by numeric states.</p>
+<pre><code class="language-py">&gt;&gt;&gt; import ludics
+&gt;&gt;&gt; import numpy as np
+
+&gt;&gt;&gt; def trivial_fitness_function(state, **kwargs):
+...         return np.array([i for _,i in enumerate(state)])
+
+&gt;&gt;&gt; source = np.array([0,1,1,0])
+&gt;&gt;&gt; target = np.array([0,1,0,0])
+
+&gt;&gt;&gt; choice_intensity = np.array([
+...     [0.1,0.2],
+...     [0.05, 0.12],
+...     [0.06, 0.07],
+...     [0.8, 0.2],
+... ])
+
+&gt;&gt;&gt; aspiration_vector = np.array([1,3,4,2])
+
+&gt;&gt;&gt; ludics.compute_aspiration_transition_probability(
+...     source=source,
+...     target=target,
+...     fitness_function=trivial_fitness_function,
+...     choice_intensity=choice_intensity,
+...     aspiration_vector=aspiration_vector
+... )
+0.138076977393581
+
+</code></pre>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
