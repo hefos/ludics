@@ -10,11 +10,12 @@ We have a state v \in S = [$v_1$, .... $v_n$] as the set of types of individuals
 There is also a fitness function f: S -> $R^N$, giving us an array of the fitness of individuals
 """
 
-import itertools
-import numpy as np
-import sympy as sym
-import scipy
 import collections
+import itertools
+
+import numpy as np
+import scipy
+import sympy as sym
 
 
 def get_state_space(N, k):
@@ -77,7 +78,7 @@ def check_valid_extrinsic_transition(source, target):
     return False
 
 def linear_fitness_map(fitness, selection_intensity, **kwargs):
-    """
+    r"""
     Takes a fitness vector and returns a linear mapping 
     $1 - \epislon + \epsilon\pi$. Good for systems with
     small payoff differences
@@ -95,7 +96,7 @@ def linear_fitness_map(fitness, selection_intensity, **kwargs):
     return 1 - selection_intensity + selection_intensity * fitness
 
 def exponential_fitness_map(fitness, selection_intensity, **kwargs):
-    """
+    r"""
     Takes a fitness vector and returns an exponential mapping 
     $e^{\epsilon * \pi}$. Good for systems with
     large negative values
@@ -123,7 +124,7 @@ def compute_moran_transition_probability(
     Returns 0 if Hamming distance > 1. Returns None if Hamming distance = 0.
 
 
-    $\frac{\sum_{v_i = u_{i*}}{f(v_i)}}{\sum_{v_i}f(v_i)}$
+    $\frac{\\sum_{v_i = u_{i*}}{f(v_i)}}{\\sum_{v_i}f(v_i)}$
 
     Parameters
     ----------
@@ -134,7 +135,7 @@ def compute_moran_transition_probability(
     fitness_function: func, The fitness function which maps a state to a
     numpy.array where each entry represents the fitness of the given individual
 
-    selection_intensity: numpy.array: the selection intensity $\epsilon$ of the
+    selection_intensity: numpy.array: the selection intensity $\\epsilon$ of the
     system. Entries may be floats or sympy.Symbol. Entry ij is the selection
     intensity when player $i$ copies player $j$. Shape must be (N,N)
 
@@ -167,7 +168,7 @@ def fermi_imitation_function(delta, choice_intensity=0.5, **kwargs):
     """
     Given the fitness of the focal individual who changes action type, and the
     target individual who is being copied, as well as the choice intensity,
-    returns $\phi(a_i, a_j) = \frac{1}{1 + \exp({\frac{f(a_{i}) - f(a_{j})
+    returns $\\phi(a_i, a_j) = \frac{1}{1 + \\exp({\frac{f(a_{i}) - f(a_{j})
     }{\beta}})}$
 
     choice intensity is set to 0.5 by default, as is common according to:
@@ -203,9 +204,9 @@ def compute_fermi_transition_probability(
 
     The following equation is the subject of this function:
 
-    $\sum_{a_j=b_{i^*}}^N\frac{1}{N(N-1)}\phi(f_i(a) - f(a_j))$
+    $\\sum_{a_j=b_{i^*}}^N\frac{1}{N(N-1)}\\phi(f_i(a) - f(a_j))$
 
-    where $\phi(f_i(a) - f(a_j)) = \frac{1}{1 + \exp({\frac{f(a_{i}) - f(a_{j})
+    where $\\phi(f_i(a) - f(a_j)) = \frac{1}{1 + \\exp({\frac{f(a_{i}) - f(a_{j})
     }{\beta}})}$
 
     Parameters
@@ -219,7 +220,7 @@ def compute_fermi_transition_probability(
 
     choice_intensity: numpy.array: the choice intensity of the
     function. The lower the value, the higher the probability that a player will
-    choose the higher fitness strategy in $\phi$. Entry ij is the rationality
+    choose the higher fitness strategy in $\\phi$. Entry ij is the rationality
     with which player $i$ considers the strategy of player $j$. Shape must be (N,N)
 
     Returns
@@ -266,8 +267,8 @@ def compute_introspective_imitation_transition_probability(
 
     The following equation is the subject of this function:
 
-    $\frac{1}{N}\frac{\sum_{a_{j} = b_{I(\textbf{a},
-    \textbf{b})}}f_j(\textbf{a})}{\sum_{k}f_k(\textbf{a})}\phi(\Delta(f_{I(\textbf{a,b})}))$
+    $\frac{1}{N}\frac{\\sum_{a_{j} = b_{I(\textbf{a},
+    \textbf{b})}}f_j(\textbf{a})}{\\sum_{k}f_k(\textbf{a})}\\phi(\\Delta(f_{I(\textbf{a,b})}))$
 
     Parameters
     ----------
@@ -280,11 +281,11 @@ def compute_introspective_imitation_transition_probability(
 
     choice_intensity: numpy.array: the choice intensity of the function. The
     lower the value, the higher the probability that a player will choose the
-    higher fitness strategy in $\phi$. Entry ik is the rationality with which
+    higher fitness strategy in $\\phi$. Entry ik is the rationality with which
     player $i$ considers strategy $k$. Shape must be (N,K), where K is the
     number of strategies
 
-    selection_intensity: numpy.array: the selection intensity $\epsilon$ of the
+    selection_intensity: numpy.array: the selection intensity $\\epsilon$ of the
     system. Entries may be floats or sympy.Symbol. Entry ij is the selection
     intensity when player $i$ copies player $j$. Shape must be (N,N)
 
@@ -342,7 +343,7 @@ def compute_introspection_transition_probability(
     Returns None if Hamming distance = 0.
 
     The following equation is the subject of this function:
-    $\frac{1}{N(m_j - 1)}\phi(f_i(a) - f_i(b))$
+    $\frac{1}{N(m_j - 1)}\\phi(f_i(a) - f_i(b))$
 
     Parameters
     ----------
@@ -355,7 +356,7 @@ def compute_introspection_transition_probability(
 
     choice_intensity: numpy.array: the choice intensity of the
     function. The lower the value, the higher the probability that a player will
-    choose the higher fitness strategy in $\phi$. Entry ik is the rationality
+    choose the higher fitness strategy in $\\phi$. Entry ik is the rationality
     with which player $i$ considers strategy $k$. Shape must be (N,K), where 
     K is the number of strategies
 
@@ -393,7 +394,7 @@ def compute_introspection_transition_probability(
 def compute_aspiration_transition_probability(
     source, target, fitness_function, choice_intensity, aspiration_vector, **kwargs
 ):
-    """
+    r"""
     Given two states, a fitness function, and a choice intensity, returns the
     transition probability when moving from the source state to the target state
     under aspiration dynamics. This dynamic takes the aspiration of a given
@@ -838,7 +839,7 @@ def simulate_markov_chain(
     iterations=10000,
     **kwargs,
 ):
-    """
+    r"""
     Given an initial state, simulates a markov chain under a fitness function
     and a population dynamic. Moves between neighbouring states and returns the
     sets in the order they were visited in, and the number of times each state

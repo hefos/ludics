@@ -1,7 +1,7 @@
-import pytest
 import numpy as np
+import pytest
 
-import ludics.main as main
+from ludics import main
 
 n_range = 200
 step_size_n = 10
