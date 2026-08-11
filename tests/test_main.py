@@ -1,7 +1,9 @@
-import ludics
 import numpy as np
-import sympy as sym
 import pytest
+import sympy as sym
+
+import ludics
+
 
 def test_compute_moran_transition_probability_for_trivial_fitness_function():
     """
@@ -240,7 +242,7 @@ def test_compute_moran_transition_probability_for_symbolic_fitness_function():
     target = np.array((1, 1, 0))
     x = sym.Symbol("x")
     y = sym.Symbol("y")
-    epsilon = sym.Symbol("\epsilon")
+    epsilon = sym.Symbol(r"\epsilon")
     selection_intensity=np.full(shape=(3,3), fill_value=epsilon)
     fitness_map = ludics.linear_fitness_map
     assert sym.simplify(ludics.compute_moran_transition_probability(
@@ -574,7 +576,7 @@ def test_generate_transition_matrix_for_symbolic_fitness_function():
     fitness_map = ludics.linear_fitness_map
     x = sym.Symbol("x")
     y = sym.Symbol("y")
-    epsilon = sym.Symbol("\epsilon")
+    epsilon = sym.Symbol(r"\epsilon")
     selection_intensity=np.full(shape=(2,2), fill_value=epsilon)
     expected_transition_matrix = np.array(
         [
@@ -789,12 +791,12 @@ def test_generate_transition_matrix_for_symbolic_fitness_function_with_mutation(
     fitness_map=ludics.linear_fitness_map
     x = sym.Symbol("x")
     y = sym.Symbol("y")
-    epsilon = sym.Symbol("\epsilon")
+    epsilon = sym.Symbol(r"\epsilon")
     selection_intensity=np.full(shape=(2,2), fill_value=epsilon)
-    mu_11 = sym.Symbol("\mu_{11}")
-    mu_12 = sym.Symbol("\mu_{12}")
-    mu_21 = sym.Symbol("\mu_{21}")
-    mu_22 = sym.Symbol("\mu_{22}")
+    mu_11 = sym.Symbol(r"\mu_{11}")
+    mu_12 = sym.Symbol(r"\mu_{12}")
+    mu_21 = sym.Symbol(r"\mu_{21}")
+    mu_22 = sym.Symbol(r"\mu_{22}")
     individual_to_action_mutation_probability = np.array(
         [[mu_11, mu_12], [mu_21, mu_22]]
     )
@@ -1738,7 +1740,7 @@ def test_compute_introspective_imitation_transition_probability_for_symbolic_fit
     source = np.array([0, 1, 1, 0, 0])
     target = np.array([1, 1, 1, 0, 0])
     beta = sym.Symbol("\beta")
-    epsilon = sym.Symbol("\epsilon")
+    epsilon = sym.Symbol(r"\epsilon")
     selection_intensity = np.full(shape=(5,5), fill_value=epsilon)
     choice_intensity = np.full(shape=(5,2), fill_value=beta)
     fitness_map=ludics.linear_fitness_map

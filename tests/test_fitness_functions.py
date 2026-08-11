@@ -1,6 +1,7 @@
-import ludics
-import sympy as sym
 import numpy as np
+import sympy as sym
+
+import ludics
 import ludics.fitness_functions
 
 

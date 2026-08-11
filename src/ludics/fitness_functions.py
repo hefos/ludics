@@ -1,6 +1,7 @@
 import numpy as np
 import sympy as sym
 
+
 def public_goods_game_fitness_function(
     state, r, alpha, **kwargs
 ):
