@@ -29,9 +29,10 @@ aspiration levels) and **asymmetric payoff functions** where the identity of
 the player matters, not just the aggregate counts.
 
 The cost is a larger state space. For symmetric games where only the count of
-each strategy matters, many states are payoff-equivalent: `[0, 1, 0]` and
-`[0, 0, 1]` produce the same fitness values under a homogeneous PGG. `ludics`
-does not collapse these equivalent states; it works with the full $k^N$ space.
+each strategy matters, many states are payoff-equivalent: `[0, 1, 0]` and 
+`[0, 0, 1]` produce the same fitness values under a homogeneous PGG. `ludics` does
+not collapse these equivalent states by default; it works with the full $k^N$
+space.
 
 ## Absorbing states
 

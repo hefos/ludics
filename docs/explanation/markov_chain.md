@@ -78,7 +78,7 @@ An ergodic Markov chain is one which has no absorbing states, and so you are
 able to traverse from any state to any other state in a finite number of steps.
 In this case, we consider state distributions in the form
 
-$$ \pi^t = (\pi^t_1, \pi^t_2, ...)$$
+$$ \pi^t = (\pi^t_1, \pi^t_2, \dots)$$
 
 Where $\pi^t_i$ is the proportion of the time spent in a certain state at step
 $T$. We have that $\sum_{i=1}^N \pi^t_i = 1$. Now, if we multiply $\pi^t$ by
@@ -98,3 +98,40 @@ irreducible (all states can reach all other states in a finite number of steps)
 and aperiodic (the states do not oscillate between certain subsets). Any
 birth-death process fulfills these conditions, and thus reaches the steady
 state in a finite number of steps.
+
+### Homogeneous Birth-death chains
+
+If we have a homogeneous population, states with $N_j$ players of each type are
+indistinguishable. We can therefore collapse the state space into the set of
+tuples:
+
+$$ (N_1, N_2, N_3, \dots) $$
+
+where two states are adjacent if they differ in exactly two positions,
+increasing one by a single player and removing that player from the other.
+
+In a two-action game with actions {$0,1$} we can represent this state space as the
+numbers $0$ through $N$, where the state is represented by the number of players
+using strategy $0$. In this case, we consider probabilities of "birth" and "death",
+given by:
+
+$$ \lambda_{i, i+1}, \lambda_{i,i-1} $$
+
+The transition matrix of this process has the form:
+
+$$ \begin{pmatrix}
+1 & 0 & 0 & \dots & 0 & 0 & 0\\
+\lambda_{1, 0} & 1 - \lambda_{1,0} - \lambda_{1,2} & \lambda_{1,2} & \dots & 0 & 0 & 0\\
+0 & \lambda_{2,1} & 1 - \lambda_{2,1} - \lambda_{2,2} & \dots & 0 & 0 & 0\\
+\vdots & \vdots & \vdots & \ddots & \vdots & \vdots & \vdots\\
+0 & 0 & 0 & \dots & \lambda_{N-1, N-2} & 1-\lambda_{N-1, N-2}-\lambda_{N-1, N}  & \lambda_{N-1, N}\\
+0 & 0 & 0 & \dots & 0 & 0 & 1
+\end{pmatrix}
+$$
+
+and the fixation probability of being absorbed into the state with $N$ players
+using action $0$, after beginning with $i$ such players, is given by:
+
+$$ \pi_i = \frac{1 + \sum_{j=1}^{i-1}\prod_{k=1}^j \frac{\lambda_{k,k-1}}{\lambda_{k,k+1}}}{1 + \sum_{j=1}^{i-1}\prod_{k=1}^{N-1} \frac{\lambda_{k,k-1}}{\lambda_{k,k+1}}} $$
+
+For further reading, see chapters 6 and 7 of (Nowak, 2006).
