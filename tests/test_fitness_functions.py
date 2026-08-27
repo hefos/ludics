@@ -245,3 +245,53 @@ def test_public_goods_game_fitness_function_for_homoogeneous_contribution_and_he
     expected_return = np.array([0,1,2])
 
     np.testing.assert_allclose(actual_return, expected_return)
+
+def test_pairwise_interaction_fitness_function_for_symmetric_prisoners_dilemma():
+    """
+    Tests that pairwise_interaction_fitness_function returns the correct
+    value for a symmetric, standard prisoner's dilemma"""
+
+    state = np.array([0,1,1,0,1])
+    a = np.array([3 for _ in state])
+    b = np.array([0 for _ in state])
+    c = np.array([5 for _ in state])
+    d = np.array([1 for _ in state])
+    
+    actual_value = ludics.fitness_functions.pairwise_interaction_fitness_function(state=state,a=a,b=b,c=c,d=d)
+    expected_value = np.array([4, 6/4, 6/4, 4, 6/4])
+
+    np.testing.assert_allclose(actual_value, expected_value)
+
+def test_pairwise_interaction_fitness_function_for_asymmetric_game():
+    """
+    Tests that pairwise_interaction_fitness_function returns the correct value for
+    an asymmetric game"""
+
+    state = np.array([1,0,1,0])
+    a = np.array([1,2,3,4])
+    b = np.array([2,4,6,8])
+    c = np.array([5,4,3,2])
+    d = np.array([2,2,2,1])
+
+    actual_value = ludics.fitness_functions.pairwise_interaction_fitness_function(state=state,a=a,b=b,c=c,d=d)
+
+    expected_value = np.array([5/3, 10/3, 5, 5/3])
+
+    np.testing.assert_allclose(actual_value, expected_value)
+    
+def test_pairwise_interaction_fitness_function_for_mixed_parameters():
+    """
+    Tests that pairwise_interaction_fitness_function returns the correct value for
+    an asymmetric game where two parameters are symmetric"""
+
+    state = np.array([1,0,0,1])
+    a = np.array([1,2,3,4])
+    b = np.array([2,4,6,4])
+    c = 5
+    d = 2
+
+    actual_value = ludics.fitness_functions.pairwise_interaction_fitness_function(state=state,a=a,b=b,c=c,d=d)
+    
+    expected_value = np.array([5/3, 4, 4, 4])
+
+    np.testing.assert_allclose(actual_value, expected_value)
