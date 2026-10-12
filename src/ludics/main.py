@@ -904,7 +904,7 @@ def simulate_markov_chain(
                 )
             )
 
-            kwargs_updated = {
+            kwargs_with_strategies_and_seed = {
                 **kwargs,
                 "number_of_strategies": number_of_strategies,
                 "seed": seed
@@ -919,7 +919,7 @@ def simulate_markov_chain(
                             source=current_state,
                             target=next_state,
                             fitness_function=fitness_function,
-                            **kwargs_updated,
+                            **kwargs_with_strategies_and_seed,
                         ),
                         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
                     )
