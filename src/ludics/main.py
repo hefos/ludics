@@ -904,9 +904,10 @@ def simulate_markov_chain(
                 )
             )
 
-            kwargs_with_strategies = {
+            kwargs_updated = {
                 **kwargs,
                 "number_of_strategies": number_of_strategies,
+                "seed": seed
             }
 
             transition_probabilities = np.array(
@@ -918,7 +919,7 @@ def simulate_markov_chain(
                             source=current_state,
                             target=next_state,
                             fitness_function=fitness_function,
-                            **kwargs_with_strategies,
+                            **kwargs_updated,
                         ),
                         individual_to_action_mutation_probability=individual_to_action_mutation_probability,
                     )

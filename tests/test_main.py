@@ -3577,3 +3577,45 @@ def test_check_valid_extrinsic_transition_for_invalid_extrinsic_transition():
     source = np.array([12,1])
     target = np.array([15,12])
     assert ludics.check_valid_extrinsic_transition(source=source, target=target) is False
+
+def test_simulate_markov_chain_passes_seed():
+    """
+    Tests that simulate_markov_chain passes the seed to a fitness function
+    which has a 'seed' parameter"""
+
+    def random_fitness_function(state, seed, **kwargs):
+        np.random.seed(seed)
+        return np.array([np.random.normal(loc=state[i], scale=1) for i in state])
+
+    seed = 5
+    epsilon = 1
+    compute_transition_probability=ludics.compute_moran_transition_probability
+    starting_state = np.array([0,1])
+    iterations = 2
+
+    actual_states_over_time, actual_state_dict = ludics.simulate_markov_chain(
+        initial_state=starting_state,
+        number_of_strategies=2,
+        compute_transition_probability=compute_transition_probability,
+        individual_to_action_mutation_probability=None,
+        warmup=0,
+        iterations=iterations,
+        seed=seed,
+        fitness_function=random_fitness_function,
+        selection_intensity=epsilon,
+        fitness_map=ludics.linear_fitness_map
+    )
+
+    expected_states_over_time = [
+        tuple(np.array([0,1])),
+        tuple(np.array([1,1])),
+    ]
+
+    expected_state_dict = {
+        tuple(np.array([0,1])):1,
+        tuple(np.array([1,1])):1
+    }
+
+    np.testing.assert_array_equal(expected_states_over_time, actual_states_over_time)
+
+    assert actual_state_dict == expected_state_dict
