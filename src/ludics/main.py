@@ -909,24 +909,26 @@ def simulate_markov_chain(
                 "number_of_strategies": number_of_strategies,
                 "seed": seed
             }
-
-            transition_probabilities = np.array(
-                [
-                    apply_mutation_probability(
-                        source=current_state,
-                        target=next_state,
-                        transition_probability=compute_transition_probability(
+            try:
+                transition_probabilities = np.array(
+                    [
+                        apply_mutation_probability(
                             source=current_state,
                             target=next_state,
-                            fitness_function=fitness_function,
-                            **kwargs_with_strategies_and_seed,
-                        ),
-                        individual_to_action_mutation_probability=individual_to_action_mutation_probability,
-                    )
-                    for next_state in neighbourhood
-                ],
-                dtype=float,
-            )
+                            transition_probability=compute_transition_probability(
+                                source=current_state,
+                                target=next_state,
+                                fitness_function=fitness_function,
+                                **kwargs_with_strategies_and_seed,
+                            ),
+                            individual_to_action_mutation_probability=individual_to_action_mutation_probability,
+                        )
+                        for next_state in neighbourhood
+                    ],
+                    dtype=float,
+                )
+            except TypeError:
+                raise TypeError("Error in calculating transition probability. Check that your fitness function accepts **kwargs")
 
             neighbourhood.append(current_state)
             transition_probabilities = np.append(

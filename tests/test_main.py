@@ -3699,3 +3699,28 @@ def test_simulate_markov_chain_respects_seeding_for_different_seeds():
     assert np.any(states_over_time_first != states_over_time_second)
 
     assert state_dict_first != state_dict_second
+
+def test_simulate_markov_chain_raises_typerror_without_kwargs():
+    """
+    Tests that simulate_markov_chain raises a type error when a fitness function
+    with no kwargs argument is passed to it.
+    """
+
+    def no_kwargs_fitness_function(state):
+        return state
+    
+    choice_intensity = 2
+    compute_transition_probability = ludics.compute_fermi_transition_probability
+    number_of_strategies = 2
+    starting_state = np.array([0,1,1])
+    seed = 8
+
+    with pytest.raises(TypeError):
+        ludics.simulate_markov_chain(
+            initial_state=starting_state,
+            number_of_strategies=number_of_strategies,
+            fitness_function=no_kwargs_fitness_function,
+            compute_transition_probability=compute_transition_probability,
+            seed=seed,
+            choice_intensity=choice_intensity
+        )
