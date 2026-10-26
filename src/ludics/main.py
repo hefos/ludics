@@ -643,8 +643,7 @@ def extract_R_numerical(transition_matrix):
     """
 
     # TODO merge with symbolic version and Q as function: obtain canonical form
-
-    absorbing_states = np.isclose(np.diag(transition_matrix), 1.0)
+    absorbing_states = np.diag(transition_matrix) == 1.0
     non_absorbing_states = ~absorbing_states
     R = transition_matrix[np.ix_(non_absorbing_states, absorbing_states)]
 
@@ -667,7 +666,7 @@ def extract_R_symbolic(transition_matrix):
     return R
 
 
-def compute_absorption_matrix(transition_matrix):
+def compute_absorption_matrix(transition_matrix, absorbing_states=None):
     """
     Given a transition matrix, NOT allowing for symbolic values,
 
@@ -677,7 +676,11 @@ def compute_absorption_matrix(transition_matrix):
     Parameters:
     ------------
 
-    transition_matrix: numpy.array: a transition matrix with no symbolic values
+    transition_matrix: numpy.array, a transition matrix with no symbolic values
+
+    absorbing_states: numpy.array, the indexes of absorbing states. By default
+    None, which calculates the absorbing states as the states which have a
+    diagonal entry of 1
 
 
     Returns:
