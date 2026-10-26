@@ -1,13 +1,7 @@
 r"""
-Code for the general heterogeneous Moran process
+Code for simulating a population dynamic on a general heterogeneous population.
 
-This corresponds to the model described in `main.tex`
-
-Assume we have N ordered individuals of k types: $A_1$, ... $A_K$
-
-We have a state v \in S = [$v_1$, .... $v_n$] as the set of types of individuals in the population, so that $v_i$ is the type of individual i. |S| = $k^N$
-
-There is also a fitness function f: S -> $R^N$, giving us an array of the fitness of individuals
+See the documentation for more information
 """
 
 import collections
