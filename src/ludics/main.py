@@ -666,7 +666,7 @@ def extract_R_symbolic(transition_matrix):
     return R
 
 
-def compute_absorption_matrix(transition_matrix, absorbing_states=None):
+def compute_absorption_matrix(transition_matrix):
     """
     Given a transition matrix, NOT allowing for symbolic values,
 
@@ -677,11 +677,6 @@ def compute_absorption_matrix(transition_matrix, absorbing_states=None):
     ------------
 
     transition_matrix: numpy.array, a transition matrix with no symbolic values
-
-    absorbing_states: numpy.array, the indexes of absorbing states. By default
-    None, which calculates the absorbing states as the states which have a
-    diagonal entry of 1
-
 
     Returns:
     -----------
