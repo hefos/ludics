@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from ludics import main
+import ludics
 
 n_range = 200
 step_size_n = 10
@@ -59,7 +59,7 @@ def test_compute_steady_state_for_deterministic_cycle_matrix(n, benchmark):
     matrix"""
 
     transition_matrix = generate_stochastic_2_valency_cycle_matrix(n, 0)
-    benchmark(main.compute_steady_state, transition_matrix)
+    benchmark(ludics.compute_steady_state, transition_matrix)
 
 
 @pytest.mark.parametrize(
@@ -77,7 +77,7 @@ def test_compute_steady_state_for_stochastic_2_valency_cycle_matrix(
     matrix"""
 
     transition_matrix = generate_stochastic_2_valency_cycle_matrix(n, prob_prior)
-    benchmark(main.compute_steady_state, transition_matrix)
+    benchmark(ludics.compute_steady_state, transition_matrix)
 
 
 @pytest.mark.parametrize("n", range(2, n_range, step_size_n))
@@ -86,7 +86,7 @@ def test_compute_steady_state_for_full_uniform_matrix(n, benchmark):
     matrix"""
 
     transition_matrix = generate_full_uniform_matrix(n)
-    benchmark(main.compute_steady_state, transition_matrix)
+    benchmark(ludics.compute_steady_state, transition_matrix)
 
 
 def test_compute_steady_state_for_specific_four_by_four(benchmark):
@@ -101,4 +101,4 @@ def test_compute_steady_state_for_specific_four_by_four(benchmark):
         ]
     )
 
-    benchmark(main.compute_steady_state, transition_matrix)
+    benchmark(ludics.compute_steady_state, transition_matrix)

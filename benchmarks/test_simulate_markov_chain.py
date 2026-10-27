@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-import ludics.main
+import ludics
 
 max_n = 102
 max_iterations = 5000
@@ -32,11 +32,11 @@ def test_simulate_markov_chain_for_moran_process(
     number_of_strategies = 2
 
     benchmark(
-        ludics.main.simulate_markov_chain,
+        ludics.simulate_markov_chain,
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_moran_transition_probability,
+        compute_transition_probability=ludics.compute_moran_transition_probability,
         seed=2,
         iterations=iterations,
         selection_intensity=selection_intensity,
@@ -66,11 +66,11 @@ def test_simulate_markov_chain_for_introspection(
     number_of_strategies = 2
 
     benchmark(
-        ludics.main.simulate_markov_chain,
+        ludics.simulate_markov_chain,
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_introspection_transition_probability,
+        compute_transition_probability=ludics.compute_introspection_transition_probability,
         seed=2,
         iterations=iterations,
         choice_intensity=choice_intensity,
@@ -100,11 +100,11 @@ def test_simulate_markov_chain_for_fermi(
     number_of_strategies = 2
 
     benchmark(
-        ludics.main.simulate_markov_chain,
+        ludics.simulate_markov_chain,
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_fermi_transition_probability,
+        compute_transition_probability=ludics.compute_fermi_transition_probability,
         seed=2,
         iterations=iterations,
         choice_intensity=choice_intensity,
@@ -135,11 +135,11 @@ def test_simulate_markov_chain_for_imispection(
     number_of_strategies = 2
 
     benchmark(
-        ludics.main.simulate_markov_chain,
+        ludics.simulate_markov_chain,
         initial_state=initial_state,
         number_of_strategies=number_of_strategies,
         fitness_function=fitness_function,
-        compute_transition_probability=ludics.main.compute_fermi_transition_probability,
+        compute_transition_probability=ludics.compute_fermi_transition_probability,
         seed=2,
         iterations=iterations,
         choice_intensity=choice_intensity,
