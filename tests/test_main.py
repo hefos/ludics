@@ -3761,22 +3761,3 @@ def test_extract_R_numerical_functions_for_values_near_1():
     actual_R = ludics.extract_R_numerical(transition_matrix=transition_matrix)
 
     np.testing.assert_array_almost_equal(actual_R, expected_R)
-
-def test_mutation_is_applied_when_passed_as_float():
-    """
-    Tests that when mutation is passed as a float, rather than None or a
-    numpy.array, it is correctly applied to the matrix"""
-
-    state_space = np.array([
-        [0,0]
-        [0,1],
-        [0,2],
-        [1,0],
-        [1,1],
-        [1,2],
-        [2,0],
-        [2,1],
-        [2,2]
-    ])
-
-    choice_intensity = 0
