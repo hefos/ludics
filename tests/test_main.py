@@ -3,6 +3,7 @@ import pytest
 import sympy as sym
 
 import ludics
+import ludics.main
 
 
 def test_compute_moran_transition_probability_for_trivial_fitness_function():
@@ -4000,7 +4001,7 @@ def test_widen_to_object_dtype():
     transition_matrix = np.zeros(shape=(3, 3))
     transition_matrix[0, 1] = 0.25
 
-    widened = ludics.widen_to_object_dtype(transition_matrix)
+    widened = ludics.main.widen_to_object_dtype(transition_matrix)
 
     assert widened.dtype == object
     assert widened[0, 1] == 0.25
@@ -4020,7 +4021,30 @@ def test_widen_to_object_dtype_for_a_matrix_which_is_already_widened():
     transition_matrix = np.zeros(shape=(2, 2)).astype(object)
     transition_matrix[0, 1] = sym.Symbol("x")
 
-    widened = ludics.widen_to_object_dtype(transition_matrix)
+    widened = ludics.main.widen_to_object_dtype(transition_matrix)
 
     assert widened is transition_matrix
     assert widened[0, 1] == sym.Symbol("x")
+
+
+def test_get_neighbourhood_states_for_an_action_set():
+    """
+    Tests that get_neighbourhood_states takes the actions themselves as well as
+
+    a count of them. A state space whose labels are not 0 to k - 1 cannot have
+
+    its actions recovered from a count: passing the count proposes states which
+
+    do not exist and misses states which do.
+    """
+
+    state = np.array([12, 1])
+
+    np.testing.assert_array_equal(
+        ludics.get_neighbourhood_states(state=state, action_set=np.array([1, 12])),
+        np.array([[1, 1], [12, 12]]),
+    )
+    np.testing.assert_array_equal(
+        ludics.get_neighbourhood_states(state=state, number_of_strategies=2),
+        np.array([[0, 1], [1, 1], [12, 0]]),
+    )

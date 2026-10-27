@@ -28,6 +28,7 @@ Below is a list of functionality included in `ludics`
 - [compute_introspection_transition_probability](compute_introspection.md)
 - [compute_aspiration_transition_probability](compute_aspiration.md)
 - [build_hybrid_population_dynamic](build_hybrid_dynamic.md)
+- [changes_one_individual](changes_one_individual.md)
 
 ### Fitness Maps
 
@@ -38,6 +39,7 @@ Below is a list of functionality included in `ludics`
 
 - [fermi_imitation_function](fermi_function.md)
 - [apply_mutation_probability](apply_mutation.md)
+- [exponentiate](exponentiate.md)
 - [get_absorbing_state_index](get_absorbing_state_index.md)
 - [get_absorbing_states](get_absorbing_states.md)
 - [extract_Q](extract_Q.md)

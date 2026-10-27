@@ -20,13 +20,11 @@ from ludics.main import (
     generate_transition_matrix,
     get_absorbing_state_index,
     get_absorbing_states,
-    get_candidate_targets,
     get_different_indices,
     get_neighbourhood_states,
     get_state_space,
     linear_fitness_map,
     simulate_markov_chain,
-    widen_to_object_dtype,
 )
 from ludics.numerics import exponentiate
 
@@ -54,11 +52,9 @@ __all__ = [
     "get_absorbing_state_index",
     "get_absorbing_states",
     "get_absorption_probabilities",
-    "get_candidate_targets",
     "get_different_indices",
     "get_neighbourhood_states",
     "get_state_space",
     "linear_fitness_map",
-    "simulate_markov_chain",
-    "widen_to_object_dtype"
+    "simulate_markov_chain"
 ]
