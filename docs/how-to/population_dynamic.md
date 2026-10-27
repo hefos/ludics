@@ -42,13 +42,11 @@ np.float64(0.1111111111111111)
 
 ```
 
-**Note:** `selection_intensity` must satisfy the following equation for all
-players $i$:
+`selection_intensity` may be passed as either a float, or a numpy.array with
+shape $(N,N)$, where entry $i,j$ is the selection intensity when player $i$
+considers player $j$.
 
-$1 -$ `selection_intensity` $+$ `selection_intensity` $\cdot$ `fitness_function(state)[i]` $\gt 0$
-
-`selection_intensity` is passed as a numpy.array. If player $i$ changes, then
-player $j$'s fitness is scaled by entry $(i,j)$ during selection.
+**Note:** The values returned by the `fitness_map` must be strictly positive.
 
 ## Fermi imitation dynamics
 
@@ -77,8 +75,8 @@ Use the `compute_fermi_transition_probability` function. Takes a
 ```
 
 `choice_intensity` controls the rationality of the Fermi function. It is passed
-as a `numpy.array` with shape (N,N). Like `selection_intensity`, player $i$
-considers player $j$'s fitness with rationality equal to entry $(i,j)$.
+either as a float, or as a `numpy.array` with shape (N,N). Player $i$ considers
+player $j$'s fitness with rationality equal to entry $(i,j)$.
 
 ## Introspection dynamics
 
@@ -108,10 +106,10 @@ standard parameters.
 
 ```
 
-In introspection dynamics, `choice_intensity` is given as an (N,K) numpy.array,
-where $K$ is the number of strategies. Entry $(i,k)$ is the rationality used by
-player $i$ when considering strategy $k$. For a homogeneous value, `np.full` can
-be used.
+In introspection dynamics, `choice_intensity` is given as either a float, or a
+numpy.array with shape (N,K), where $K$ is the number of strategies.
+Entry $(i,k)$ is the rationality used by player $i$ when considering strategy
+$k$.
 
 ## Aspiration dynamics
 
@@ -141,3 +139,5 @@ parameters. State space must include exactly two actions.
 0.207486443733952
 
 ```
+`choice_intensity` in `compute_aspiration_transition_probability` works the same
+as in `compute_introspection_transition_probability`.

@@ -10,9 +10,8 @@ for the state convention used below.
 
 ## When to use each dynamic
 
-**Moran process**: a classical, well-studied baseline. The linear fitness
-weighting and closed-form fixation formula make results easy to interpret
-analytically.
+**Moran process**: a classical, well-studied baseline. Results are easily
+interpretable due to the simple model.
 
 **Fermi imitation**: models noisy social learning, where players sometimes copy
 worse-performing neighbours. The `choice_intensity` parameter ($\beta$)
@@ -23,8 +22,11 @@ strict imitation of better-performing players.
 without comparing themselves to others. The chain is ergodic with no absorbing
 states; use the stationary distribution rather than fixation probabilities.
 
-Moran and Fermi produce **absorbing** chains. Introspection produces an
-**ergodic** chain.
+**Aspiration**: players are not concerned about reaching their maximum payoff,
+but instead wish to reach a specific target payoff.
+
+Moran and Fermi produce **absorbing** chains. Introspection and aspiration
+produce **ergodic** chains.
 
 ```py
 >>> import ludics
@@ -105,6 +107,27 @@ array([0.24117286, 0.14628008, 0.14628008, 0.08872416, 0.14628008,
 The highest weight falls on all-defect $[0,0,0]$ (~24%) and the lowest on
 all-contribute $[1,1,1]$ (~5%), as expected when $r < N$.
 
+## Aspiration dynamics (ergodic chain)
+```py
+>>> tm_asp = ludics.generate_transition_matrix(
+...     state_space=state_space,
+...     fitness_function=ludics.fitness_functions.public_goods_game_fitness_function,
+...     compute_transition_probability=ludics.compute_aspiration_transition_probability,
+...     choice_intensity=1,
+...     aspiration_vector=np.array([2,4,6]),
+...     r=r,
+...     alpha=alpha,
+... )
+>>> ludics.compute_steady_state(tm_asp)
+array([0.12960668, 0.13042322, 0.12923832, 0.12984536, 0.12192501,
+       0.12109432, 0.11965307, 0.11821403])
+
+```
+
+Here, players play in intermediate states where a one or two players contribute,
+but not all. Players reach their baseline fitness in these states, and to begin
+to contribute beyond this point would reduce their payoff.
+
 ## Summary
 
 | Dynamic         | Chain type | Key quantity            |
@@ -112,7 +135,4 @@ all-contribute $[1,1,1]$ (~5%), as expected when $r < N$.
 | Moran           | Absorbing  | Fixation probabilities  |
 | Fermi imitation | Absorbing  | Fixation probabilities  |
 | Introspection   | Ergodic    | Stationary distribution |
-
-Fermi dynamics places stronger pressure on payoff differences than the Moran
-process at comparable parameters, driving fixation toward defection more
-strongly here.
+| Aspiration      | Ergodic    | Stationary distribution |

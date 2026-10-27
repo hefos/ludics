@@ -18,4 +18,4 @@ array([3, 6, 9])
 ```
 
 **NOTE**: A fitness function _must_ accept `**kwargs` in order to be passed to
-the `generate_transition_matrix` function.
+the `generate_transition_matrix` or `simulate_markov_chain` functions.
