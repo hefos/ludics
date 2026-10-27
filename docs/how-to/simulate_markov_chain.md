@@ -8,7 +8,7 @@ large for exact computation of the transition or absorption matrix.
 >>> import ludics
 >>> import numpy as np
 
->>> def example_fitness_function(state):
+>>> def example_fitness_function(state, **kwargs):
 ...     return np.array([np.sum(state) - player_action for player_action in state])
 
 >>> initial_state = np.array([1, 1, 0])
