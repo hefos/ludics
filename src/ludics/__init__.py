@@ -25,6 +25,7 @@ from ludics.main import (
     linear_fitness_map,
     simulate_markov_chain,
 )
+from ludics.numerics import exponentiate
 
 __all__ = [
     "apply_mutation_probability",
@@ -40,6 +41,7 @@ __all__ = [
     "compute_moran_transition_probability",
     "compute_steady_state",
     "exponential_fitness_map",
+    "exponentiate",
     "extract_Q",
     "extract_R_numerical",
     "extract_R_symbolic",

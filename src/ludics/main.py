@@ -11,6 +11,8 @@ import numpy as np
 import scipy
 import sympy as sym
 
+from ludics.numerics import exponentiate
+
 
 def get_state_space(N, k):
     """
@@ -89,6 +91,7 @@ def linear_fitness_map(fitness, selection_intensity, **kwargs):
 
     return 1 - selection_intensity + selection_intensity * fitness
 
+
 def exponential_fitness_map(fitness, selection_intensity, **kwargs):
     r"""
     Takes a fitness vector and returns an exponential mapping 
@@ -105,7 +108,7 @@ def exponential_fitness_map(fitness, selection_intensity, **kwargs):
     --------
     numpy.array: the mapped fitness of the system"""
 
-    return sym.E ** (selection_intensity * fitness)
+    return exponentiate(selection_intensity * fitness)
 
 def compute_moran_transition_probability(
     source, target, fitness_function, selection_intensity, fitness_map=linear_fitness_map, **kwargs
@@ -182,7 +185,7 @@ def fermi_imitation_function(delta, choice_intensity=0.5, **kwargs):
     choice_intensity goes to infinity, the probability of transitioning goes
     to $\frac{1}{2}$
     """
-    return 1 / (1 + sym.E ** (choice_intensity * (delta)))
+    return 1 / (1 + exponentiate(choice_intensity * delta))
 
 
 def compute_fermi_transition_probability(
@@ -527,14 +530,37 @@ def generate_transition_matrix(
     Returns
     ----------
     numpy.array: the transition matrix
+
+    Notes
+    ----------
+    Only one individual changes type at a time, so a source state can only
+    reach the states which differ from it at a single position. Every other off
+    diagonal entry is zero and the diagonal is set from the row sums, so we
+    visit each source's neighbourhood rather than every ordered pair of states.
+    The matrix is the one the full double loop produces, and the work falls
+    from the square of the number of states to the number of states times the
+    size of a neighbourhood.
     """
     N = len(state_space)
     transition_matrix = np.zeros(shape=(N, N))
     if individual_to_action_mutation_probability is None:
         individual_to_action_mutation_probability = np.zeros(shape=(N, N))
+
+    index_of_state = {tuple(state): index for index, state in enumerate(state_space)}
+    action_set = np.unique(state_space)
+
     for row_index, source in enumerate(state_space):
-        for col_index, target in enumerate(state_space):
-            if row_index != col_index:
+        for position in range(len(source)):
+            for action in action_set:
+                if source[position] == action:
+                    continue
+
+                target = source.copy()
+                target[position] = action
+                col_index = index_of_state.get(tuple(target))
+                if col_index is None:
+                    continue
+
                 try:
                     transition_matrix[row_index, col_index] = (
                         apply_mutation_probability(
