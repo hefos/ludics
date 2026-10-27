@@ -26,6 +26,7 @@ from ludics.main import (
     get_state_space,
     linear_fitness_map,
     simulate_markov_chain,
+    widen_to_object_dtype,
 )
 from ludics.numerics import exponentiate
 
@@ -58,5 +59,6 @@ __all__ = [
     "get_neighbourhood_states",
     "get_state_space",
     "linear_fitness_map",
-    "simulate_markov_chain"
+    "simulate_markov_chain",
+    "widen_to_object_dtype"
 ]

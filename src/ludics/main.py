@@ -535,6 +535,35 @@ def apply_mutation_probability(
     return transition_probability
 
 
+def widen_to_object_dtype(transition_matrix):
+    """
+    Returns a transition matrix as an array of objects.
+
+    Assigning a symbolic entry into an array of floats raises a TypeError, so
+    we widen the matrix when the first symbolic entry arrives. The entries we
+    have not visited still hold the float zero the matrix was created with, and
+    we write them as integer zeros, as the loop over every ordered pair of
+    states used to. A matrix which has already been widened is returned as it
+    is.
+
+    Parameters
+    -----------
+    transition_matrix: numpy.array, the transition matrix being built
+
+    Returns
+    --------
+    numpy.array: the transition matrix, as an array of objects"""
+
+    if transition_matrix.dtype == object:
+        return transition_matrix
+
+    unvisited = transition_matrix == 0
+    transition_matrix = transition_matrix.astype(object)
+    transition_matrix[unvisited] = 0
+
+    return transition_matrix
+
+
 def get_candidate_targets(
     source, row_index, state_space, index_of_state, action_set, neighbourhood_only
 ):
@@ -673,11 +702,7 @@ def generate_transition_matrix(
                     )
                 )
             except TypeError:
-                if transition_matrix.dtype != object:
-                    unvisited = transition_matrix == 0
-                    transition_matrix = transition_matrix.astype(object)
-                    transition_matrix[unvisited] = 0
-
+                transition_matrix = widen_to_object_dtype(transition_matrix)
                 transition_matrix[row_index, col_index] = (
                     apply_mutation_probability(
                         source=source,

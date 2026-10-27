@@ -3984,3 +3984,43 @@ def test_generate_transition_matrix_marking_a_dynamic_does_not_change_it():
     )
 
     np.testing.assert_allclose(unmarked, marked)
+
+
+def test_widen_to_object_dtype():
+    """
+    Tests that widen_to_object_dtype widens a matrix of floats and writes the
+
+    entries which were never visited as integer zeros, so that a matrix built
+
+    by visiting neighbourhoods holds the same zeros as one built by visiting
+
+    every ordered pair of states.
+    """
+
+    transition_matrix = np.zeros(shape=(3, 3))
+    transition_matrix[0, 1] = 0.25
+
+    widened = ludics.widen_to_object_dtype(transition_matrix)
+
+    assert widened.dtype == object
+    assert widened[0, 1] == 0.25
+    assert all(
+        isinstance(entry, int)
+        for entry in (widened[0, 0], widened[1, 2], widened[2, 1])
+    )
+
+
+def test_widen_to_object_dtype_for_a_matrix_which_is_already_widened():
+    """
+    Tests that widen_to_object_dtype returns a matrix which already holds
+
+    objects as it is, so that the entries written so far are left alone.
+    """
+
+    transition_matrix = np.zeros(shape=(2, 2)).astype(object)
+    transition_matrix[0, 1] = sym.Symbol("x")
+
+    widened = ludics.widen_to_object_dtype(transition_matrix)
+
+    assert widened is transition_matrix
+    assert widened[0, 1] == sym.Symbol("x")
