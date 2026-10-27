@@ -1,13 +1,7 @@
 r"""
-Code for the general heterogeneous Moran process
+Code for simulating a population dynamic on a general heterogeneous population.
 
-This corresponds to the model described in `main.tex`
-
-Assume we have N ordered individuals of k types: $A_1$, ... $A_K$
-
-We have a state v \in S = [$v_1$, .... $v_n$] as the set of types of individuals in the population, so that $v_i$ is the type of individual i. |S| = $k^N$
-
-There is also a fitness function f: S -> $R^N$, giving us an array of the fitness of individuals
+See the documentation for more information
 """
 
 import collections
@@ -904,28 +898,31 @@ def simulate_markov_chain(
                 )
             )
 
-            kwargs_with_strategies = {
+            kwargs_with_strategies_and_seed = {
                 **kwargs,
                 "number_of_strategies": number_of_strategies,
+                "seed": seed
             }
-
-            transition_probabilities = np.array(
-                [
-                    apply_mutation_probability(
-                        source=current_state,
-                        target=next_state,
-                        transition_probability=compute_transition_probability(
+            try:
+                transition_probabilities = np.array(
+                    [
+                        apply_mutation_probability(
                             source=current_state,
                             target=next_state,
-                            fitness_function=fitness_function,
-                            **kwargs_with_strategies,
-                        ),
-                        individual_to_action_mutation_probability=individual_to_action_mutation_probability,
-                    )
-                    for next_state in neighbourhood
-                ],
-                dtype=float,
-            )
+                            transition_probability=compute_transition_probability(
+                                source=current_state,
+                                target=next_state,
+                                fitness_function=fitness_function,
+                                **kwargs_with_strategies_and_seed,
+                            ),
+                            individual_to_action_mutation_probability=individual_to_action_mutation_probability,
+                        )
+                        for next_state in neighbourhood
+                    ],
+                    dtype=float,
+                )
+            except TypeError:
+                raise TypeError("Error in calculating transition probability. Check that your fitness function accepts **kwargs")
 
             neighbourhood.append(current_state)
             transition_probabilities = np.append(

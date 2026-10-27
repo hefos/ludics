@@ -2321,11 +2321,11 @@ def test_simulate_markov_chain_for_trivial_fitness_function():
     choice_intensity = np.full(shape=(3,2), fill_value=0.3)
 
     expected_states_over_time = [
-        tuple(np.array([1, 1, 1])),
-        tuple(np.array([1, 1, 0])),
-        tuple(np.array([0, 1, 0])),
-        tuple(np.array([0, 1, 0])),
-        tuple(np.array([0, 1, 1])),
+        (1,1,1),
+        (1,1,0),
+        (0,1,0),
+        (0,1,0),
+        (0,1,1),
     ]
 
     actual_states_over_time, _ = ludics.simulate_markov_chain(
@@ -2357,10 +2357,10 @@ def test_simulate_markov_chain_for_warmup():
     choice_intensity = np.full(shape=(3,2), fill_value=0.3)
 
     expected_states_over_time = [
-        tuple(np.array([1, 1, 0])),
-        tuple(np.array([0, 1, 0])),
-        tuple(np.array([0, 1, 0])),
-        tuple(np.array([0, 1, 1])),
+        (1,1,0),
+        (0,1,0),
+        (0,1,0),
+        (0,1,1),
     ]
 
     actual_states_over_time, _ = ludics.simulate_markov_chain(
@@ -2392,11 +2392,11 @@ def test_simulate_markov_chain_for_moran_process():
     selection_intensity=np.full(shape=(3,3), fill_value=0.3)
 
     expected_states_over_time = [
-        tuple(np.array([1, 1, 0])),
-        tuple(np.array([1, 1, 1])),
-        tuple(np.array([1, 1, 1])),
-        tuple(np.array([1, 1, 1])),
-        tuple(np.array([1, 1, 1])),
+        (1,1,0),
+        (1,1,1),
+        (1,1,1),
+        (1,1,1),
+        (1,1,1),
     ]
     fitness_map=ludics.linear_fitness_map
 
@@ -2430,8 +2430,8 @@ def test_simulate_markov_chain_for_moran_process_counter():
     selection_intensity=np.full(shape=(3,3), fill_value=0.3)
     fitness_map=ludics.linear_fitness_map
     expected_state_distribution = {
-        tuple(np.array([1, 1, 0])): 1,
-        tuple(np.array([1, 1, 1])): 4,
+        (1,1,0): 1,
+        (1,1,1): 4,
     }
 
     _, actual_state_distribution = ludics.simulate_markov_chain(
@@ -3577,3 +3577,150 @@ def test_check_valid_extrinsic_transition_for_invalid_extrinsic_transition():
     source = np.array([12,1])
     target = np.array([15,12])
     assert ludics.check_valid_extrinsic_transition(source=source, target=target) is False
+
+def test_simulate_markov_chain_passes_seed():
+    """
+    Tests that simulate_markov_chain passes the seed to a fitness function
+    which has a 'seed' parameter"""
+
+    def random_fitness_function(state, seed, **kwargs):
+        np.random.seed(seed)
+        return np.array([np.random.normal(loc=state[i], scale=1) for i in state])
+
+    seed = 5
+    epsilon = 1
+    compute_transition_probability=ludics.compute_moran_transition_probability
+    starting_state = np.array([0,1])
+    iterations = 2
+
+    actual_states_over_time, actual_state_dict = ludics.simulate_markov_chain(
+        initial_state=starting_state,
+        number_of_strategies=2,
+        compute_transition_probability=compute_transition_probability,
+        individual_to_action_mutation_probability=None,
+        warmup=0,
+        iterations=iterations,
+        seed=seed,
+        fitness_function=random_fitness_function,
+        selection_intensity=epsilon,
+        fitness_map=ludics.linear_fitness_map
+    )
+
+    expected_states_over_time = [
+        (0,1),
+        (1,1),
+    ]
+
+    expected_state_dict = {
+        (0,1):1,
+        (1,1):1
+    }
+
+    np.testing.assert_array_equal(expected_states_over_time, actual_states_over_time)
+
+    assert actual_state_dict == expected_state_dict
+
+def test_simulate_markov_chain_respects_seeding_for_same_seed():
+    """
+    Tests that running simulate_markov_chain with the same seed twice returns
+    the same result"""
+
+    def trivial_fitness_function(state, **kwargs):
+
+        return np.array([i + 1 for i in state])
+
+    seed = 7
+    beta = 0.3
+    compute_transition_probability = ludics.compute_introspection_transition_probability
+    initial_state = np.array([0,1,0])
+    number_of_strategies = 8
+    mu = 0.01
+
+    states_over_time_first, state_dict_first = ludics.simulate_markov_chain(
+        initial_state=initial_state,
+        number_of_strategies=number_of_strategies,
+        fitness_function=trivial_fitness_function,
+        compute_transition_probability=compute_transition_probability,
+        seed=seed,
+        individual_to_action_mutation_probability=np.full(shape=(3, 8), fill_value=mu),
+        choice_intensity=beta,
+    )
+
+    states_over_time_second, state_dict_second = ludics.simulate_markov_chain(
+        initial_state=initial_state,
+        number_of_strategies=number_of_strategies,
+        fitness_function=trivial_fitness_function,
+        compute_transition_probability=compute_transition_probability,
+        seed=seed,
+        individual_to_action_mutation_probability=np.full(shape=(3, 8), fill_value=mu),
+        choice_intensity=beta,
+    )
+
+    np.testing.assert_array_equal(states_over_time_first, states_over_time_second)
+    assert state_dict_first == state_dict_second
+
+def test_simulate_markov_chain_respects_seeding_for_different_seeds():
+    """
+    Tests that running simulate_markov_chain with two different seeds returns
+    two different results"""
+
+    def trivial_fitness_function(state, **kwargs):
+
+        return np.array([i + 1 for i in state])
+
+    seed1 = 83
+    seed2 = 94
+    beta = 0.3
+    compute_transition_probability = ludics.compute_introspection_transition_probability
+    initial_state = np.array([0,1,0,1,0])
+    number_of_strategies = 5
+    mu = 0.1
+
+    states_over_time_first, state_dict_first = ludics.simulate_markov_chain(
+        initial_state=initial_state,
+        number_of_strategies=number_of_strategies,
+        fitness_function=trivial_fitness_function,
+        compute_transition_probability=compute_transition_probability,
+        seed=seed1,
+        individual_to_action_mutation_probability=np.full(shape=(5, 8), fill_value=mu),
+        choice_intensity=beta,
+    )
+
+    states_over_time_second, state_dict_second = ludics.simulate_markov_chain(
+        initial_state=initial_state,
+        number_of_strategies=number_of_strategies,
+        fitness_function=trivial_fitness_function,
+        compute_transition_probability=compute_transition_probability,
+        seed=seed2,
+        individual_to_action_mutation_probability=np.full(shape=(5, 8), fill_value=mu),
+        choice_intensity=beta,
+    )
+
+    assert np.any(states_over_time_first != states_over_time_second)
+
+    assert state_dict_first != state_dict_second
+
+def test_simulate_markov_chain_raises_typerror_without_kwargs():
+    """
+    Tests that simulate_markov_chain raises a type error when a fitness function
+    with no kwargs argument is passed to it.
+    """
+
+    def no_kwargs_fitness_function(state):
+        return state
+    
+    choice_intensity = 2
+    compute_transition_probability = ludics.compute_fermi_transition_probability
+    number_of_strategies = 2
+    starting_state = np.array([0,1,1])
+    seed = 8
+
+    with pytest.raises(TypeError):
+        ludics.simulate_markov_chain(
+            initial_state=starting_state,
+            number_of_strategies=number_of_strategies,
+            fitness_function=no_kwargs_fitness_function,
+            compute_transition_probability=compute_transition_probability,
+            seed=seed,
+            choice_intensity=choice_intensity
+        )
