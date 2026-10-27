@@ -72,7 +72,7 @@ Use the `compute_fermi_transition_probability` function. Takes a
 ...     choice_intensity=choice_intensity,
 ...     fitness_function=example_fitness_function,
 ... )
-0.0629234447996909
+np.float64(0.06292344479969089)
 
 ```
 
@@ -104,7 +104,7 @@ standard parameters.
 ...     fitness_function=example_fitness_function,
 ...     number_of_strategies=3,
 ... )
-0.0833333333333333
+np.float64(0.08333333333333333)
 
 ```
 
@@ -138,6 +138,6 @@ parameters. State space must include exactly two actions.
 ...     fitness_function=example_fitness_function,
 ...     aspiration_vector=aspiration_vector,
 ... )
-0.207486443733952
+np.float64(0.20748644373395153)
 
 ```

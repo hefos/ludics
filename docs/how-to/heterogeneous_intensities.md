@@ -67,7 +67,7 @@ $i,j$ is the choice intensity when player $i$ copies player $j$.
 ...     fitness_function=trivial_fitness_function,
 ...     choice_intensity=choice_intensity,
 ... )
-0.0837493305937842
+np.float64(0.0837493305937842)
 
 ```
 
@@ -103,7 +103,7 @@ information on state representation, see
 ...     choice_intensity=choice_intensity,
 ...     number_of_strategies=2
 ... )
-0.158340270840353
+np.float64(0.15834027084035332)
 
 ```
 
@@ -140,6 +140,6 @@ $j$, as represented by numeric states.
 ...     choice_intensity=choice_intensity,
 ...     aspiration_vector=aspiration_vector
 ... )
-0.138076977393581
+np.float64(0.13807697739358132)
 
 ```
