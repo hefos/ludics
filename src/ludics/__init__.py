@@ -26,7 +26,7 @@ from ludics.main import (
     linear_fitness_map,
     simulate_markov_chain,
 )
-from ludics.numerics import exponentiate
+from ludics.numerics import exponentiate, solve_stationary_distribution
 
 __all__ = [
     "apply_mutation_probability",
@@ -56,5 +56,6 @@ __all__ = [
     "get_neighbourhood_states",
     "get_state_space",
     "linear_fitness_map",
-    "simulate_markov_chain"
+    "simulate_markov_chain",
+    "solve_stationary_distribution"
 ]

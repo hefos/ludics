@@ -11,7 +11,7 @@ import numpy as np
 import scipy
 import sympy as sym
 
-from ludics.numerics import exponentiate
+from ludics.numerics import exponentiate, solve_stationary_distribution
 
 
 def get_state_space(N, k):
@@ -892,15 +892,35 @@ def compute_steady_state(transition_matrix, tolerance=10**-6, initial_dist=None)
     transition_matrix - numpy.array, a transition matrix.
 
     tolerance - float. The maximum change when taking next_pi = pi @
-    transition_matrix
+    transition_matrix, used when iterating.
 
-    initial_dist - numpy.array: the starting state distribution.
+    initial_dist - numpy.array: the starting state distribution. Passing one
+    iterates from it rather than solving directly.
 
     Returns
     ----------
-    numpy.array - steady state of transition_matrix."""
+    numpy.array - steady state of transition_matrix.
+
+    Notes
+    ----------
+    Where the chain has a single steady state we solve for it directly, with
+    `solve_stationary_distribution`. Iterating $\\pi \\mapsto \\pi P$ instead
+    costs one matrix product per step and takes as many steps as the chain
+    takes to mix, which is slow for the large, weakly mixing chains a
+    population dynamic gives rise to.
+
+    We iterate in the two cases a direct solve cannot answer. A caller who
+    gives an `initial_dist` is asking about a particular starting distribution,
+    which only matters when there is more than one steady state to reach, so we
+    iterate from it. A chain with more than one steady state makes the direct
+    system singular, and `solve_stationary_distribution` returns None, so we
+    iterate from the uniform distribution as before."""
     N, _ = transition_matrix.shape
     if initial_dist is None:
+        if np.asarray(transition_matrix).dtype != object:
+            steady_state = solve_stationary_distribution(transition_matrix)
+            if steady_state is not None:
+                return steady_state
         pi = np.ones(N) / N
     else:
         pi = initial_dist

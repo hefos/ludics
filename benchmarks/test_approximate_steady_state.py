@@ -102,3 +102,57 @@ def test_compute_steady_state_for_specific_four_by_four(benchmark):
     )
 
     benchmark(ludics.compute_steady_state, transition_matrix)
+
+
+def build_population_transition_matrix(n, k, mutation_probability):
+    """Returns the transition matrix of a population under imispection
+    dynamics, which is the kind of chain compute_steady_state is asked for in
+    practice: large, sparse, and slow to mix when the mutation is small."""
+
+    def fitness_function(state, **kwargs):
+        return np.array([i + j for i, j in enumerate(state)])
+
+    state_space = ludics.get_state_space(N=n, k=k)
+
+    return ludics.generate_transition_matrix(
+        state_space=state_space,
+        fitness_function=fitness_function,
+        compute_transition_probability=(
+            ludics.compute_introspective_imitation_transition_probability
+        ),
+        individual_to_action_mutation_probability=np.full(
+            shape=(n, k), fill_value=mutation_probability
+        ),
+        selection_intensity=np.full(shape=(n, n), fill_value=0.5),
+        choice_intensity=np.full(shape=(n, k), fill_value=0.5),
+        number_of_strategies=k,
+        fitness_map=ludics.exponential_fitness_map,
+    )
+
+
+@pytest.mark.parametrize(
+    "n, k",
+    [(n_val, k_val) for n_val in range(2, 9) for k_val in range(2, 4)],
+)
+def test_compute_steady_state_for_a_population(n, k, benchmark):
+    """Benchmarks compute_steady_state for the transition matrix of a
+    population"""
+
+    transition_matrix = build_population_transition_matrix(
+        n=n, k=k, mutation_probability=0.001
+    )
+    benchmark(ludics.compute_steady_state, transition_matrix)
+
+
+@pytest.mark.parametrize("mutation_probability", [0.1, 0.01, 0.001, 0.0001])
+def test_compute_steady_state_for_a_weakly_mixing_population(
+    mutation_probability, benchmark
+):
+    """Benchmarks compute_steady_state as the mutation falls and the chain
+    takes longer to mix, which is what decides how many steps an iteration
+    needs"""
+
+    transition_matrix = build_population_transition_matrix(
+        n=6, k=3, mutation_probability=mutation_probability
+    )
+    benchmark(ludics.compute_steady_state, transition_matrix)

@@ -1,7 +1,9 @@
 import numpy as np
+import scipy.sparse
 import sympy as sym
 
 import ludics
+import ludics.numerics
 
 
 def test_exponentiate_for_a_float():
@@ -139,3 +141,149 @@ def test_exponentiate_is_used_by_the_fitness_map_and_imitation_function():
     assert ludics.fermi_imitation_function(
         delta=1.0, choice_intensity=beta
     ).free_symbols == {beta}
+
+
+def build_cycle_transition_matrix(number_of_states, forward_probability):
+    """Returns a random walk on a cycle, whose stationary distribution is
+    uniform and which is sparse enough to take the sparse path."""
+
+    transition_matrix = np.zeros((number_of_states, number_of_states))
+    for state in range(number_of_states):
+        transition_matrix[state, (state + 1) % number_of_states] = forward_probability
+        transition_matrix[state, (state - 1) % number_of_states] = (
+            1 - forward_probability
+        )
+
+    return transition_matrix
+
+
+reducible_transition_matrix = np.array(
+    [
+        [1.00, 0.00, 0.00, 0.00],
+        [0.25, 0.25, 0.25, 0.25],
+        [0.25, 0.25, 0.25, 0.25],
+        [0.00, 0.00, 0.00, 1.00],
+    ]
+)
+
+
+def test_solve_stationary_distribution_for_a_dense_matrix():
+    """
+    Tests that solve_stationary_distribution returns the stationary
+
+    distribution of a small chain, which is dense enough to be solved as one.
+    """
+
+    transition_matrix = np.array(
+        [
+            [0.3, 0.3, 0.3, 0.1],
+            [0.0, 0.3, 0.2, 0.5],
+            [0.1, 0.1, 0.7, 0.1],
+            [0.1, 0.0, 0.0, 0.9],
+        ]
+    )
+
+    np.testing.assert_allclose(
+        ludics.solve_stationary_distribution(transition_matrix),
+        np.array([0.11585366, 0.07317073, 0.16463415, 0.64634146]),
+    )
+
+
+def test_solve_stationary_distribution_for_a_sparse_matrix():
+    """
+    Tests that solve_stationary_distribution takes the sparse path for a chain
+
+    with few transitions out of each state, and returns the same answer whether
+
+    the matrix is given densely or as a scipy sparse array.
+
+    The walk is periodic, so iterating would never settle, which the direct
+    
+    solve does not mind.
+    """
+
+    transition_matrix = build_cycle_transition_matrix(
+        number_of_states=10, forward_probability=0.7
+    )
+    uniform = np.full(10, 0.1)
+
+    np.testing.assert_allclose(
+        ludics.solve_stationary_distribution(transition_matrix), uniform
+    )
+    np.testing.assert_allclose(
+        ludics.solve_stationary_distribution(
+            scipy.sparse.csr_array(transition_matrix)
+        ),
+        uniform,
+    )
+
+
+def test_solve_stationary_distribution_returns_none_when_not_unique():
+    """
+    Tests that solve_stationary_distribution returns None for a chain with two
+
+    absorbing states, which has a family of stationary distributions rather
+
+    than one. The dense and the sparse paths fail differently, the first by
+
+    raising and the second by returning values which are not finite, so both
+
+    are checked.
+    """
+
+    assert (
+        ludics.solve_stationary_distribution(reducible_transition_matrix) is None
+    )
+    assert (
+        ludics.solve_stationary_distribution(
+            scipy.sparse.csr_array(reducible_transition_matrix)
+        )
+        is None
+    )
+
+
+def test_compute_steady_state_falls_back_to_iterating():
+    """
+    Tests that compute_steady_state iterates from the uniform distribution when
+
+    the chain has no single stationary distribution and no initial distribution
+
+    was given. Starting uniformly splits evenly between the two absorbing
+    
+    states.
+    """
+
+    np.testing.assert_allclose(
+        ludics.compute_steady_state(reducible_transition_matrix),
+        np.array([0.5, 0.0, 0.0, 0.5]),
+        atol=10**-5,
+    )
+
+
+def test_solve_stationary_distribution_checks_the_answer(monkeypatch):
+    """
+    Tests that solve_stationary_distribution checks what the solver returns
+
+    rather than trusting it, by giving it a solver which returns a vector that
+
+    is not a stationary distribution. A singular system has no way to signal
+
+    the failure other than the answer it gives back, so returning a wrong
+
+    distribution quietly would be worse than returning None.
+    """
+
+    transition_matrix = np.array([[0.4, 0.6], [0.4, 0.6]])
+
+    for bad_answer in (
+        np.array([np.inf, -np.inf]),
+        np.array([-0.5, 1.5]),
+        np.array([0.4, 0.4]),
+        np.array([0.9, 0.1]),
+    ):
+        monkeypatch.setattr(
+            ludics.numerics.scipy.linalg,
+            "solve",
+            lambda *_, answer=bad_answer, **__: answer,
+        )
+        assert ludics.solve_stationary_distribution(transition_matrix) is None
