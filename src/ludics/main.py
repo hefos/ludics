@@ -532,6 +532,10 @@ def generate_transition_matrix(
     transition_matrix = np.zeros(shape=(N, N))
     if individual_to_action_mutation_probability is None:
         individual_to_action_mutation_probability = np.zeros(shape=(N, N))
+    elif isinstance(individual_to_action_mutation_probability, float):
+        number_of_types = len(np.unique(state_space))
+        number_of_players = len(state_space[0])
+        individual_to_action_mutation_probability = np.full(shape=(number_of_players, number_of_types), fill_value=individual_to_action_mutation_probability)
     for row_index, source in enumerate(state_space):
         for col_index, target in enumerate(state_space):
             if row_index != col_index:
