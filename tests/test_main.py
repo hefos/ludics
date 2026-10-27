@@ -3724,3 +3724,40 @@ def test_simulate_markov_chain_raises_typerror_without_kwargs():
             seed=seed,
             choice_intensity=choice_intensity
         )
+
+def test_get_absorption_matrix_works_for_values_near_1():
+    """
+    Tests that for an absorption matrix which has values near 1 in a transitive
+    state, the absorption matrix will differentiate between the transitive and
+    absorbing states"""
+
+    transition_matrix = np.array([
+        [1, 0, 0],
+        [0.00000001, 0.99999998, 0.00000001],
+        [0, 0, 1]
+    ])
+
+    actual_absorption_matrix = ludics.compute_absorption_matrix(transition_matrix=transition_matrix)
+    expected_absorption_matrix = np.array([[0.5, 0.5]])
+
+    np.testing.assert_array_almost_equal(actual_absorption_matrix, expected_absorption_matrix)
+
+def test_extract_R_numerical_functions_for_values_near_1():
+    """
+    Tests that extract_R_numerical recognises the transitive states in a
+    transition matrix with a self-transition near 1"""
+
+    transition_matrix = np.array([
+        [1, 0, 0, 0],
+        [0.00000001, 0.99999998, 0, 0.00000001],
+        [0.000000001, 0, 0.999999998, 0.000000001],
+        [0, 0, 0, 1]
+    ])
+
+    expected_R = np.array([
+        [0.00000001, 0.00000001],
+        [0.000000001,0.000000001]])
+
+    actual_R = ludics.extract_R_numerical(transition_matrix=transition_matrix)
+
+    np.testing.assert_array_almost_equal(actual_R, expected_R)
