@@ -2,6 +2,7 @@ import warnings
 
 import numpy as np
 import scipy.sparse
+import scipy.sparse.linalg
 import sympy as sym
 
 import ludics
@@ -182,6 +183,15 @@ reducible_transition_matrix = np.array(
     ]
 )
 
+disjoint_blocks_transition_matrix = np.array(
+    [
+        [0.5, 0.5, 0.0, 0.0],
+        [0.5, 0.5, 0.0, 0.0],
+        [0.0, 0.0, 0.5, 0.5],
+        [0.0, 0.0, 0.5, 0.5],
+    ]
+)
+
 
 def test_solve_stationary_distribution_for_a_dense_matrix():
     """
@@ -236,42 +246,85 @@ def test_solve_stationary_distribution_for_a_sparse_matrix():
 
 def test_solve_stationary_distribution_returns_none_when_not_unique():
     """
+    Tests that solve_stationary_distribution returns None for a chain with more
+
+    than one stationary distribution. Two absorbing states are visible on the
+
+    diagonal and are caught before the solver runs, while two closed blocks are
+
+    not visible that way and reach it, where the dense input raises and the
+
+    sparse input cannot be read as a dense array. Both routes are checked.
+    """
+
+    for transition_matrix in (
+        reducible_transition_matrix,
+        disjoint_blocks_transition_matrix,
+    ):
+        assert ludics.solve_stationary_distribution(transition_matrix) is None
+        assert (
+            ludics.solve_stationary_distribution(
+                scipy.sparse.csr_array(transition_matrix)
+            )
+            is None
+        )
+
+
+def test_solve_stationary_distribution_sees_absorbing_states_before_solving(
+    monkeypatch,
+):
+    """
     Tests that solve_stationary_distribution returns None for a chain with two
 
-    absorbing states, which has a family of stationary distributions rather
+    absorbing states without factorising anything. Such a chain has a family of
 
-    than one. The dense and the sparse paths fail differently, the first by
+    stationary distributions, so the factorisation would be discarded, and for
 
-    raising and the second by returning values which are not finite, so both
-
-    are checked.
-    """
-
-    assert (
-        ludics.solve_stationary_distribution(reducible_transition_matrix) is None
-    )
-    assert (
-        ludics.solve_stationary_distribution(
-            scipy.sparse.csr_array(reducible_transition_matrix)
-        )
-        is None
-    )
-
-
-def test_solve_stationary_distribution_is_quiet_for_a_singular_system():
-    """
-    Tests that solve_stationary_distribution stays quiet when the sparse path
-
-    meets a singular system. A chain with more than one stationary
-
-    distribution reports itself that way, which the library handles by
-
-    returning None, so the warning the factorisation raises would point a
-
-    caller at these internals for nothing.
+    a population of a few thousand states it is most of what the call costs.
     """
 
     transition_matrix = build_reducible_sparse_transition_matrix(10)
+    assert np.count_nonzero(transition_matrix) / transition_matrix.size < 0.25
+
+    def fail_if_called(*_, **__):
+        raise AssertionError("a system we knew to be singular was factorised")
+
+    monkeypatch.setattr(
+        ludics.numerics.scipy.sparse.linalg, "spsolve", fail_if_called
+    )
+    monkeypatch.setattr(ludics.numerics.scipy.linalg, "solve", fail_if_called)
+
+    assert ludics.solve_stationary_distribution(transition_matrix) is None
+
+
+def test_solve_stationary_distribution_is_quiet_for_a_singular_system(monkeypatch):
+    """
+    Tests that solve_stationary_distribution stays quiet when the sparse
+
+    factorisation reports a singular system. The diagonal check catches the
+
+    absorbing chains, but a reducible chain without absorbing states reaches
+
+    the factorisation, and the warning would point a caller at these internals
+
+    for a case the library handles by returning None.
+    """
+
+    def warn_and_return_nothing_useful(*_, **__):
+        warnings.warn(
+            "Matrix is exactly singular",
+            scipy.sparse.linalg.MatrixRankWarning,
+            stacklevel=2,
+        )
+        return np.full(10, np.nan)
+
+    monkeypatch.setattr(
+        ludics.numerics.scipy.sparse.linalg,
+        "spsolve",
+        warn_and_return_nothing_useful,
+    )
+
+    transition_matrix = build_cycle_transition_matrix(10, 0.5)
     assert np.count_nonzero(transition_matrix) / transition_matrix.size < 0.25
 
     with warnings.catch_warnings():

@@ -54,14 +54,21 @@ def solve_stationary_distribution(
     which factorises it sparsely when the matrix is sparse and densely when it
     is not, rather than iterating towards the answer.
 
-    A chain with more than one stationary distribution, such as one with two
-    absorbing states, makes the system singular. There is then no single answer
-    to return, so we return None and leave the caller to iterate instead. We
-    check the solution rather than trusting it, since a singular system gives
-    scipy no way to signal the failure other than the answer it returns. A
-    singular system is an expected outcome here rather than an error, so we
-    silence the warning the sparse factorisation raises for it, which would
-    otherwise point a caller at these internals for a case we handle.
+    A chain with more than one stationary distribution makes the system
+    singular. There is then no single answer to return, so we return None and
+    leave the caller to iterate instead. Two or more absorbing states are the
+    way this arises in practice, and they are visible on the diagonal, so we
+    look there first and return before factorising a system we already know to
+    be singular. That matters for more than tidiness: a population of 6561
+    states without mutation spends around fourteen seconds on a factorisation
+    whose answer is then thrown away.
+
+    The diagonal shows us absorbing states but not every reducible chain, so we
+    still check the solution rather than trusting it, since a singular system
+    gives scipy no way to signal the failure other than the answer it returns.
+    For the same reason we silence the warning the sparse factorisation raises
+    on a singular system, which is an expected outcome here rather than an
+    error.
 
     Parameters
     -----------
@@ -87,6 +94,9 @@ def solve_stationary_distribution(
     else:
         transition_matrix = np.asarray(transition_matrix, dtype=float)
         density = np.count_nonzero(transition_matrix) / number_of_states**2
+
+    if np.count_nonzero(np.isclose(transition_matrix.diagonal(), 1)) > 1:
+        return None
 
     try:
         if density < sparse_density_threshold:
