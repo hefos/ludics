@@ -7,6 +7,8 @@ derived in closed form. The helpers here carry that dual use, so that the maps
 themselves do not each have to.
 """
 
+import warnings
+
 import numpy as np
 import scipy.linalg
 import scipy.sparse
@@ -56,7 +58,10 @@ def solve_stationary_distribution(
     absorbing states, makes the system singular. There is then no single answer
     to return, so we return None and leave the caller to iterate instead. We
     check the solution rather than trusting it, since a singular system gives
-    scipy no way to signal the failure other than the answer it returns.
+    scipy no way to signal the failure other than the answer it returns. A
+    singular system is an expected outcome here rather than an error, so we
+    silence the warning the sparse factorisation raises for it, which would
+    otherwise point a caller at these internals for a case we handle.
 
     Parameters
     -----------
@@ -90,7 +95,9 @@ def solve_stationary_distribution(
                 - scipy.sparse.eye_array(number_of_states, format="csc")
             ).tolil()
             system[-1, :] = 1
-            solution = scipy.sparse.linalg.spsolve(system.tocsc(), normalisation)
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", scipy.sparse.linalg.MatrixRankWarning)
+                solution = scipy.sparse.linalg.spsolve(system.tocsc(), normalisation)
         else:
             system = np.asarray(transition_matrix, dtype=float).T - np.eye(
                 number_of_states

@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import scipy.sparse
 import sympy as sym
@@ -157,6 +159,20 @@ def build_cycle_transition_matrix(number_of_states, forward_probability):
     return transition_matrix
 
 
+def build_reducible_sparse_transition_matrix(number_of_states):
+    """Returns a random walk with absorbing ends, which has a family of
+    stationary distributions and is sparse enough to take the sparse path."""
+
+    transition_matrix = np.zeros((number_of_states, number_of_states))
+    transition_matrix[0, 0] = 1
+    transition_matrix[-1, -1] = 1
+    for state in range(1, number_of_states - 1):
+        transition_matrix[state, state - 1] = 0.5
+        transition_matrix[state, state + 1] = 0.5
+
+    return transition_matrix
+
+
 reducible_transition_matrix = np.array(
     [
         [1.00, 0.00, 0.00, 0.00],
@@ -240,6 +256,27 @@ def test_solve_stationary_distribution_returns_none_when_not_unique():
         )
         is None
     )
+
+
+def test_solve_stationary_distribution_is_quiet_for_a_singular_system():
+    """
+    Tests that solve_stationary_distribution stays quiet when the sparse path
+
+    meets a singular system. A chain with more than one stationary
+
+    distribution reports itself that way, which the library handles by
+
+    returning None, so the warning the factorisation raises would point a
+
+    caller at these internals for nothing.
+    """
+
+    transition_matrix = build_reducible_sparse_transition_matrix(10)
+    assert np.count_nonzero(transition_matrix) / transition_matrix.size < 0.25
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        assert ludics.solve_stationary_distribution(transition_matrix) is None
 
 
 def test_compute_steady_state_falls_back_to_iterating():
