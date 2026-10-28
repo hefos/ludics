@@ -3,11 +3,9 @@ import pytest
 
 import ludics
 
-max_n = 8
+n_vals = [2,8]
 compute_transition_probability_functions = [ludics.compute_fermi_transition_probability, ludics.compute_moran_transition_probability, ludics.compute_introspection_transition_probability, ludics.compute_introspective_imitation_transition_probability]
-n_step_size = 1
-max_actions = 4
-action_step_size = 1
+action_sets = [2,4]
 mutation_values = [0, 0.05]
 
 def fitness_function(state, **kwargs):
@@ -26,8 +24,8 @@ def test_fitness_function_returns_expected_value_and_takes_kwargs():
 @pytest.mark.parametrize(
         "n, actions, transition_probability, mu",
         [(n,action_types,compute_transition_probability, mu)
-         for n in range(2, max_n, n_step_size)
-         for action_types in range(2, max_actions, action_step_size)
+         for n in n_vals
+         for action_types in action_sets
          for compute_transition_probability in compute_transition_probability_functions
          for mu in mutation_values]
 )
