@@ -3,6 +3,7 @@ import pytest
 import sympy as sym
 
 import ludics
+import ludics.main
 
 
 def test_compute_moran_transition_probability_for_trivial_fitness_function():
@@ -3761,3 +3762,266 @@ def test_extract_R_numerical_functions_for_values_near_1():
     actual_R = ludics.extract_R_numerical(transition_matrix=transition_matrix)
 
     np.testing.assert_array_almost_equal(actual_R, expected_R)
+
+
+def test_generate_transition_matrix_for_a_state_space_missing_states():
+    """
+    Tests that generate_transition_matrix handles a state space which does not
+
+    hold every state, by leaving out the transitions which would leave it.
+
+    Here the state (1, 1) is absent, so neither (0, 1) nor (1, 0) can reach it,
+
+    and the probability of staying put absorbs what those transitions carried.
+    """
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([1 for _ in state])
+
+    state_space = np.array([(0, 0), (0, 1), (1, 0)])
+    selection_intensity = np.full(shape=(2, 2), fill_value=0.5)
+    expected_transition_matrix = np.array(
+        [
+            [1, 0, 0],
+            [0.25, 0.75, 0],
+            [0.25, 0, 0.75],
+        ]
+    )
+
+    np.testing.assert_allclose(
+        ludics.generate_transition_matrix(
+            state_space=state_space,
+            fitness_function=trivial_fitness_function,
+            compute_transition_probability=ludics.compute_moran_transition_probability,
+            selection_intensity=selection_intensity,
+            fitness_map=ludics.linear_fitness_map,
+        ),
+        expected_transition_matrix,
+    )
+
+
+def test_build_hybrid_population_dynamics_returns_zero_for_distant_states():
+    """
+    Tests that build_hybrid_population_dynamics returns 0 when more than one
+
+    individual differs between the two states, since only one individual
+    
+    changes type at a time."""
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i for i in state])
+
+    population_dynamic_array = np.array(
+        [
+            ludics.compute_fermi_transition_probability,
+            ludics.compute_introspection_transition_probability,
+        ]
+    )
+    choice_intensity = np.full(shape=(2, 2), fill_value=0.5)
+
+    hybrid_dynamic = ludics.build_hybrid_population_dynamic(population_dynamic_array)
+
+    assert (
+        hybrid_dynamic(
+            source=np.array([0, 0]),
+            target=np.array([1, 1]),
+            fitness_function=trivial_fitness_function,
+            choice_intensity=choice_intensity,
+        )
+        == 0
+    )
+
+
+def wright_fisher_transition_probability(
+    source, target, fitness_function, **kwargs
+):
+    """
+    A dynamic in which the whole population is replaced at once.
+
+    Each of the offspring of a generation is drawn independently in proportion
+    to the fitness of the parents, so every state can be reached from every
+    other and the probability factorises over the offspring. It carries no
+    mark, which is what a dynamic written outside the library looks like.
+    """
+
+    fitness = fitness_function(source, **kwargs)
+    total_fitness = fitness.sum()
+
+    probability = 1.0
+    for offspring_type in target:
+        probability *= fitness[source == offspring_type].sum() / total_fitness
+
+    return probability
+
+
+def test_the_dynamics_of_the_library_change_one_individual():
+    """
+    Tests that every dynamic the library provides carries the mark, since each
+
+    of them returns 0 when more than one individual differs.
+    """
+
+    for compute_transition_probability in (
+        ludics.compute_moran_transition_probability,
+        ludics.compute_fermi_transition_probability,
+        ludics.compute_introspective_imitation_transition_probability,
+        ludics.compute_introspection_transition_probability,
+        ludics.compute_aspiration_transition_probability,
+    ):
+        assert compute_transition_probability.changes_one_individual is True
+
+
+def test_build_hybrid_population_dynamic_changes_one_individual():
+    """
+    Tests that a hybrid dynamic carries the mark, since it assigns a dynamic to
+
+    the one player whose type differs.
+    """
+
+    hybrid_dynamic = ludics.build_hybrid_population_dynamic(
+        np.array(
+            [
+                ludics.compute_fermi_transition_probability,
+                ludics.compute_introspection_transition_probability,
+            ]
+        )
+    )
+
+    assert hybrid_dynamic.changes_one_individual is True
+
+
+def test_generate_transition_matrix_for_an_unmarked_dynamic():
+    """
+    Tests that a dynamic which is not marked is given every ordered pair of
+
+    states, so that one in which the whole population is replaced at once is
+
+    built correctly.
+
+    Visiting only the neighbourhood of each source would leave the states which
+
+    differ at more than one position at zero, and the diagonal would absorb
+
+    what they carried, giving a matrix which is still stochastic but wrong.
+    """
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([index + 1 for index in state])
+
+    state_space = ludics.get_state_space(N=3, k=2)
+    transition_matrix = ludics.generate_transition_matrix(
+        state_space=state_space,
+        fitness_function=trivial_fitness_function,
+        compute_transition_probability=wright_fisher_transition_probability,
+    )
+
+    expected_transition_matrix = np.array(
+        [
+            [
+                wright_fisher_transition_probability(
+                    source=source,
+                    target=target,
+                    fitness_function=trivial_fitness_function,
+                )
+                for target in state_space
+            ]
+            for source in state_space
+        ]
+    )
+
+    np.testing.assert_allclose(transition_matrix, expected_transition_matrix)
+    np.testing.assert_allclose(transition_matrix.sum(axis=1), 1)
+
+    distant_pairs = [
+        (row_index, col_index)
+        for row_index, source in enumerate(state_space)
+        for col_index, target in enumerate(state_space)
+        if len(ludics.get_different_indices(source=source, target=target)) > 1
+    ]
+
+    assert any(
+        transition_matrix[row_index, col_index] > 0
+        for row_index, col_index in distant_pairs
+    )
+
+
+def test_generate_transition_matrix_marking_a_dynamic_does_not_change_it():
+    """
+    Tests that marking a dynamic which does change one individual at a time
+
+    gives the same matrix as leaving it unmarked, so that the mark is an
+
+    assertion about the dynamic rather than a change to the chain.
+    """
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([index + 1 for index in state])
+
+    def compute_peer_pressure_probability(source, target, fitness_function, **kwargs):
+        different_indices = ludics.get_different_indices(source=source, target=target)
+        if len(different_indices) > 1:
+            return 0
+        if len(different_indices) == 0:
+            return None
+
+        fitness = fitness_function(source, **kwargs)
+
+        return ludics.fermi_imitation_function(
+            delta=fitness[different_indices[0]], choice_intensity=0.5
+        ) / len(source)
+
+    state_space = ludics.get_state_space(N=3, k=2)
+    unmarked = ludics.generate_transition_matrix(
+        state_space=state_space,
+        fitness_function=trivial_fitness_function,
+        compute_transition_probability=compute_peer_pressure_probability,
+    )
+    marked = ludics.generate_transition_matrix(
+        state_space=state_space,
+        fitness_function=trivial_fitness_function,
+        compute_transition_probability=ludics.changes_one_individual(
+            compute_peer_pressure_probability
+        ),
+    )
+
+    np.testing.assert_allclose(unmarked, marked)
+
+
+def test_widen_to_object_dtype():
+    """
+    Tests that widen_to_object_dtype widens a matrix of floats and writes the
+
+    entries which were never visited as integer zeros, so that a matrix built
+
+    by visiting neighbourhoods holds the same zeros as one built by visiting
+
+    every ordered pair of states.
+    """
+
+    transition_matrix = np.zeros(shape=(3, 3))
+    transition_matrix[0, 1] = 0.25
+
+    widened = ludics.main.widen_to_object_dtype(transition_matrix)
+
+    assert widened.dtype == object
+    assert widened[0, 1] == 0.25
+    assert all(
+        isinstance(entry, int)
+        for entry in (widened[0, 0], widened[1, 2], widened[2, 1])
+    )
+
+
+def test_widen_to_object_dtype_for_a_matrix_which_is_already_widened():
+    """
+    Tests that widen_to_object_dtype returns a matrix which already holds
+
+    objects as it is, so that the entries written so far are left alone.
+    """
+
+    transition_matrix = np.zeros(shape=(2, 2)).astype(object)
+    transition_matrix[0, 1] = sym.Symbol("x")
+
+    widened = ludics.main.widen_to_object_dtype(transition_matrix)
+
+    assert widened is transition_matrix
+    assert widened[0, 1] == sym.Symbol("x")

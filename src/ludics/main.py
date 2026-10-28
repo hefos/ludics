@@ -11,6 +11,8 @@ import numpy as np
 import scipy
 import sympy as sym
 
+from ludics.numerics import exponentiate
+
 
 def get_state_space(N, k):
     """
@@ -71,6 +73,37 @@ def check_valid_extrinsic_transition(source, target):
         return target[different_indices[0]] in source
     return False
 
+
+def changes_one_individual(compute_transition_probability):
+    """
+    Marks a population dynamic in which one individual changes type per step.
+
+    A dynamic carrying this mark asserts that it returns 0 whenever the source
+    and the target differ at more than one position. `generate_transition_matrix`
+    then visits only the neighbourhood of each source rather than every ordered
+    pair of states, which is the difference between work in the square of the
+    number of states and work in the number of states times the size of a
+    neighbourhood.
+
+    A dynamic which is not marked is given every state as a candidate target,
+    since we cannot know which of them it reaches. We therefore ask each
+    dynamic to make the claim rather than assuming it, so that a dynamic in
+    which the whole population is replaced at once, such as a Wright-Fisher
+    process, is handled correctly by a caller who has never heard of this mark.
+
+    Parameters
+    -----------
+    compute_transition_probability: function, the population dynamic to mark
+
+    Returns
+    --------
+    function: the same population dynamic, marked"""
+
+    compute_transition_probability.changes_one_individual = True
+
+    return compute_transition_probability
+
+
 def linear_fitness_map(fitness, selection_intensity, **kwargs):
     r"""
     Takes a fitness vector and returns a linear mapping 
@@ -89,6 +122,7 @@ def linear_fitness_map(fitness, selection_intensity, **kwargs):
 
     return 1 - selection_intensity + selection_intensity * fitness
 
+
 def exponential_fitness_map(fitness, selection_intensity, **kwargs):
     r"""
     Takes a fitness vector and returns an exponential mapping 
@@ -105,8 +139,9 @@ def exponential_fitness_map(fitness, selection_intensity, **kwargs):
     --------
     numpy.array: the mapped fitness of the system"""
 
-    return sym.E ** (selection_intensity * fitness)
+    return exponentiate(selection_intensity * fitness)
 
+@changes_one_individual
 def compute_moran_transition_probability(
     source, target, fitness_function, selection_intensity, fitness_map=linear_fitness_map, **kwargs
 ):
@@ -182,9 +217,10 @@ def fermi_imitation_function(delta, choice_intensity=0.5, **kwargs):
     choice_intensity goes to infinity, the probability of transitioning goes
     to $\frac{1}{2}$
     """
-    return 1 / (1 + sym.E ** (choice_intensity * (delta)))
+    return 1 / (1 + exponentiate(choice_intensity * delta))
 
 
+@changes_one_individual
 def compute_fermi_transition_probability(
     source, target, fitness_function, choice_intensity, **kwargs
 ):
@@ -248,6 +284,7 @@ def compute_fermi_transition_probability(
     return (scalar * np.array(changes)).sum()
 
 
+@changes_one_individual
 def compute_introspective_imitation_transition_probability(
     source, target, fitness_function, choice_intensity, selection_intensity, fitness_map=linear_fitness_map, **kwargs
 ):
@@ -324,6 +361,7 @@ def compute_introspective_imitation_transition_probability(
     )
 
 
+@changes_one_individual
 def compute_introspection_transition_probability(
     source, target, fitness_function, choice_intensity, number_of_strategies, **kwargs
 ):
@@ -385,6 +423,7 @@ def compute_introspection_transition_probability(
     )
 
 
+@changes_one_individual
 def compute_aspiration_transition_probability(
     source, target, fitness_function, choice_intensity, aspiration_vector, **kwargs
 ):
@@ -496,6 +535,87 @@ def apply_mutation_probability(
     return transition_probability
 
 
+def widen_to_object_dtype(transition_matrix):
+    """
+    Returns a transition matrix as an array of objects.
+
+    Assigning a symbolic entry into an array of floats raises a TypeError, so
+    we widen the matrix when the first symbolic entry arrives. The entries we
+    have not visited still hold the float zero the matrix was created with, and
+    we write them as integer zeros, as the loop over every ordered pair of
+    states used to. A matrix which has already been widened is returned as it
+    is.
+
+    Parameters
+    -----------
+    transition_matrix: numpy.array, the transition matrix being built
+
+    Returns
+    --------
+    numpy.array: the transition matrix, as an array of objects"""
+
+    if transition_matrix.dtype == object:
+        return transition_matrix
+
+    unvisited = transition_matrix == 0
+    transition_matrix = transition_matrix.astype(object)
+    transition_matrix[unvisited] = 0
+
+    return transition_matrix
+
+
+def get_candidate_targets(
+    source, row_index, state_space, index_of_state, action_set, neighbourhood_only
+):
+    """
+    Yields each state a source may transition to, together with its index.
+
+    A dynamic which changes one individual at a time can only reach the states
+    which differ from the source at a single position, so for one of those we
+    walk the neighbourhood of the source. Any other dynamic is given every
+    state but the source itself, since we cannot know which of them it reaches.
+
+    A state space which does not hold every state is respected either way: a
+    neighbour which is absent from it is not yielded, exactly as the loop over
+    every ordered pair of states would never have reached it.
+
+    Parameters
+    -----------
+    source: numpy.array, the state being moved away from
+
+    row_index: int, the index of the source in the state space
+
+    state_space: numpy.array, the state space of the chain
+
+    index_of_state: dict, the index of each state of the state space
+
+    action_set: numpy.array, the action types which appear in the state space
+
+    neighbourhood_only: bool, whether to walk the neighbourhood of the source
+    rather than the whole state space
+
+    Yields
+    --------
+    tuple: the index of a target state, and the target state itself"""
+
+    if neighbourhood_only is False:
+        for col_index, target in enumerate(state_space):
+            if col_index != row_index:
+                yield col_index, target
+        return
+
+    for position in range(len(source)):
+        for action in action_set:
+            if source[position] == action:
+                continue
+
+            target = source.copy()
+            target[position] = action
+            col_index = index_of_state.get(tuple(target))
+            if col_index is not None:
+                yield col_index, target
+
+
 def generate_transition_matrix(
     state_space,
     fitness_function,
@@ -527,48 +647,77 @@ def generate_transition_matrix(
     Returns
     ----------
     numpy.array: the transition matrix
+
+    Notes
+    ----------
+    A dynamic marked with `changes_one_individual` can only reach the states
+    which differ from the source at a single position. Every other off diagonal
+    entry of its matrix is zero and the diagonal is set from the row sums, so
+    for such a dynamic we visit each source's neighbourhood rather than every
+    ordered pair of states. The matrix is the one the full double loop
+    produces, and the work falls from the square of the number of states to the
+    number of states times the size of a neighbourhood. A dynamic which is not
+    marked is given every ordered pair, since we cannot know which states it
+    reaches.
+
+    A symbolic entry makes the matrix an array of objects. The states we never
+    visit cannot be reached in one step, and we write an integer zero in their
+    entries, as the loop over every ordered pair of states used to.
     """
     N = len(state_space)
     transition_matrix = np.zeros(shape=(N, N))
     if individual_to_action_mutation_probability is None:
         individual_to_action_mutation_probability = np.zeros(shape=(N, N))
-    for row_index, source in enumerate(state_space):
-        for col_index, target in enumerate(state_space):
-            if row_index != col_index:
-                try:
-                    transition_matrix[row_index, col_index] = (
-                        apply_mutation_probability(
-                            source=source,
-                            target=target,
-                            individual_to_action_mutation_probability=individual_to_action_mutation_probability,
-                            transition_probability=(
-                                compute_transition_probability(
-                                    source=source,
-                                    target=target,
-                                    fitness_function=fitness_function,
-                                    **kwargs,
-                                )
-                            ),
-                        )
-                    )
-                except TypeError:
-                    transition_matrix = transition_matrix.astype(object)
 
-                    transition_matrix[row_index, col_index] = (
-                        apply_mutation_probability(
-                            source=source,
-                            target=target,
-                            individual_to_action_mutation_probability=individual_to_action_mutation_probability,
-                            transition_probability=(
-                                compute_transition_probability(
-                                    source=source,
-                                    target=target,
-                                    fitness_function=fitness_function,
-                                    **kwargs,
-                                )
-                            ),
-                        )
+    index_of_state = {tuple(state): index for index, state in enumerate(state_space)}
+    action_set = np.unique(state_space)
+
+    neighbourhood_only = getattr(
+        compute_transition_probability, "changes_one_individual", False
+    )
+
+    for row_index, source in enumerate(state_space):
+        for col_index, target in get_candidate_targets(
+            source=source,
+            row_index=row_index,
+            state_space=state_space,
+            index_of_state=index_of_state,
+            action_set=action_set,
+            neighbourhood_only=neighbourhood_only,
+        ):
+            try:
+                transition_matrix[row_index, col_index] = (
+                    apply_mutation_probability(
+                        source=source,
+                        target=target,
+                        individual_to_action_mutation_probability=individual_to_action_mutation_probability,
+                        transition_probability=(
+                            compute_transition_probability(
+                                source=source,
+                                target=target,
+                                fitness_function=fitness_function,
+                                **kwargs,
+                            )
+                        ),
                     )
+                )
+            except TypeError:
+                transition_matrix = widen_to_object_dtype(transition_matrix)
+                transition_matrix[row_index, col_index] = (
+                    apply_mutation_probability(
+                        source=source,
+                        target=target,
+                        individual_to_action_mutation_probability=individual_to_action_mutation_probability,
+                        transition_probability=(
+                            compute_transition_probability(
+                                source=source,
+                                target=target,
+                                fitness_function=fitness_function,
+                                **kwargs,
+                            )
+                        ),
+                    )
+                )
 
     np.fill_diagonal(transition_matrix, 1 - transition_matrix.sum(axis=1))
     return transition_matrix
@@ -958,8 +1107,16 @@ def build_hybrid_population_dynamic(dynamic_array):
 
     Returns
     --------
-    function - a population dynamic"""
+    function - a population dynamic
 
+    Notes
+    ----------
+    The dynamic which is built is marked with `changes_one_individual`
+    whatever it is built from, since it assigns a dynamic to the one player
+    whose type differs and so cannot describe a step in which several change.
+    """
+
+    @changes_one_individual
     def hybrid_dynamic(source, target, fitness_function, **kwargs):
         different_indices = np.where(source != target)
         if len(different_indices[0]) > 1:
