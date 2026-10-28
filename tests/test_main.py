@@ -4025,26 +4025,3 @@ def test_widen_to_object_dtype_for_a_matrix_which_is_already_widened():
 
     assert widened is transition_matrix
     assert widened[0, 1] == sym.Symbol("x")
-
-
-def test_get_neighbourhood_states_for_an_action_set():
-    """
-    Tests that get_neighbourhood_states takes the actions themselves as well as
-
-    a count of them. A state space whose labels are not 0 to k - 1 cannot have
-
-    its actions recovered from a count: passing the count proposes states which
-
-    do not exist and misses states which do.
-    """
-
-    state = np.array([12, 1])
-
-    np.testing.assert_array_equal(
-        ludics.get_neighbourhood_states(state=state, action_set=np.array([1, 12])),
-        np.array([[1, 1], [12, 12]]),
-    )
-    np.testing.assert_array_equal(
-        ludics.get_neighbourhood_states(state=state, number_of_strategies=2),
-        np.array([[0, 1], [1, 1], [12, 0]]),
-    )

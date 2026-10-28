@@ -604,10 +604,16 @@ def get_candidate_targets(
                 yield col_index, target
         return
 
-    for target in get_neighbourhood_states(state=source, action_set=action_set):
-        col_index = index_of_state.get(tuple(target))
-        if col_index is not None:
-            yield col_index, target
+    for position in range(len(source)):
+        for action in action_set:
+            if source[position] == action:
+                continue
+
+            target = source.copy()
+            target[position] = action
+            col_index = index_of_state.get(tuple(target))
+            if col_index is not None:
+                yield col_index, target
 
 
 def generate_transition_matrix(
@@ -930,32 +936,26 @@ def calculate_steady_state(transition_matrix):
     return pi.T
 
 
-def get_neighbourhood_states(state, number_of_strategies=None, action_set=None):
+def get_neighbourhood_states(state, number_of_strategies):
     """
     Given a state, returns a numpy.array of neighbouring states. That is, the
     set of states which differ at 1 position from the current state.
-
-    The actions are given either as a count, in which case they are taken to be
-    $0$ to `number_of_strategies` $- 1$, or as the set of actions themselves. A
-    state space whose labels are not $0$ to $k - 1$ needs the second form,
-    since the actions it uses cannot be recovered from a count.
 
     Parameters:
     ------------
 
     state: numpy.array - the state to be considered
 
-    number_of_strategies: int or None - the number of actions available to each
-    player, used when `action_set` is not given
+    number_of_strategies: int - the number of actions available to each player
 
-    action_set: numpy.array or None - the actions available to each player
+    extrinsic: bool - whether or not the players can only change to a type
+    within the state.
 
     returns:
     ---------
     numpy.array: the set of states in the neighbourhood of the passed state"""
 
-    if action_set is None:
-        action_set = np.arange(number_of_strategies)
+    action_set = np.arange(number_of_strategies)
 
     neighbours = []
 
