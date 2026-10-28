@@ -43,7 +43,7 @@ def exponentiate(exponent):
 
 
 def solve_stationary_distribution(
-    transition_matrix, residual_tolerance=10**-8, sparse_density_threshold=0.25
+    transition_matrix, residual_tolerance=10**-8, density_threshold=0.25
 ):
     """
     Returns the unique stationary distribution of a transition matrix, or None.
@@ -51,8 +51,8 @@ def solve_stationary_distribution(
     Writing $\\pi P = \\pi$ as $(P^T - I)\\pi^T = 0$ and replacing the last row
     with the condition that the entries sum to one gives a linear system whose
     solution is the stationary distribution. We hand that system to scipy,
-    which factorises it sparsely when the matrix is sparse and densely when it
-    is not, rather than iterating towards the answer.
+    which factorises it sparsely when few of its entries are non zero and
+    densely when most of them are, rather than iterating towards the answer.
 
     A chain with more than one stationary distribution makes the system
     singular. There is then no single answer to return, so we return None and
@@ -72,13 +72,15 @@ def solve_stationary_distribution(
 
     Parameters
     -----------
-    transition_matrix: numpy.array or scipy.sparse array, a transition matrix
+    transition_matrix: numpy.array or scipy.sparse array, a transition matrix.
+    A sparse array is read without being converted, though nothing in the
+    library builds one yet
 
     residual_tolerance: float, how far $\\pi P$ may sit from $\\pi$ for the
     solution to be accepted
 
-    sparse_density_threshold: float, the proportion of entries which must be
-    non zero before the system is factorised densely rather than sparsely
+    density_threshold: float, the proportion of non zero entries at which we
+    stop factorising sparsely and factorise densely instead
 
     Returns
     --------
@@ -86,8 +88,8 @@ def solve_stationary_distribution(
     does not have exactly one"""
 
     number_of_states = transition_matrix.shape[0]
-    normalisation = np.zeros(number_of_states)
-    normalisation[-1] = 1
+    right_hand_side = np.zeros(number_of_states)
+    right_hand_side[-1] = 1
 
     if scipy.sparse.issparse(transition_matrix):
         density = transition_matrix.nnz / number_of_states**2
@@ -99,21 +101,23 @@ def solve_stationary_distribution(
         return None
 
     try:
-        if density < sparse_density_threshold:
-            system = (
+        if density < density_threshold:
+            coefficient_matrix = (
                 scipy.sparse.csc_array(transition_matrix).T
                 - scipy.sparse.eye_array(number_of_states, format="csc")
             ).tolil()
-            system[-1, :] = 1
+            coefficient_matrix[-1, :] = 1
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore", scipy.sparse.linalg.MatrixRankWarning)
-                solution = scipy.sparse.linalg.spsolve(system.tocsc(), normalisation)
+                solution = scipy.sparse.linalg.spsolve(
+                    coefficient_matrix.tocsc(), right_hand_side
+                )
         else:
-            system = np.asarray(transition_matrix, dtype=float).T - np.eye(
+            coefficient_matrix = np.asarray(transition_matrix, dtype=float).T - np.eye(
                 number_of_states
             )
-            system[-1, :] = 1
-            solution = scipy.linalg.solve(system, normalisation)
+            coefficient_matrix[-1, :] = 1
+            solution = scipy.linalg.solve(coefficient_matrix, right_hand_side)
     except (ValueError, RuntimeError, scipy.linalg.LinAlgError):
         return None
 
