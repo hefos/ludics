@@ -10,6 +10,7 @@ import itertools
 import numpy as np
 import scipy
 import scipy.sparse
+import scipy.sparse.linalg
 import sympy as sym
 
 from ludics.numerics import exponentiate, solve_stationary_distribution
@@ -34,22 +35,24 @@ def get_state_space(N, k):
 
     return state_space
 
+
 def get_different_indices(source, target):
     """
     Given a source and a target, returns the indices where they differ. Will
     return an empty array if source==target.
-    
+
     Parameters
     -----------
     source: numpy.array: the state being moved away from
-    
+
     target: numpy.array: the state being moved towards
-    
+
     Returns
     --------
     array: the list of indices where source and target differ"""
 
     return np.where(source != target)[0]
+
 
 def check_valid_extrinsic_transition(source, target):
     """
@@ -58,12 +61,12 @@ def check_valid_extrinsic_transition(source, target):
     different entry in target is also in source (i.e, (0,1,1) -> (0,1,0)) and
     False if not (i.e, (0,1,1) -> (0,1,2)). Returns False for a self transition
     as a state is not considered to be in it's own neighbourhood.
-    
+
     Parameters
     -----------
     source: numpy.array, the state being moved away from target: numpy.array,
     the state being moved towards
-    
+
     Returns
     --------
     bool, whether or not the transition is valid in an extrinsic population
@@ -107,16 +110,16 @@ def changes_one_individual(compute_transition_probability):
 
 def linear_fitness_map(fitness, selection_intensity, **kwargs):
     r"""
-    Takes a fitness vector and returns a linear mapping 
+    Takes a fitness vector and returns a linear mapping
     $1 - \epislon + \epsilon\pi$. Good for systems with
     small payoff differences
-    
+
     Parameters
     -----------
     fitness: numpy.array or float, the unscaled fitness of a state or player
-    
+
     selection_intensity: float, the selection intensity of the system
-    
+
     Returns
     --------
     numpy.array: the mapped fitness of the system"""
@@ -126,25 +129,31 @@ def linear_fitness_map(fitness, selection_intensity, **kwargs):
 
 def exponential_fitness_map(fitness, selection_intensity, **kwargs):
     r"""
-    Takes a fitness vector and returns an exponential mapping 
+    Takes a fitness vector and returns an exponential mapping
     $e^{\epsilon * \pi}$. Good for systems with
     large negative values
-    
+
     Parameters
     -----------
     fitness: numpy.array or float, the unscaled fitness of a state or player
-    
+
     selection_intensity: float, the selection intensity of the system
-    
+
     Returns
     --------
     numpy.array: the mapped fitness of the system"""
 
     return exponentiate(selection_intensity * fitness)
 
+
 @changes_one_individual
 def compute_moran_transition_probability(
-    source, target, fitness_function, selection_intensity, fitness_map=linear_fitness_map, **kwargs
+    source,
+    target,
+    fitness_function,
+    selection_intensity,
+    fitness_map=linear_fitness_map,
+    **kwargs,
 ):
     """
     Given two states and a fitness function, returns the transition probability
@@ -186,9 +195,15 @@ def compute_moran_transition_probability(
         return 0
 
     if isinstance(selection_intensity, (int, float, np.floating, np.integer)):
-        selection_intensity = np.full(shape=(len(source), len(source)), fill_value=selection_intensity)
-    
-    fitness = fitness_map(fitness=fitness_function(source, **kwargs), selection_intensity=selection_intensity[index_of_difference], **kwargs)
+        selection_intensity = np.full(
+            shape=(len(source), len(source)), fill_value=selection_intensity
+        )
+
+    fitness = fitness_map(
+        fitness=fitness_function(source, **kwargs),
+        selection_intensity=selection_intensity[index_of_difference],
+        **kwargs,
+    )
     denominator = fitness.sum() * len(source)
     numerator = fitness[source == target[index_of_difference]].sum()
     return numerator / denominator
@@ -260,15 +275,17 @@ def compute_fermi_transition_probability(
 
     different_indices = get_different_indices(source=source, target=target)
     if len(different_indices) > 1:
-            return 0
+        return 0
     if len(different_indices) == 0:
-            return None
+        return None
     index_of_difference = different_indices[0]
     if check_valid_extrinsic_transition(source=source, target=target) is False:
         return 0
-    
+
     if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
-        choice_intensity = np.full(shape=(len(source), len(source)), fill_value=choice_intensity)
+        choice_intensity = np.full(
+            shape=(len(source), len(source)), fill_value=choice_intensity
+        )
 
     fitness = fitness_function(source, **kwargs)
 
@@ -287,7 +304,13 @@ def compute_fermi_transition_probability(
 
 @changes_one_individual
 def compute_introspective_imitation_transition_probability(
-    source, target, fitness_function, choice_intensity, selection_intensity, fitness_map=linear_fitness_map, **kwargs
+    source,
+    target,
+    fitness_function,
+    choice_intensity,
+    selection_intensity,
+    fitness_map=linear_fitness_map,
+    **kwargs,
 ):
     """
     Given two states, a fitness function, and a choice intensity, returns the
@@ -330,24 +353,32 @@ def compute_introspective_imitation_transition_probability(
 
     different_indices = get_different_indices(source=source, target=target)
     if len(different_indices) > 1:
-                return 0
+        return 0
     if len(different_indices) == 0:
-                return None
+        return None
     index_of_difference = different_indices[0]
     if check_valid_extrinsic_transition(source=source, target=target) is False:
         return 0
-    
+
     if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
-        choice_intensity = np.full(shape=(len(source), np.max(target)+1), fill_value=choice_intensity)
-    
+        choice_intensity = np.full(
+            shape=(len(source), np.max(target) + 1), fill_value=choice_intensity
+        )
+
     if isinstance(selection_intensity, (int, float, np.floating, np.integer)):
-        selection_intensity = np.full(shape=(len(source), len(source)), fill_value=selection_intensity)
+        selection_intensity = np.full(
+            shape=(len(source), len(source)), fill_value=selection_intensity
+        )
 
     fitness = fitness_function(source, **kwargs)
     fitness_before = fitness[index_of_difference]
     fitness_after = fitness_function(target, **kwargs)[index_of_difference]
 
-    selection_fitness = fitness_map(fitness=fitness, selection_intensity=selection_intensity[index_of_difference], **kwargs)
+    selection_fitness = fitness_map(
+        fitness=fitness,
+        selection_intensity=selection_intensity[index_of_difference],
+        **kwargs,
+    )
     selection_denominator = selection_fitness.sum() * len(source)
     selection_numerator = selection_fitness[source == target[index_of_difference]].sum()
     selection_probability = selection_numerator / selection_denominator
@@ -355,7 +386,9 @@ def compute_introspective_imitation_transition_probability(
     delta = fitness_before - fitness_after
 
     different_strategy = target[index_of_difference]
-    choice_intensity_to_target = choice_intensity[index_of_difference][different_strategy]
+    choice_intensity_to_target = choice_intensity[index_of_difference][
+        different_strategy
+    ]
 
     return selection_probability * fermi_imitation_function(
         delta=delta, choice_intensity=choice_intensity_to_target
@@ -390,7 +423,7 @@ def compute_introspection_transition_probability(
     choice_intensity: numpy.array: the choice intensity of the
     function. The lower the value, the higher the probability that a player will
     choose the higher fitness strategy in $\\phi$. Entry ik is the rationality
-    with which player $i$ considers strategy $k$. Shape must be (N,K), where 
+    with which player $i$ considers strategy $k$. Shape must be (N,K), where
     K is the number of strategies
 
     number_of_strategies: the number of strategies available to each player in
@@ -405,9 +438,11 @@ def compute_introspection_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
-    
+
     if isinstance(choice_intensity, (int, float, np.floating, np.integer)):
-        choice_intensity = np.full(shape=(len(source), number_of_strategies), fill_value=choice_intensity)
+        choice_intensity = np.full(
+            shape=(len(source), number_of_strategies), fill_value=choice_intensity
+        )
 
     fitness = fitness_function(source, **kwargs)
     fitness_before = fitness[different_indices][0]
@@ -417,7 +452,9 @@ def compute_introspection_transition_probability(
 
     delta = fitness_before - fitness_after
     different_strategy = target[different_indices[0][0]]
-    choice_intensity_to_target = choice_intensity[different_indices[0][0]][different_strategy]
+    choice_intensity_to_target = choice_intensity[different_indices[0][0]][
+        different_strategy
+    ]
 
     return selection_probability * fermi_imitation_function(
         delta=delta, choice_intensity=choice_intensity_to_target
@@ -481,7 +518,9 @@ def compute_aspiration_transition_probability(
     delta = fitness_before - aspiration_vector[different_indices][0]
 
     current_strategy = source[different_indices[0][0]]
-    choice_intensity_to_target = choice_intensity[different_indices[0][0]][current_strategy]
+    choice_intensity_to_target = choice_intensity[different_indices[0][0]][
+        current_strategy
+    ]
 
     return selection_probability * fermi_imitation_function(
         delta=delta, choice_intensity=choice_intensity_to_target
@@ -855,6 +894,7 @@ def get_absorbing_states(state_space):
         else np.array([state_space[index] for index in index_array])
     )
 
+
 def extract_Q(transition_matrix):
     """
     For a transition matrix, compute the corresponding matrix Q
@@ -888,7 +928,7 @@ def extract_R_numerical(transition_matrix):
     """
 
     # TODO merge with symbolic version and Q as function: obtain canonical form
-    absorbing_states = np.diag(transition_matrix) == 1.0
+    absorbing_states = transition_matrix.diagonal() == 1.0
     non_absorbing_states = ~absorbing_states
     R = transition_matrix[np.ix_(non_absorbing_states, absorbing_states)]
 
@@ -926,18 +966,25 @@ def compute_absorption_matrix(transition_matrix):
     Returns:
     -----------
 
-    numpy.array: the probability of transitioning from
-
-    each transitive state (row) to each absorbing state(column).
+    numpy.array: the probability of transitioning from each transitive state
+                 (row) to each absorbing state(column).
     """
 
     Q = extract_Q(transition_matrix=transition_matrix)
 
     R = extract_R_numerical(transition_matrix=transition_matrix)
 
-    B = scipy.linalg.solve(np.eye(Q.shape[0]) - Q, R)
+    number_of_transient_states = Q.shape[0]
 
-    return B
+    if scipy.sparse.issparse(Q):
+        system = scipy.sparse.eye_array(number_of_transient_states, format="csc") - Q
+        factorisation = scipy.sparse.linalg.splu(
+            system.tocsc(), permc_spec="MMD_AT_PLUS_A"
+        )
+
+        return factorisation.solve(R.toarray())
+
+    return scipy.linalg.solve(np.eye(number_of_transient_states) - Q, R)
 
 
 def calculate_absorption_matrix(transition_matrix):
@@ -1172,7 +1219,7 @@ def simulate_markov_chain(
             kwargs_with_strategies_and_seed = {
                 **kwargs,
                 "number_of_strategies": number_of_strategies,
-                "seed": seed
+                "seed": seed,
             }
             try:
                 transition_probabilities = np.array(
@@ -1193,7 +1240,9 @@ def simulate_markov_chain(
                     dtype=float,
                 )
             except TypeError:
-                raise TypeError("Error in calculating transition probability. Check that your fitness function accepts **kwargs")
+                raise TypeError(
+                    "Error in calculating transition probability. Check that your fitness function accepts **kwargs"
+                )
 
             neighbourhood.append(current_state)
             transition_probabilities = np.append(

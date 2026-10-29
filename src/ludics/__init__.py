@@ -51,7 +51,6 @@ __all__ = [
     "generate_transition_matrix",
     "get_absorbing_state_index",
     "get_absorbing_states",
-    "get_absorption_probabilities",
     "get_different_indices",
     "get_neighbourhood_states",
     "get_state_space",

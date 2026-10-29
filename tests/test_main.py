@@ -4229,3 +4229,58 @@ def test_compute_steady_state_solves_directly_for_a_sparse_array(monkeypatch):
         solve_stationary_distribution(sparse),
     )
     assert len(solved) == 1
+
+
+def build_absorbing_random_walk(number_of_states):
+    """Returns a random walk with absorbing ends, whose absorption
+    probabilities are known: from state i of n, the walk is absorbed at 0 with
+    probability (n - 1 - i) / (n - 1)."""
+
+    transition_matrix = np.zeros((number_of_states, number_of_states))
+    transition_matrix[0, 0] = 1
+    transition_matrix[-1, -1] = 1
+    for state in range(1, number_of_states - 1):
+        transition_matrix[state, state - 1] = 0.5
+        transition_matrix[state, state + 1] = 0.5
+
+    return transition_matrix
+
+
+def test_compute_absorption_matrix_for_a_random_walk():
+    """
+    Tests that the absorption matrix of a random walk with absorbing ends is
+
+    the one the walk is known to have, from either way of storing the chain.
+    """
+
+    transition_matrix = build_absorbing_random_walk(12)
+
+    expected_absorption_matrix = np.array(
+        [[(11 - state) / 11, state / 11] for state in range(1, 11)]
+    )
+
+    np.testing.assert_allclose(
+        ludics.compute_absorption_matrix(transition_matrix),
+        expected_absorption_matrix,
+    )
+    np.testing.assert_allclose(
+        ludics.compute_absorption_matrix(
+            scipy.sparse.csr_array(transition_matrix)
+        ),
+        expected_absorption_matrix,
+    )
+
+
+def test_compute_absorption_matrix_when_every_state_is_absorbing():
+    """
+    Tests that a chain with no transient states has an absorption matrix with
+
+    no rows, whichever way it is stored, since a system of no equations is
+
+    still a system to be factorised.
+    """
+
+    assert ludics.compute_absorption_matrix(np.eye(3)).shape == (0, 3)
+    assert ludics.compute_absorption_matrix(
+        scipy.sparse.csr_array(np.eye(3))
+    ).shape == (0, 3)

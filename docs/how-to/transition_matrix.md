@@ -139,7 +139,7 @@ reaches every state, so its matrix has no zeros to leave out and asking for a
 sparse array raises a `ValueError`. A symbolic chain comes back as an array of
 objects, since a sparse array holds floats.
 
-The sparse array is read by `compute_steady_state` and
-`solve_stationary_distribution`. The absorption functions, `extract_Q`,
-`extract_R_numerical` and `compute_absorption_matrix`, still expect an ordinary
-array.
+A sparse array is read by `compute_steady_state`,
+`solve_stationary_distribution` and `compute_absorption_matrix`, so both the
+stationary distribution and the absorption probabilities of a large chain can
+be found from one. `simulate_markov_chain` still expects an ordinary array.
