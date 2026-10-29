@@ -18,6 +18,7 @@ Below is a list of functionality included in `ludics`
 - [compute_absorption_matrix](compute_absorption_matrix.md)
 - [calculate_absorption_matrix](calculate_absorption_matrix.md)
 - [compute_steady_state](compute_steady_state.md)
+- [solve_stationary_distribution](solve_stationary_distribution.md)
 - [calculate_steady_state](calculate_steady_state.md)
 - [simulate_markov_chain](simulate_markov_chain.md)
 

@@ -9,6 +9,7 @@ import itertools
 
 import numpy as np
 import scipy
+import scipy.sparse
 import sympy as sym
 
 from ludics.numerics import exponentiate, solve_stationary_distribution
@@ -564,6 +565,65 @@ def widen_to_object_dtype(transition_matrix):
     return transition_matrix
 
 
+def assemble_sparse_transition_matrix(
+    row_indices, column_indices, values, number_of_states
+):
+    """
+    Returns a transition matrix as a sparse array, built from its entries.
+
+    A dynamic which changes one individual at a time writes an entry for each
+    neighbour of a state and leaves the rest of the row alone, so the number of
+    entries grows with the population rather than with its square. Collecting
+    them as they are computed and assembling them here keeps only those
+    entries, where writing them into an array of zeros keeps all of them: a
+    population of 6561 states takes 344MB densely and under 2MB sparsely.
+
+    The diagonal is whatever is left of a row once the entries leaving the
+    state are accounted for, so we take the row sums of the entries we hold and
+    add the remainder to each diagonal. Entries which came out as zero are then
+    dropped, so that the number stored is the number of non zero entries a
+    dense matrix would report rather than the number we happened to visit.
+
+    Parameters
+    -----------
+    row_indices: list, the row of each entry
+
+    column_indices: list, the column of each entry
+
+    values: list, the value of each entry
+
+    number_of_states: int, the number of states of the chain
+
+    Returns
+    --------
+    scipy.sparse.csr_array: the transition matrix
+
+    Raises
+    --------
+    TypeError: when an entry is symbolic, since a sparse array holds floats"""
+
+    values = np.asarray(values, dtype=float)
+    row_indices = np.asarray(row_indices, dtype=int)
+    column_indices = np.asarray(column_indices, dtype=int)
+    diagonal = np.arange(number_of_states)
+
+    row_sums = np.bincount(row_indices, weights=values, minlength=number_of_states)
+
+    transition_matrix = scipy.sparse.coo_array(
+        (
+            np.concatenate([values, 1 - row_sums]),
+            (
+                np.concatenate([row_indices, diagonal]),
+                np.concatenate([column_indices, diagonal]),
+            ),
+        ),
+        shape=(number_of_states, number_of_states),
+    ).tocsr()
+    transition_matrix.eliminate_zeros()
+
+    return transition_matrix
+
+
 def get_candidate_targets(
     source, row_index, state_space, index_of_state, action_set, neighbourhood_only
 ):
@@ -621,6 +681,7 @@ def generate_transition_matrix(
     fitness_function,
     compute_transition_probability,
     individual_to_action_mutation_probability=None,
+    return_sparse_array=False,
     **kwargs,
 ):
     """
@@ -644,9 +705,12 @@ def generate_transition_matrix(
     corresponds to action type 0. Action types must be written in the form of
     0,1,2,etc. If None, this will assume a vector of 0 probabilities.
 
+    return_sparse_array: bool, whether to return the matrix as a sparse array
+    rather than as an array of zeros with the entries written into it
+
     Returns
     ----------
-    numpy.array: the transition matrix
+    numpy.array or scipy.sparse.csr_array: the transition matrix
 
     Notes
     ----------
@@ -663,18 +727,39 @@ def generate_transition_matrix(
     A symbolic entry makes the matrix an array of objects. The states we never
     visit cannot be reached in one step, and we write an integer zero in their
     entries, as the loop over every ordered pair of states used to.
+
+    Asking for a sparse array keeps the entries we visit and nothing else,
+    which is what lets a population past 6561 states be held at all: the array
+    of zeros is the square of the number of states whatever the dynamic does
+    with it, and reaches 3GB at 19683 states where the entries themselves take
+    6MB. We therefore refuse it for a dynamic which is not marked
+    `changes_one_individual`, whose matrix has no zeros to leave out, and fall
+    back to an array of objects for a symbolic one, which a sparse array
+    cannot hold.
     """
     N = len(state_space)
-    transition_matrix = np.zeros(shape=(N, N))
-    if individual_to_action_mutation_probability is None:
-        individual_to_action_mutation_probability = np.zeros(shape=(N, N))
-
     index_of_state = {tuple(state): index for index, state in enumerate(state_space)}
     action_set = np.unique(state_space)
+
+    if individual_to_action_mutation_probability is None:
+        individual_to_action_mutation_probability = np.zeros(
+            shape=(len(state_space[0]), action_set.max() + 1)
+        )
 
     neighbourhood_only = getattr(
         compute_transition_probability, "changes_one_individual", False
     )
+
+    if return_sparse_array and neighbourhood_only is False:
+        raise ValueError(
+            "a dynamic which is not marked `changes_one_individual` reaches "
+            "every state, so its matrix has no zeros to leave out"
+        )
+
+    if return_sparse_array:
+        row_indices, column_indices, values = [], [], []
+    else:
+        transition_matrix = np.zeros(shape=(N, N))
 
     for row_index, source in enumerate(state_space):
         for col_index, target in get_candidate_targets(
@@ -685,39 +770,50 @@ def generate_transition_matrix(
             action_set=action_set,
             neighbourhood_only=neighbourhood_only,
         ):
-            try:
-                transition_matrix[row_index, col_index] = (
-                    apply_mutation_probability(
+            probability = apply_mutation_probability(
+                source=source,
+                target=target,
+                individual_to_action_mutation_probability=individual_to_action_mutation_probability,
+                transition_probability=(
+                    compute_transition_probability(
                         source=source,
                         target=target,
-                        individual_to_action_mutation_probability=individual_to_action_mutation_probability,
-                        transition_probability=(
-                            compute_transition_probability(
-                                source=source,
-                                target=target,
-                                fitness_function=fitness_function,
-                                **kwargs,
-                            )
-                        ),
+                        fitness_function=fitness_function,
+                        **kwargs,
                     )
-                )
+                ),
+            )
+
+            if return_sparse_array:
+                row_indices.append(row_index)
+                column_indices.append(col_index)
+                values.append(probability)
+                continue
+
+            try:
+                transition_matrix[row_index, col_index] = probability
             except TypeError:
                 transition_matrix = widen_to_object_dtype(transition_matrix)
-                transition_matrix[row_index, col_index] = (
-                    apply_mutation_probability(
-                        source=source,
-                        target=target,
-                        individual_to_action_mutation_probability=individual_to_action_mutation_probability,
-                        transition_probability=(
-                            compute_transition_probability(
-                                source=source,
-                                target=target,
-                                fitness_function=fitness_function,
-                                **kwargs,
-                            )
-                        ),
-                    )
-                )
+                transition_matrix[row_index, col_index] = probability
+
+    if return_sparse_array:
+        try:
+            return assemble_sparse_transition_matrix(
+                row_indices=row_indices,
+                column_indices=column_indices,
+                values=values,
+                number_of_states=N,
+            )
+        except TypeError:
+            return generate_transition_matrix(
+                state_space=state_space,
+                fitness_function=fitness_function,
+                compute_transition_probability=compute_transition_probability,
+                individual_to_action_mutation_probability=(
+                    individual_to_action_mutation_probability
+                ),
+                **kwargs,
+            )
 
     np.fill_diagonal(transition_matrix, 1 - transition_matrix.sum(axis=1))
     return transition_matrix
@@ -914,10 +1010,18 @@ def compute_steady_state(transition_matrix, tolerance=10**-6, initial_dist=None)
     which only matters when there is more than one steady state to reach, so we
     iterate from it. A chain with more than one steady state makes the direct
     system singular, and `solve_stationary_distribution` returns None, so we
-    iterate from the uniform distribution as before."""
+    iterate from the uniform distribution as before.
+
+    A symbolic matrix is the third case, and we ask whether its entries are
+    objects to recognise it. A sparse array answers that question wrongly,
+    since asking numpy to read one gives a single object rather than an array
+    of numbers, so we look at whether it is sparse first. It holds floats by
+    construction, which is the answer we wanted."""
     N, _ = transition_matrix.shape
     if initial_dist is None:
-        if np.asarray(transition_matrix).dtype != object:
+        if scipy.sparse.issparse(transition_matrix) or (
+            np.asarray(transition_matrix).dtype != object
+        ):
             steady_state = solve_stationary_distribution(transition_matrix)
             if steady_state is not None:
                 return steady_state
