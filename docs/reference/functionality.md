@@ -18,6 +18,7 @@ Below is a list of functionality included in `ludics`
 - [compute_absorption_matrix](compute_absorption_matrix.md)
 - [calculate_absorption_matrix](calculate_absorption_matrix.md)
 - [compute_steady_state](compute_steady_state.md)
+- [solve_stationary_distribution](solve_stationary_distribution.md)
 - [calculate_steady_state](calculate_steady_state.md)
 - [simulate_markov_chain](simulate_markov_chain.md)
 
@@ -26,6 +27,7 @@ Below is a list of functionality included in `ludics`
 - [compute_moran_transition_probability](compute_moran.md)
 - [compute_fermi_transition_probability](compute_fermi.md)
 - [compute_introspection_transition_probability](compute_introspection.md)
+- [compute_introspective_imitation_transition_probability](compute_introspective_imitation.md)
 - [compute_aspiration_transition_probability](compute_aspiration.md)
 - [build_hybrid_population_dynamic](build_hybrid_dynamic.md)
 - [changes_one_individual](changes_one_individual.md)
@@ -46,6 +48,8 @@ Below is a list of functionality included in `ludics`
 - [extract_R_numerical](extract_R_numerical.md)
 - [extract_R_symbolic](extract_R_symbolic.md)
 - [get_neighbourhood_states](get_neighbourhood_states.md)
+- [get_different_indices](get_different_indices.md)
+- [check_valid_extrinsic_transition](check_valid_extrinsic_transition.md)
 
 ---
 

@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+import scipy.sparse
 import sympy as sym
 
 import ludics
@@ -4025,3 +4026,261 @@ def test_widen_to_object_dtype_for_a_matrix_which_is_already_widened():
 
     assert widened is transition_matrix
     assert widened[0, 1] == sym.Symbol("x")
+
+
+def test_generate_transition_matrix_as_a_sparse_array():
+    """
+    Tests that asking for a sparse array gives the same chain as the array of
+
+    zeros does, holding only the entries which are not zero, so that the choice
+
+    is one of storage rather than of dynamics.
+    """
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([index + 1 for index in state])
+
+    state_space = ludics.get_state_space(N=4, k=3)
+    arguments = {
+        "state_space": state_space,
+        "fitness_function": trivial_fitness_function,
+        "compute_transition_probability": (
+            ludics.compute_introspective_imitation_transition_probability
+        ),
+        "individual_to_action_mutation_probability": np.full(
+            shape=(4, 3), fill_value=0.01
+        ),
+        "selection_intensity": np.full(shape=(4, 4), fill_value=0.5),
+        "choice_intensity": np.full(shape=(4, 3), fill_value=0.5),
+        "number_of_strategies": 3,
+    }
+
+    dense = ludics.generate_transition_matrix(**arguments)
+    sparse = ludics.generate_transition_matrix(**arguments, return_sparse_array=True)
+
+    assert scipy.sparse.issparse(sparse)
+    np.testing.assert_allclose(sparse.toarray(), dense)
+    np.testing.assert_allclose(sparse.sum(axis=1), 1)
+    assert sparse.nnz == np.count_nonzero(dense)
+
+
+def test_generate_transition_matrix_as_a_sparse_array_solves_the_same_chain():
+    """
+    Tests that the stationary distribution of a chain is the same whichever
+
+    way its matrix is stored, since solve_stationary_distribution reads a
+
+    sparse array without converting it.
+    """
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([index + 1 for index in state])
+
+    arguments = {
+        "state_space": ludics.get_state_space(N=4, k=3),
+        "fitness_function": trivial_fitness_function,
+        "compute_transition_probability": (
+            ludics.compute_introspective_imitation_transition_probability
+        ),
+        "individual_to_action_mutation_probability": np.full(
+            shape=(4, 3), fill_value=0.01
+        ),
+        "selection_intensity": np.full(shape=(4, 4), fill_value=0.5),
+        "choice_intensity": np.full(shape=(4, 3), fill_value=0.5),
+        "number_of_strategies": 3,
+    }
+
+    dense = ludics.generate_transition_matrix(**arguments)
+    sparse = ludics.generate_transition_matrix(**arguments, return_sparse_array=True)
+
+    np.testing.assert_allclose(
+        ludics.solve_stationary_distribution(sparse),
+        ludics.solve_stationary_distribution(dense),
+    )
+
+
+def test_generate_transition_matrix_as_a_sparse_array_for_an_unmarked_dynamic():
+    """
+    Tests that a dynamic which is not marked `changes_one_individual` is
+
+    refused a sparse array, since it reaches every state and so has no zeros
+
+    to leave out.
+    """
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([index + 1 for index in state])
+
+    with pytest.raises(ValueError, match="no zeros to leave out"):
+        ludics.generate_transition_matrix(
+            state_space=ludics.get_state_space(N=3, k=2),
+            fitness_function=trivial_fitness_function,
+            compute_transition_probability=wright_fisher_transition_probability,
+            return_sparse_array=True,
+        )
+
+
+def test_generate_transition_matrix_as_a_sparse_array_for_symbolic_entries():
+    """
+    Tests that a symbolic chain asked for as a sparse array comes back as an
+
+    array of objects, since a sparse array holds floats, and that it is the
+
+    matrix the dense path would have built.
+    """
+
+    def symbolic_fitness_function(state, **kwargs):
+        return np.array(
+            [
+                sym.Symbol("x") if individual == 1 else sym.Symbol("y")
+                for individual in state
+            ]
+        )
+
+    arguments = {
+        "state_space": np.array([(0, 0), (0, 1), (1, 0), (1, 1)]),
+        "fitness_function": symbolic_fitness_function,
+        "compute_transition_probability": ludics.compute_moran_transition_probability,
+        "selection_intensity": np.full(shape=(2, 2), fill_value=sym.Symbol("e")),
+    }
+
+    sparse = ludics.generate_transition_matrix(**arguments, return_sparse_array=True)
+
+    assert not scipy.sparse.issparse(sparse)
+    assert sparse.dtype == object
+    np.testing.assert_array_equal(
+        sparse, ludics.generate_transition_matrix(**arguments)
+    )
+
+
+def test_assemble_sparse_transition_matrix():
+    """
+    Tests that the entries given to assemble_sparse_transition_matrix are
+
+    placed where they belong, that each diagonal takes whatever is left of its
+
+    row, and that an entry which came out as zero is not stored.
+    """
+
+    transition_matrix = ludics.main.assemble_sparse_transition_matrix(
+        row_indices=[0, 1, 2],
+        column_indices=[1, 0, 0],
+        values=[0.25, 0.5, 0.0],
+        number_of_states=3,
+    )
+
+    np.testing.assert_allclose(
+        transition_matrix.toarray(),
+        np.array([[0.75, 0.25, 0.0], [0.5, 0.5, 0.0], [0.0, 0.0, 1.0]]),
+    )
+    assert transition_matrix.nnz == 5
+
+
+def test_compute_steady_state_solves_directly_for_a_sparse_array(monkeypatch):
+    """
+    Tests that a sparse matrix is solved directly rather than iterated towards.
+
+    `compute_steady_state` recognises a symbolic matrix by asking whether its
+
+    entries are objects, and numpy reads a sparse array as a single object, so
+
+    a sparse chain would otherwise be sent down the slow path it was built to
+
+    avoid.
+    """
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([index + 1 for index in state])
+
+    arguments = {
+        "state_space": ludics.get_state_space(N=4, k=3),
+        "fitness_function": trivial_fitness_function,
+        "compute_transition_probability": (
+            ludics.compute_introspective_imitation_transition_probability
+        ),
+        "individual_to_action_mutation_probability": np.full(
+            shape=(4, 3), fill_value=0.01
+        ),
+        "selection_intensity": np.full(shape=(4, 4), fill_value=0.5),
+        "choice_intensity": np.full(shape=(4, 3), fill_value=0.5),
+        "number_of_strategies": 3,
+    }
+
+    sparse = ludics.generate_transition_matrix(**arguments, return_sparse_array=True)
+
+    np.testing.assert_allclose(
+        ludics.compute_steady_state(sparse),
+        ludics.compute_steady_state(ludics.generate_transition_matrix(**arguments)),
+    )
+
+    solved = []
+    solve_stationary_distribution = ludics.main.solve_stationary_distribution
+
+    def record_the_solve(transition_matrix, *args, **kwargs):
+        solved.append(transition_matrix)
+        return solve_stationary_distribution(transition_matrix, *args, **kwargs)
+
+    monkeypatch.setattr(
+        ludics.main, "solve_stationary_distribution", record_the_solve
+    )
+
+    np.testing.assert_allclose(
+        ludics.compute_steady_state(sparse),
+        solve_stationary_distribution(sparse),
+    )
+    assert len(solved) == 1
+
+
+def build_absorbing_random_walk(number_of_states):
+    """Returns a random walk with absorbing ends, whose absorption
+    probabilities are known: from state i of n, the walk is absorbed at 0 with
+    probability (n - 1 - i) / (n - 1)."""
+
+    transition_matrix = np.zeros((number_of_states, number_of_states))
+    transition_matrix[0, 0] = 1
+    transition_matrix[-1, -1] = 1
+    for state in range(1, number_of_states - 1):
+        transition_matrix[state, state - 1] = 0.5
+        transition_matrix[state, state + 1] = 0.5
+
+    return transition_matrix
+
+
+def test_compute_absorption_matrix_for_a_random_walk():
+    """
+    Tests that the absorption matrix of a random walk with absorbing ends is
+
+    the one the walk is known to have, from either way of storing the chain.
+    """
+
+    transition_matrix = build_absorbing_random_walk(12)
+
+    expected_absorption_matrix = np.array(
+        [[(11 - state) / 11, state / 11] for state in range(1, 11)]
+    )
+
+    np.testing.assert_allclose(
+        ludics.compute_absorption_matrix(transition_matrix),
+        expected_absorption_matrix,
+    )
+    np.testing.assert_allclose(
+        ludics.compute_absorption_matrix(
+            scipy.sparse.csr_array(transition_matrix)
+        ),
+        expected_absorption_matrix,
+    )
+
+
+def test_compute_absorption_matrix_when_every_state_is_absorbing():
+    """
+    Tests that a chain with no transient states has an absorption matrix with
+
+    no rows, whichever way it is stored, since a system of no equations is
+
+    still a system to be factorised.
+    """
+
+    assert ludics.compute_absorption_matrix(np.eye(3)).shape == (0, 3)
+    assert ludics.compute_absorption_matrix(
+        scipy.sparse.csr_array(np.eye(3))
+    ).shape == (0, 3)
