@@ -77,3 +77,69 @@ array([[0.85      , 0.03333333, 0.05      , 0.        , 0.06666667,
         0.06666667, 0.05      , 0.85      ]])
 
 ```
+
+## Build the matrix sparsely for a large population
+
+A dynamic which changes one individual at a time can only reach the states which
+differ from the source at a single position, so most of the matrix is zero. The
+array those entries are written into is the square of the number of states
+whatever the dynamic does with it: a population of 6561 states takes 344MB
+densely and under 2MB sparsely, and one of 19683 states takes 3.1GB, which is
+where a dense build stops rather than where it gets slow.
+
+Pass `return_sparse_array=True` to keep only the entries which are not zero:
+
+```py
+>>> import ludics
+>>> import ludics.fitness_functions
+>>> import numpy as np
+
+>>> state_space = ludics.get_state_space(N=3, k=2)
+>>> arguments = {
+...     "state_space": state_space,
+...     "fitness_function": (
+...         ludics.fitness_functions.public_goods_game_fitness_function
+...     ),
+...     "compute_transition_probability": (
+...         ludics.compute_moran_transition_probability
+...     ),
+...     "selection_intensity": 0.2,
+...     "fitness_map": ludics.linear_fitness_map,
+...     "alpha": 5,
+...     "r": 1.5,
+... }
+
+>>> transition_matrix = ludics.generate_transition_matrix(
+...     **arguments, return_sparse_array=True
+... )
+>>> transition_matrix.shape
+(8, 8)
+>>> transition_matrix.nnz
+26
+
+```
+
+It is the same chain, so it gives the same stationary distribution:
+
+```py
+>>> dense_matrix = ludics.generate_transition_matrix(**arguments)
+>>> bool(np.allclose(transition_matrix.toarray(), dense_matrix))
+True
+
+>>> bool(np.allclose(
+...     ludics.compute_steady_state(transition_matrix),
+...     ludics.compute_steady_state(dense_matrix),
+... ))
+True
+
+```
+
+We note two limits. A dynamic which is not marked with `changes_one_individual`
+reaches every state, so its matrix has no zeros to leave out and asking for a
+sparse array raises a `ValueError`. A symbolic chain comes back as an array of
+objects, since a sparse array holds floats.
+
+A sparse array is read by `compute_steady_state`,
+`solve_stationary_distribution` and `compute_absorption_matrix`, so both the
+stationary distribution and the absorption probabilities of a large chain can
+be found from one. `simulate_markov_chain` still expects an ordinary array.

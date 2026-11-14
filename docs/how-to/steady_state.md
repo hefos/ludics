@@ -20,7 +20,7 @@ Use `compute_steady_state`:
 ... ])
 
 >>> ludics.compute_steady_state(transition_matrix)
-array([0.11585355, 0.07317128, 0.16463682, 0.64633834])
+array([0.11585366, 0.07317073, 0.16463415, 0.64634146])
 
 ```
 
