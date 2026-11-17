@@ -1107,7 +1107,7 @@ def calculate_steady_state(transition_matrix):
     return pi.T
 
 
-def get_neighbourhood_states(state, number_of_strategies):
+def get_neighbourhood_states(state, number_of_strategies, changes_one_individual):
     """
     Given a state, returns a numpy.array of neighbouring states. That is, the
     set of states which differ at 1 position from the current state.
@@ -1119,8 +1119,8 @@ def get_neighbourhood_states(state, number_of_strategies):
 
     number_of_strategies: int - the number of actions available to each player
 
-    extrinsic: bool - whether or not the players can only change to a type
-    within the state.
+    changes_one_individual: bool - whether or not only one player changes in
+    each step
 
     returns:
     ---------
@@ -1128,16 +1128,18 @@ def get_neighbourhood_states(state, number_of_strategies):
 
     action_set = np.arange(number_of_strategies)
 
-    neighbours = []
+    if changes_one_individual is True:
+        neighbours = []
+        for player, player_type in enumerate(state):
+            for action in action_set:
+                if player_type != action:
+                    adjacent_state = state.copy()
+                    adjacent_state[player] = action
+                    neighbours.append(adjacent_state)
+        return np.array(neighbours)
 
-    for player, player_type in enumerate(state):
-        for action in action_set:
-            if player_type != action:
-                adjacent_state = state.copy()
-                adjacent_state[player] = action
-                neighbours.append(adjacent_state)
-
-    return np.array(neighbours)
+    return np.array(list(itertools.product(action_set, repeat=len(state))))
+    
 
 
 def simulate_markov_chain(
@@ -1189,6 +1191,10 @@ def simulate_markov_chain(
 
     np.random.seed(seed)
 
+    neighbourhood_only = getattr(
+        compute_transition_probability, "changes_one_individual", False
+    )
+
     if individual_to_action_mutation_probability is None:
         individual_to_action_mutation_probability = np.zeros(
             shape=(len(initial_state), number_of_strategies)
@@ -1212,7 +1218,7 @@ def simulate_markov_chain(
         except KeyError:
             neighbourhood = list(
                 get_neighbourhood_states(
-                    state=current_state, number_of_strategies=number_of_strategies
+                    state=current_state, number_of_strategies=number_of_strategies, changes_one_individual=neighbourhood_only
                 )
             )
 

@@ -2190,7 +2190,7 @@ def test_get_neighbourhood_states_for_standard_state():
     expected_neighbourhood = np.array([[0, 0, 1], [1, 1, 1], [1, 0, 0]])
 
     actual_neighbourhood = ludics.get_neighbourhood_states(
-        state=state, number_of_strategies=number_of_strategies
+        state=state, number_of_strategies=number_of_strategies, changes_one_individual=True
     )
 
     np.testing.assert_array_equal(actual_neighbourhood, expected_neighbourhood)
@@ -2220,7 +2220,7 @@ def test_get_neighbourhood_states_for_lots_of_strategies():
     )
 
     actual_neighbourhood = ludics.get_neighbourhood_states(
-        state=state, number_of_strategies=number_of_strategies
+        state=state, number_of_strategies=number_of_strategies, changes_one_individual=True
     )
 
     np.testing.assert_array_equal(actual_neighbourhood, expected_neighbourhood)
@@ -4284,3 +4284,65 @@ def test_compute_absorption_matrix_when_every_state_is_absorbing():
     assert ludics.compute_absorption_matrix(
         scipy.sparse.csr_array(np.eye(3))
     ).shape == (0, 3)
+
+def test_get_neighbourhood_states_for_not_neighbourhood_only():
+    """
+    Tests that get_neighbourhood_states returns the expected states for a
+    transition probability function which allows multiple transitions at once"""
+
+    state = np.array([0,1,1])
+    number_of_strategies = 2
+    changes_one_individual = False
+
+    actual_states = ludics.get_neighbourhood_states(
+        state=state,
+        number_of_strategies=number_of_strategies,
+        changes_one_individual=changes_one_individual
+    )
+
+    expected_states = np.array([
+        [0,0,0],
+        [0,0,1],
+        [0,1,0],
+        [0,1,1],
+        [1,0,0],
+        [1,0,1],
+        [1,1,0],
+        [1,1,1]
+    ])
+
+    np.testing.assert_array_equal(actual_states, expected_states)
+
+def test_simulate_markov_chain_for_population_dynamic_which_connects_all_states():
+    """
+    Tests that simulate_markov_chain behaves as expected for a population
+    dynamic which allows multiple players to transition at once"""
+
+    def transition_probability_function(source, target, **kwargs):
+        return (1/2)**len(source)
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([1 for _ in state])
+
+    initial_state = np.array([1,0,0,1,1])
+    number_of_strategies = 2
+    seed = 47
+    iterations = 3
+    warmup = 1
+
+    actual_states_over_time, actual_state_dict = ludics.simulate_markov_chain(
+        initial_state=initial_state,
+        number_of_strategies=number_of_strategies,
+        fitness_function=trivial_fitness_function,
+        compute_transition_probability=transition_probability_function,
+        seed=seed,
+        iterations=iterations,
+        warmup=warmup
+        )
+
+    expected_states_over_time = [(0, 0, 0, 1, 1), (1, 1, 1, 1, 1)]
+    expected_state_dict = {(0, 0, 0, 1, 1): 1, (1, 1, 1, 1, 1): 1}
+
+    for expected, actual in zip(expected_states_over_time, actual_states_over_time):
+        assert actual == expected
+    assert actual_state_dict == expected_state_dict
