@@ -2190,7 +2190,7 @@ def test_get_neighbourhood_states_for_standard_state():
     expected_neighbourhood = np.array([[0, 0, 1], [1, 1, 1], [1, 0, 0]])
 
     actual_neighbourhood = ludics.get_neighbourhood_states(
-        state=state, number_of_strategies=number_of_strategies, changes_one_individual=True
+        state=state, number_of_strategies=number_of_strategies, neighbourhood_only=True
     )
 
     np.testing.assert_array_equal(actual_neighbourhood, expected_neighbourhood)
@@ -2220,7 +2220,7 @@ def test_get_neighbourhood_states_for_lots_of_strategies():
     )
 
     actual_neighbourhood = ludics.get_neighbourhood_states(
-        state=state, number_of_strategies=number_of_strategies, changes_one_individual=True
+        state=state, number_of_strategies=number_of_strategies, neighbourhood_only=True
     )
 
     np.testing.assert_array_equal(actual_neighbourhood, expected_neighbourhood)
@@ -4292,12 +4292,12 @@ def test_get_neighbourhood_states_for_not_neighbourhood_only():
 
     state = np.array([0,1,1])
     number_of_strategies = 2
-    changes_one_individual = False
+    neighbourhood_only = False
 
     actual_states = ludics.get_neighbourhood_states(
         state=state,
         number_of_strategies=number_of_strategies,
-        changes_one_individual=changes_one_individual
+        neighbourhood_only=neighbourhood_only
     )
 
     expected_states = np.array([

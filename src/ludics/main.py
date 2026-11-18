@@ -1107,7 +1107,7 @@ def calculate_steady_state(transition_matrix):
     return pi.T
 
 
-def get_neighbourhood_states(state, number_of_strategies, changes_one_individual):
+def get_neighbourhood_states(state, number_of_strategies, neighbourhood_only):
     """
     Given a state, returns a numpy.array of neighbouring states. That is, the
     set of states which differ at 1 position from the current state.
@@ -1119,7 +1119,7 @@ def get_neighbourhood_states(state, number_of_strategies, changes_one_individual
 
     number_of_strategies: int - the number of actions available to each player
 
-    changes_one_individual: bool - whether or not only one player changes in
+    neighbourhood_only: bool - whether or not only one player changes in
     each step
 
     returns:
@@ -1128,7 +1128,7 @@ def get_neighbourhood_states(state, number_of_strategies, changes_one_individual
 
     action_set = np.arange(number_of_strategies)
 
-    if changes_one_individual is True:
+    if neighbourhood_only is True:
         neighbours = []
         for player, player_type in enumerate(state):
             for action in action_set:
@@ -1218,7 +1218,7 @@ def simulate_markov_chain(
         except KeyError:
             neighbourhood = list(
                 get_neighbourhood_states(
-                    state=current_state, number_of_strategies=number_of_strategies, changes_one_individual=neighbourhood_only
+                    state=current_state, number_of_strategies=number_of_strategies, neighbourhood_only=neighbourhood_only
                 )
             )
 
