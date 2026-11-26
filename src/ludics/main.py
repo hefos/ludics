@@ -1138,7 +1138,7 @@ def get_neighbourhood_states(state, number_of_strategies, neighbourhood_only):
                     neighbours.append(adjacent_state)
         return np.array(neighbours)
 
-    return np.array(list(itertools.product(action_set, repeat=len(state))))
+    return np.array([neighbour for neighbour in itertools.product(action_set, repeat=len(state)) if neighbour != tuple(state)])
     
 
 
