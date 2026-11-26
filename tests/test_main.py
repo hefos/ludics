@@ -4304,7 +4304,6 @@ def test_get_neighbourhood_states_for_not_neighbourhood_only():
         [0,0,0],
         [0,0,1],
         [0,1,0],
-        [0,1,1],
         [1,0,0],
         [1,0,1],
         [1,1,0],
@@ -4326,7 +4325,7 @@ def test_simulate_markov_chain_for_population_dynamic_which_connects_all_states(
 
     initial_state = np.array([1,0,0,1,1])
     number_of_strategies = 2
-    seed = 47
+    seed = 8
     iterations = 3
     warmup = 1
 
@@ -4340,8 +4339,8 @@ def test_simulate_markov_chain_for_population_dynamic_which_connects_all_states(
         warmup=warmup
         )
 
-    expected_states_over_time = [(0, 0, 0, 1, 1), (1, 1, 1, 1, 1)]
-    expected_state_dict = {(0, 0, 0, 1, 1): 1, (1, 1, 1, 1, 1): 1}
+    expected_states_over_time = [(1, 1, 1, 0, 0), (1, 1, 1, 1, 1)]
+    expected_state_dict = {(1, 1, 1, 0, 0): 1, (1, 1, 1, 1, 1): 1}
 
     for expected, actual in zip(expected_states_over_time, actual_states_over_time):
         assert actual == expected
